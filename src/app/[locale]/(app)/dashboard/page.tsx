@@ -6,10 +6,15 @@ import { KpiGrid, type KpiItem } from '@/components/dashboard/kpi-grid';
 import { DashboardFeed } from '@/components/dashboard/dashboard-feed';
 import { DashboardIntent } from '@/components/dashboard/dashboard-intent';
 import { Link } from '@/i18n/routing';
-import { seededScore } from '@/lib/utils';
 import { fetchFranceNews, type LiveNewsItem } from '@/lib/sources/news';
 import { searchTenders, type TenderResult } from '@/lib/sources/boamp';
 import { buyingIntentReal } from '@/lib/sources/intent';
+import {
+  opportunityScore,
+  marketActivity,
+  signalCounts,
+  soonestTenderDeadline,
+} from '@/lib/dashboard-metrics';
 import { Users, Truck, Gavel, FileText, Bot, Zap } from 'lucide-react';
 
 export default async function DashboardPage() {
@@ -27,19 +32,26 @@ export default async function DashboardPage() {
     buyingIntentReal().catch(() => []),
   ]);
 
-  const fundingSignals = news.filter((n) => n.signalType === 'Investment').length;
-  const hiringSignals = news.filter((n) => n.signalType === 'Expansion').length;
+  const inputs = { news, tenders, intent };
+  const counts = signalCounts(news);
   const live = news.length > 0 || tenders.total > 0;
 
+  // All headline numbers are now computed from the live signals above.
+  const oppScore = opportunityScore(inputs);
+  const mktActivity = marketActivity(inputs);
+  const newToday = news.length + tenders.results.length;
+  const soonest = soonestTenderDeadline(tenders.results);
+
   const kpis: KpiItem[] = [
-    { key: 'newOpportunities', value: news.length + tenders.results.length, delta: seededScore('a', 5, 28), real: live },
-    { key: 'matchingTenders', value: tenders.total.toLocaleString(), delta: seededScore('b', 3, 20), real: tenders.total > 0 },
-    { key: 'highIntentBuyers', value: intent.length, delta: seededScore('c', 4, 22), real: intent.length > 0 },
-    { key: 'fundingSignals', value: fundingSignals, delta: seededScore('d', 2, 18), real: news.length > 0 },
-    { key: 'hiringSignals', value: hiringSignals, delta: seededScore('e', 2, 16), real: news.length > 0 },
-    { key: 'potentialDistributors', value: seededScore('dist', 20, 120), delta: seededScore('f', 1, 14) },
-    { key: 'decisionMakers', value: seededScore('dm', 30, 180), delta: seededScore('g', 1, 12) },
-    { key: 'pipelineValue', value: `€${(seededScore('pipe', 80, 320) * 1450).toLocaleString()}`, delta: seededScore('h', 2, 20) },
+    { key: 'newOpportunities', value: newToday, real: live, hint: t('hintLast48h') },
+    { key: 'matchingTenders', value: tenders.total.toLocaleString(), real: tenders.total > 0,
+      hint: soonest != null ? t('hintNextDeadline', { days: soonest }) : undefined },
+    { key: 'highIntentBuyers', value: intent.length, real: intent.length > 0, hint: t('hintBuyersSource') },
+    { key: 'fundingSignals', value: counts.Investment, real: news.length > 0, hint: t('hintFromNews') },
+    { key: 'hiringSignals', value: counts.Expansion, real: news.length > 0, hint: t('hintFromNews') },
+    { key: 'partnershipSignals', value: counts.Partnership, real: news.length > 0, hint: t('hintFromNews') },
+    { key: 'riskAlerts', value: counts.Risk, real: news.length > 0, hint: t('hintFromNews') },
+    { key: 'buyingSignals', value: counts.Buying, real: news.length > 0, hint: t('hintFromNews') },
   ];
 
   const feed = news.slice(0, 6);
@@ -63,19 +75,22 @@ export default async function DashboardPage() {
         <p className="mt-1 text-sm text-muted-foreground">{t('subtitle')}</p>
 
         <div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3">
-          <Card className="p-3 sm:p-4">
+          <Card className="p-3 sm:p-4" title={t('opportunityScoreHelp')}>
             <CardTitle className="truncate">{t('opportunityScore')}</CardTitle>
-            <div className="mt-1 text-2xl font-bold text-primary sm:text-3xl">{seededScore('today-opp', 70, 95)}</div>
+            <div className="mt-1 text-2xl font-bold text-primary sm:text-3xl">{oppScore}<span className="text-base font-medium text-muted-foreground">/100</span></div>
           </Card>
-          <Card className="p-3 sm:p-4">
+          <Card className="p-3 sm:p-4" title={t('marketActivityHelp')}>
             <CardTitle className="truncate">{t('marketActivity')}</CardTitle>
-            <div className="mt-1 text-2xl font-bold text-accent sm:text-3xl">{seededScore('mkt-act', 60, 90)}</div>
+            <div className="mt-1 text-2xl font-bold text-accent sm:text-3xl">{mktActivity}<span className="text-base font-medium text-muted-foreground">/100</span></div>
           </Card>
           <Card className="col-span-2 p-3 sm:col-span-1 sm:p-4">
             <CardTitle className="truncate">{t('newToday')}</CardTitle>
-            <div className="mt-1 text-2xl font-bold sm:text-3xl">{news.length + tenders.results.length}</div>
+            <div className="mt-1 text-2xl font-bold sm:text-3xl">{newToday}</div>
           </Card>
         </div>
+        {live && (
+          <p className="mt-3 text-[11px] text-muted-foreground">{t('metricsNote')}</p>
+        )}
 
         <div className="mt-5 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
           {quickActions.map(({ key, href, Icon }) => (

@@ -124,7 +124,14 @@
     "feed": "Business Development Feed",
     "highIntent": "High Intent Buyers",
     "tenderCenter": "Tender Center",
-    "kpis": "Key Indicators"
+    "kpis": "Key Indicators",
+    "opportunityScoreHelp": "Computed from live signals: opportunity volume (30%), active buyers (25%), funding momentum (20%), feed quality (25%).",
+    "marketActivityHelp": "Computed from open tenders, fresh news volume, active buyers and funding momentum.",
+    "metricsNote": "Scores are computed in real time from live French market signals (news, public tenders, buyer activity).",
+    "hintLast48h": "news + open tenders",
+    "hintNextDeadline": "next deadline in {days}d",
+    "hintBuyersSource": "live tenders + funded",
+    "hintFromNews": "from live news"
   },
   "kpi": {
     "newOpportunities": "New Opportunities Today",
@@ -134,7 +141,10 @@
     "decisionMakers": "Decision Makers Found",
     "fundingSignals": "Funding Signals",
     "hiringSignals": "Hiring Signals",
-    "pipelineValue": "Monthly Pipeline Value"
+    "pipelineValue": "Monthly Pipeline Value",
+    "partnershipSignals": "Partnership signals",
+    "riskAlerts": "Risk alerts",
+    "buyingSignals": "Buying signals"
   },
   "companies": {
     "title": "Company Intelligence",

@@ -124,7 +124,14 @@
     "feed": "Fil de développement commercial",
     "highIntent": "Acheteurs à forte intention",
     "tenderCenter": "Centre des appels d'offres",
-    "kpis": "Indicateurs clés"
+    "kpis": "Indicateurs clés",
+    "opportunityScoreHelp": "Calculé à partir de signaux en direct : volume d'opportunités (30%), acheteurs actifs (25%), dynamique de financement (20%), qualité du flux (25%).",
+    "marketActivityHelp": "Calculé à partir des appels d'offres ouverts, du volume d'actualités, des acheteurs actifs et de la dynamique de financement.",
+    "metricsNote": "Scores calculés en temps réel à partir de signaux du marché français (actualités, appels d'offres, activité acheteurs).",
+    "hintLast48h": "actus + appels d'offres",
+    "hintNextDeadline": "prochaine échéance dans {days} j",
+    "hintBuyersSource": "appels d'offres + levées",
+    "hintFromNews": "d'après l'actualité"
   },
   "kpi": {
     "newOpportunities": "Nouvelles opportunités aujourd'hui",
@@ -134,7 +141,10 @@
     "decisionMakers": "Décideurs identifiés",
     "fundingSignals": "Signaux de financement",
     "hiringSignals": "Signaux de recrutement",
-    "pipelineValue": "Valeur mensuelle du pipeline"
+    "pipelineValue": "Valeur mensuelle du pipeline",
+    "partnershipSignals": "Signaux de partenariat",
+    "riskAlerts": "Alertes risque",
+    "buyingSignals": "Signaux d'achat"
   },
   "companies": {
     "title": "Intelligence Entreprises",

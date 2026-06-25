@@ -124,7 +124,14 @@
     "feed": "商业拓展动态",
     "highIntent": "高意向买家",
     "tenderCenter": "招标中心",
-    "kpis": "关键指标"
+    "kpis": "关键指标",
+    "opportunityScoreHelp": "由实时信号计算：机会量(30%)、活跃买家(25%)、融资动能(20%)、信息流质量(25%)。",
+    "marketActivityHelp": "由公开招标量、新闻量、活跃买家与融资动能计算。",
+    "metricsNote": "评分由法国市场实时信号（新闻、公开招标、买家活动）实时计算。",
+    "hintLast48h": "新闻 + 公开招标",
+    "hintNextDeadline": "最近截止 {days} 天",
+    "hintBuyersSource": "实时招标 + 融资公司",
+    "hintFromNews": "来自实时新闻"
   },
   "kpi": {
     "newOpportunities": "今日新增机会",
@@ -134,7 +141,10 @@
     "decisionMakers": "已发现决策者",
     "fundingSignals": "融资信号",
     "hiringSignals": "招聘信号",
-    "pipelineValue": "月度管道价值"
+    "pipelineValue": "月度管道价值",
+    "partnershipSignals": "合作信号",
+    "riskAlerts": "风险预警",
+    "buyingSignals": "采购信号"
   },
   "companies": {
     "title": "企业情报",
