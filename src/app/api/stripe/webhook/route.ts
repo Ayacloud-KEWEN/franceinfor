@@ -6,9 +6,12 @@ import type Stripe from 'stripe';
 // Period end moved from Subscription top-level to subscription items in the
 // 2025-03-31 (basil) API version. Read it defensively from either location.
 function periodEnd(sub: Stripe.Subscription): Date | undefined {
+  // The field is absent from the v17 (acacia) SDK types but present at runtime
+  // on the account's newer API version, so read both spots through a cast.
+  const item = sub.items?.data?.[0] as unknown as { current_period_end?: number } | undefined;
   const ts =
     (sub as unknown as { current_period_end?: number }).current_period_end ??
-    sub.items?.data?.[0]?.current_period_end;
+    item?.current_period_end;
   return ts ? new Date(ts * 1000) : undefined;
 }
 
