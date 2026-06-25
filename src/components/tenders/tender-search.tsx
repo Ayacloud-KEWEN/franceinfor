@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/card';
 import { ScorePill } from '@/components/ui/badge';
 import { Search, Loader2, ExternalLink, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { SaveButton } from '@/components/saved/save-button';
 import type { TenderResult } from '@/lib/sources/boamp';
 
 type Source = 'boamp' | 'ted';
@@ -113,16 +114,26 @@ export function TenderSearch() {
                 </div>
               </div>
             </div>
-            {tn.url && (
-              <a
-                href={tn.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-              >
-                {t('view')} <ExternalLink size={12} />
-              </a>
-            )}
+            <div className="mt-2 flex items-center justify-between gap-3">
+              {tn.url ? (
+                <a
+                  href={tn.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                >
+                  {t('view')} <ExternalLink size={12} />
+                </a>
+              ) : (
+                <span />
+              )}
+              <SaveButton
+                type="TENDER"
+                refId={tn.id}
+                label={tn.title}
+                data={{ buyer: tn.buyer, deadline: tn.deadline, url: tn.url, source }}
+              />
+            </div>
           </Card>
         ))}
       </div>

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScorePill } from '@/components/ui/badge';
 import { Loader2, Sparkles, ChevronDown } from 'lucide-react';
+import { SaveButton } from '@/components/saved/save-button';
 import type { DiscoveryResult } from '@/lib/data/modules';
 
 const PER_CAT = 4;
@@ -61,12 +62,21 @@ export function DiscoverEngine() {
               </CardHeader>
               <CardContent className="space-y-2">
                 {r.items.slice(0, perCat).map((it) => (
-                  <div key={it.name} className="flex items-center justify-between rounded-lg border border-border px-3 py-2">
-                    <div>
+                  <div key={it.name} className="flex items-center justify-between gap-2 rounded-lg border border-border px-3 py-2">
+                    <div className="min-w-0">
                       <div className="text-sm font-medium">{it.name}</div>
                       <div className="text-xs text-muted-foreground">{it.reason}</div>
                     </div>
-                    <ScorePill score={it.score} />
+                    <div className="flex shrink-0 items-center gap-2">
+                      <ScorePill score={it.score} />
+                      <SaveButton
+                        size="icon"
+                        type="OPPORTUNITY"
+                        refId={`${r.category}:${it.name}`}
+                        label={it.name}
+                        data={{ category: r.category, reason: it.reason, score: it.score }}
+                      />
+                    </div>
                   </div>
                 ))}
               </CardContent>
