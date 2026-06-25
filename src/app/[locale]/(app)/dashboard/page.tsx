@@ -56,31 +56,39 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* HERO */}
-      <div className="gradient-hero overflow-hidden rounded-2xl border border-border p-6 sm:p-8">
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+      <div className="gradient-hero overflow-hidden rounded-2xl border border-border p-5 sm:p-8">
+        <h1 className="text-xl font-bold tracking-tight sm:text-3xl">
           {t('goodMorning')}, {name} 👋
         </h1>
-        <p className="mt-1 text-muted-foreground">{t('subtitle')}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{t('subtitle')}</p>
 
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
-          <Card className="p-4">
-            <CardTitle>{t('opportunityScore')}</CardTitle>
-            <div className="mt-1 text-3xl font-bold text-primary">{seededScore('today-opp', 70, 95)}</div>
+        <div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3">
+          <Card className="p-3 sm:p-4">
+            <CardTitle className="truncate">{t('opportunityScore')}</CardTitle>
+            <div className="mt-1 text-2xl font-bold text-primary sm:text-3xl">{seededScore('today-opp', 70, 95)}</div>
           </Card>
-          <Card className="p-4">
-            <CardTitle>{t('marketActivity')}</CardTitle>
-            <div className="mt-1 text-3xl font-bold text-accent">{seededScore('mkt-act', 60, 90)}</div>
+          <Card className="p-3 sm:p-4">
+            <CardTitle className="truncate">{t('marketActivity')}</CardTitle>
+            <div className="mt-1 text-2xl font-bold text-accent sm:text-3xl">{seededScore('mkt-act', 60, 90)}</div>
           </Card>
-          <Card className="p-4 col-span-2 sm:col-span-1">
-            <CardTitle>{t('newToday')}</CardTitle>
-            <div className="mt-1 text-3xl font-bold">{news.length + tenders.results.length}</div>
+          <Card className="col-span-2 p-3 sm:col-span-1 sm:p-4">
+            <CardTitle className="truncate">{t('newToday')}</CardTitle>
+            <div className="mt-1 text-2xl font-bold sm:text-3xl">{news.length + tenders.results.length}</div>
           </Card>
         </div>
 
-        <div className="mt-6 flex flex-wrap gap-2">
+        <div className="mt-5 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
           {quickActions.map(({ key, href, Icon }) => (
-            <Link key={key} href={href}>
-              <Button variant={key === 'askCopilot' ? 'accent' : 'default'} size="sm">
+            <Link
+              key={key}
+              href={href}
+              className={`w-full sm:w-auto ${key === 'askCopilot' ? 'col-span-2 sm:col-span-1' : ''}`}
+            >
+              <Button
+                variant={key === 'askCopilot' ? 'accent' : 'default'}
+                size="sm"
+                className="w-full justify-center sm:w-auto"
+              >
                 <Icon size={16} /> {t(key)}
               </Button>
             </Link>
