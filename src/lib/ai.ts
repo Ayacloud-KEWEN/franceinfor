@@ -113,7 +113,11 @@ export function providerStatus(): ProviderStatus {
   };
 }
 
-async function callOpenAICompatible(cfg: ProviderConfig, messages: AiMessage[]): Promise<string> {
+async function callOpenAICompatible(
+  cfg: ProviderConfig,
+  messages: AiMessage[],
+  system: string
+): Promise<string> {
   const res = await fetch(`${cfg.baseUrl}/chat/completions`, {
     method: 'POST',
     headers: {
@@ -122,9 +126,9 @@ async function callOpenAICompatible(cfg: ProviderConfig, messages: AiMessage[]):
     },
     body: JSON.stringify({
       model: cfg.model,
-      messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
-      max_tokens: 1500,
-      temperature: 0.4,
+      messages: [{ role: 'system', content: system }, ...messages],
+      max_tokens: 2000,
+      temperature: 0.3,
       stream: false,
     }),
   });
@@ -135,7 +139,11 @@ async function callOpenAICompatible(cfg: ProviderConfig, messages: AiMessage[]):
   return text;
 }
 
-async function callAnthropic(cfg: ProviderConfig, messages: AiMessage[]): Promise<string> {
+async function callAnthropic(
+  cfg: ProviderConfig,
+  messages: AiMessage[],
+  system: string
+): Promise<string> {
   const res = await fetch(`${cfg.baseUrl}/v1/messages`, {
     method: 'POST',
     headers: {
@@ -145,8 +153,8 @@ async function callAnthropic(cfg: ProviderConfig, messages: AiMessage[]): Promis
     },
     body: JSON.stringify({
       model: cfg.model,
-      max_tokens: 1500,
-      system: SYSTEM_PROMPT,
+      max_tokens: 2000,
+      system,
       messages,
     }),
   });
@@ -157,7 +165,10 @@ async function callAnthropic(cfg: ProviderConfig, messages: AiMessage[]): Promis
   return text;
 }
 
-export async function complete(messages: AiMessage[]): Promise<string> {
+export async function complete(
+  messages: AiMessage[],
+  system: string = SYSTEM_PROMPT
+): Promise<string> {
   const last = messages[messages.length - 1]?.content ?? '';
   if (FORCE_MOCK) return mockConsultantReply(last);
 
@@ -169,8 +180,8 @@ export async function complete(messages: AiMessage[]): Promise<string> {
 
   try {
     return cfg.kind === 'anthropic'
-      ? await callAnthropic(cfg, messages)
-      : await callOpenAICompatible(cfg, messages);
+      ? await callAnthropic(cfg, messages, system)
+      : await callOpenAICompatible(cfg, messages, system);
   } catch (e) {
     console.warn(`[ai] ${cfg.id} failed, falling back to mock:`, (e as Error).message);
     return mockConsultantReply(last);
@@ -201,6 +212,40 @@ const LANG_LABEL: Record<string, string> = {
   fr: 'French',
 };
 
+const TRANSLATE_SYSTEM =
+  'You are a precise translation engine. You output only what is asked — no preamble, no explanations, no markdown fences unless requested.';
+
+// Pull a JSON string array out of a model response (tolerates code fences / stray text).
+function extractStringArray(out: string, n: number): string[] | null {
+  let s = out.trim();
+  const fence = s.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if (fence) s = fence[1].trim();
+  const start = s.indexOf('[');
+  const end = s.lastIndexOf(']');
+  if (start !== -1 && end > start) s = s.slice(start, end + 1);
+  try {
+    const arr = JSON.parse(s);
+    if (Array.isArray(arr) && arr.length === n) {
+      return arr.map((x) => (typeof x === 'string' ? x : String(x ?? '')));
+    }
+  } catch {
+    /* not JSON */
+  }
+  return null;
+}
+
+// Fallback: parse numbered lines (tolerates half/full-width separators).
+function parseNumberedLines(out: string, n: number): string[] | null {
+  const map: Record<number, string> = {};
+  for (const raw of out.split('\n')) {
+    const line = raw.trim().replace(/^\*+\s*/, '').replace(/\*+$/, '');
+    const m = line.match(/^(\d+)\s*[.)、．。:：・\-]\s*(.+)$/);
+    if (m) map[Number(m[1])] = m[2].trim();
+  }
+  if (Object.keys(map).length >= n) return Array.from({ length: n }, (_, i) => map[i + 1] ?? '');
+  return null;
+}
+
 /**
  * Translate a batch of short texts into the target locale using the configured
  * model. Returns the originals unchanged on mock mode, missing config, or error.
@@ -217,24 +262,18 @@ export async function translateBatch(
   const cfg = buildConfig();
   if (cfg.needsKey && !cfg.apiKey) return texts;
 
-  const numbered = texts.map((t, i) => `${i + 1}. ${t}`).join('\n');
   const prompt =
-    `Translate each numbered news headline into ${lang}.\n` +
-    `STRICT RULES:\n` +
-    `- Keep company names, brand names, product names, organisation names and person names EXACTLY as written, in their original Latin script. Do NOT translate or transliterate them.\n` +
-    `  Examples: "Mistral AI" stays "Mistral AI" (never 迷流); "Schneider Electric" stays "Schneider Electric"; "Les Echos" stays "Les Echos".\n` +
-    `- Keep tickers, acronyms and figures (€450M, CAC 40) unchanged.\n` +
-    `- Output ONLY the translated lines, same numbering (1., 2., ...), one per line, no preamble or commentary.\n\n` +
-    `${numbered}`;
+    `Translate each string of this JSON array into ${lang}.\n` +
+    `Return ONLY a JSON array of exactly ${texts.length} strings, in the same order — no markdown, no comments.\n` +
+    `Keep company names, brand names, product names, organisation names and person names EXACTLY as written ` +
+    `(original Latin script — e.g. "Mistral AI", "Schneider Electric", "Doctolib"). Keep tickers/acronyms/figures unchanged.\n\n` +
+    JSON.stringify(texts);
 
   try {
-    const out = await complete([{ role: 'user', content: prompt }]);
-    const map: Record<number, string> = {};
-    for (const line of out.split('\n')) {
-      const m = line.match(/^\s*(\d+)[.)]\s*(.+)/);
-      if (m) map[Number(m[1])] = m[2].trim();
-    }
-    return texts.map((t, i) => map[i + 1] || t);
+    const out = await complete([{ role: 'user', content: prompt }], TRANSLATE_SYSTEM);
+    const arr = extractStringArray(out, texts.length) ?? parseNumberedLines(out, texts.length);
+    if (!arr) return texts;
+    return texts.map((t, i) => (arr[i] && arr[i].trim() ? arr[i] : t));
   } catch {
     return texts;
   }
