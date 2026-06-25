@@ -78,7 +78,7 @@ prisma/                        schema + seed
 ## ⭐ 关注列表 / 轻量 CRM（本次新增）
 - **页面** `/[locale]/watchlist`：按 `Stage` 看板（潜在 LEAD→接触 CONTACTED→商谈 NEGOTIATING→赢单 WON→丢单 LOST）。每张卡可改阶段(select)、加备注(textarea，blur 保存)、移除。客户端组件 `components/saved/watchlist-board.tsx`。
 - **收藏机制**：通用 `components/saved/save-button.tsx`（传 `type/refId/label/data`）→ `/api/saved`（GET 列表 / POST 收藏 / PATCH 改 stage·note·tags / DELETE）。同页多个按钮经 `use-saved-keys.ts`（react-query `['saved-keys']`）共享已收藏状态。
-- **已接入**：企业搜索结果(`company-search.tsx` Detail 面板) + 企业详情页头部。**要给招标/机会/联系人加收藏**：在对应卡片放 `<SaveButton type=... />` 即可；`watchlist-board.tsx#hrefFor` 里补该类型的深链。
+- **已接入**：企业(搜索 Detail 面板 + 详情页头部)、招标(`tender-search.tsx`，TENDER)、机会发现(`discover.tsx`，OPPORTUNITY，icon 按钮)。**再加联系人/买家意向**：在对应卡片放 `<SaveButton type=... />` 即可；`watchlist-board.tsx#hrefFor` 里补该类型的深链。
 - **Schema**：`SavedItem` 加 `note/stage(Stage 枚举)/tags(String[])/updatedAt`；索引 `@@index([userId, stage])`。新列纯增，自动部署 `prisma db push` 会自动建。
 - 全链路本地验证：收藏→列表→改阶段+备注→看板渲染→删除。
 
