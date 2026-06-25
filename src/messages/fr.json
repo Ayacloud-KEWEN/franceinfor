@@ -260,7 +260,6 @@
   },
   "services": {
     "sectionLabel": "Service à valeur ajoutée",
-    "cost": "Coût estimé",
     "time": "Délai estimé",
     "steps": "Étapes",
     "ctaPartner": "Se faire accompagner par un partenaire certifié",
@@ -268,7 +267,6 @@
     "disclaimer": "Information générale — ne constitue pas un conseil juridique.",
     "companyTitle": "Créer une société en France",
     "companyIntro": "Aperçu pratique de l'immatriculation d'une société française (SAS / SARL …).",
-    "companyCost": "≈ 200–400 € de frais",
     "companyTime": "≈ 1–3 semaines",
     "companySteps": [
       "Choisir une forme juridique (SAS/SASU, SARL/EURL…) et rédiger les statuts",
@@ -280,7 +278,6 @@
     ],
     "brandTitle": "Déposer une marque en France",
     "brandIntro": "Aperçu pratique de la protection de votre marque via l'INPI (France) ou l'EUIPO (UE).",
-    "brandCost": "≈ 190 € (1 classe, INPI)",
     "brandTime": "≈ 4–6 mois",
     "brandSteps": [
       "Effectuer une recherche d'antériorité / disponibilité dans la base INPI",

@@ -2,7 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Building2, Tag, ArrowRight, Clock, Coins, Sparkles } from 'lucide-react';
+import { Building2, Tag, ArrowRight, Clock, Sparkles } from 'lucide-react';
 
 // "如何在法国注册公司 / 商标" 增值服务板块。
 // 合作伙伴办理链接通过 env 配置，未配置则为占位（#）。
@@ -12,7 +12,6 @@ export async function ServiceGuide({ kind }: { kind: 'company' | 'brand' }) {
 
   const title = isCompany ? t('companyTitle') : t('brandTitle');
   const intro = isCompany ? t('companyIntro') : t('brandIntro');
-  const cost = isCompany ? t('companyCost') : t('brandCost');
   const time = isCompany ? t('companyTime') : t('brandTime');
   const steps = t.raw(isCompany ? 'companySteps' : 'brandSteps') as string[];
   const Icon = isCompany ? Building2 : Tag;
@@ -43,9 +42,6 @@ export async function ServiceGuide({ kind }: { kind: 'company' | 'brand' }) {
 
       <CardContent>
         <div className="mb-4 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1">
-            <Coins size={13} className="text-muted-foreground" /> {t('cost')}: <b>{cost}</b>
-          </span>
           <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1">
             <Clock size={13} className="text-muted-foreground" /> {t('time')}: <b>{time}</b>
           </span>

@@ -260,7 +260,6 @@
   },
   "services": {
     "sectionLabel": "增值服务",
-    "cost": "预估费用",
     "time": "预估时长",
     "steps": "办理步骤",
     "ctaPartner": "通过认证合作伙伴办理",
@@ -268,7 +267,6 @@
     "disclaimer": "仅为一般性指引，不构成法律意见。",
     "companyTitle": "在法国注册公司",
     "companyIntro": "注册法国公司（SAS / SARL 等）的实用流程概览。",
-    "companyCost": "约 €200–400 行政费用",
     "companyTime": "约 1–3 周",
     "companySteps": [
       "选择法律形式（SAS/SASU、SARL/EURL 等）并起草公司章程",
@@ -280,7 +278,6 @@
     ],
     "brandTitle": "在法国注册商标",
     "brandIntro": "通过 INPI（法国）或 EUIPO（全欧盟）保护你的品牌的实用流程概览。",
-    "brandCost": "约 €190（单类别，INPI）",
     "brandTime": "约 4–6 个月",
     "brandSteps": [
       "在 INPI 数据库做可注册性 / 在先权利检索",

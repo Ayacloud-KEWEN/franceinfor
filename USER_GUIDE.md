@@ -51,10 +51,12 @@
 ### 🏢 Companies（企业情报，模块 3）
 - **搜索**：按公司名 / SIREN / SIRET 实时查法国企业登记库（recherche-entreprises），返回真实身份、营业额、机会评分；展开行可见增值税号、财务年度、高管。
 - **完整档案页**（「查看完整档案」）：概览（状态/法律形式/类别/NAF/员工/成立/机构数/增值税号）、自然人高管、**法人股东（可点进其公司）**、多年真实财务柱状图、**BODACC 法律事件**（破产/变更等）、**公司新闻**、一键 AI 商业简报。
+- 💎 **增值服务 ·「在法国注册公司」**：页面下方的指引卡片，含 6 步真实注册流程（法律形式→章程→存资本→法定公告→INPI 一站式窗口→SIREN/Kbis→增值税）、预估时长，以及**「通过认证合作伙伴办理」**按钮（链接可配置，见 §6）。
 
 ### 🏷️ Brands（品牌情报，模块 4）
 - 商标/品牌名检索，返回 风险评分 / 相似度 / 可注册性 + 注册建议（INPI/EUIPO/WIPO 口径）。
 - 配置 `EUIPO_*` 密钥后走真实 EUIPO 数据，否则为演示生成。
+- 💎 **增值服务 ·「在法国注册商标」**：页面下方的指引卡片，含 6 步真实注册流程（INPI 在先检索→尼斯分类→INPI/EUIPO 提交→审查→2 个月异议期→注册 10 年）、预估时长，以及**「通过认证合作伙伴办理」**按钮（链接可配置，见 §6）。
 
 ### 🛡️ Credit（信用情报，模块 12）
 - 输入公司名 → 信任总分 + 多维评分：
@@ -118,6 +120,13 @@
   UPDATE "User" SET role='ADMIN', plan='ENTERPRISE' WHERE email='...';
   ```
 - **更新上线**：本地 `git push` 到 main → GitHub Actions 自动部署；或服务器 `npm run deploy`。
+- **配置增值服务的合作伙伴链接**：在服务器 `.env` 设
+  ```env
+  NEXT_PUBLIC_PARTNER_COMPANY_URL="https://合作伙伴-公司注册页"
+  NEXT_PUBLIC_PARTNER_BRAND_URL="https://合作伙伴-商标注册页"
+  # 也可只设通用的 NEXT_PUBLIC_PARTNER_URL 作为两者的兜底
+  ```
+  ⚠️ 这是 `NEXT_PUBLIC_` **构建时**变量，改后需重新构建（`npm run deploy`）才生效；未配置时按钮为占位 `#`。
 - **进程**：`pm2 status` / `pm2 logs france-os` / `pm2 reload france-os`。
 - **数据源/合规**：见 [DATA_SOURCES.md](DATA_SOURCES.md)（含 BODACC 个人数据、Google News 商用等注意事项）。
 

@@ -260,7 +260,6 @@
   },
   "services": {
     "sectionLabel": "Value-added service",
-    "cost": "Est. cost",
     "time": "Est. time",
     "steps": "Steps",
     "ctaPartner": "Get help from a certified partner",
@@ -268,7 +267,6 @@
     "disclaimer": "General guidance only — not legal advice.",
     "companyTitle": "Set up a company in France",
     "companyIntro": "A practical overview of registering a French company (SAS / SARL …).",
-    "companyCost": "≈ €200–400 admin fees",
     "companyTime": "≈ 1–3 weeks",
     "companySteps": [
       "Choose a legal form (SAS/SASU, SARL/EURL…) and draft the articles of association",
@@ -280,7 +278,6 @@
     ],
     "brandTitle": "Register a trademark in France",
     "brandIntro": "A practical overview of protecting your brand via INPI (France) or EUIPO (EU-wide).",
-    "brandCost": "≈ €190 (1 class, INPI)",
     "brandTime": "≈ 4–6 months",
     "brandSteps": [
       "Run an availability / prior-rights search in the INPI database",
