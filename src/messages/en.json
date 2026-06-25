@@ -22,7 +22,8 @@
     "settings": "Settings",
     "admin": "Admin",
     "watchlist": "Watchlist",
-    "funding": "Funding"
+    "funding": "Funding",
+    "signals": "Funding signals"
   },
   "navGroup": {
     "overview": "Overview",
@@ -390,5 +391,15 @@
       "EQUITY": "Equity",
       "ADVISORY": "Advisory"
     }
+  },
+  "signals": {
+    "title": "Funding & investment signals",
+    "subtitle": "French companies that just raised capital — fresh budget means strong buying intent.",
+    "searchPlaceholder": "Filter by sector or company…",
+    "read": "Read",
+    "intent": "Intent",
+    "sampleData": "sample data",
+    "empty": "No recent funding signals found.",
+    "disclaimer": "Auto-extracted from live news headlines; amounts and company names are best-effort — verify on the source article."
   }
 }

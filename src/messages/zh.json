@@ -22,7 +22,8 @@
     "settings": "设置",
     "admin": "管理后台",
     "watchlist": "关注列表",
-    "funding": "扶持资金"
+    "funding": "扶持资金",
+    "signals": "融资动向"
   },
   "navGroup": {
     "overview": "概览",
@@ -390,5 +391,15 @@
       "EQUITY": "股权投资",
       "ADVISORY": "咨询辅导"
     }
+  },
+  "signals": {
+    "title": "融资与投资动向",
+    "subtitle": "刚完成融资的法国公司——新预算意味着强烈的采购意向。",
+    "searchPlaceholder": "按行业或公司筛选…",
+    "read": "阅读",
+    "intent": "意向",
+    "sampleData": "示例数据",
+    "empty": "未发现近期融资动向。",
+    "disclaimer": "自动从实时新闻标题中提取；金额与公司名为尽力解析，请以来源文章为准。"
   }
 }

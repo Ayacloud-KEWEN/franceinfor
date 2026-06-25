@@ -96,6 +96,12 @@ prisma/                        schema + seed
 - **真实源切换**：`lib/sources/aides.ts` —— 配 `AIDES_API_TOKEN`（Aides-territoires，免费申请）即叠加实时地方补贴；未配/出错回退内置库。`/api/aides` 鉴权 + 配额（module='aides'）。
 - **待办**：申请 token 启用实时；补贴卡加 SaveButton（type 需扩展或复用 OPPORTUNITY）；评分权重微调（现多项满分 100）。
 
+## 📈 融资动向（本次新增）
+- **页面** `/[locale]/signals`（导航 opportunities 组）：列出刚融资的法国公司作为强购买信号，进页自动加载。组件 `components/signals/funding-signals.tsx`。
+- **数据**：`lib/sources/funding-signals.ts` 复用 `fetchFranceNews`（Google News，免密钥）按融资关键词抓取，正则解析 **公司名/金额/轮次**，按规模+时效打意向分。出错/空 → `FUNDING_SIGNALS_MOCK`。`/api/signals` 鉴权 + 配额（module='signals'）。
+- 解析已用真实新闻验证（~11/14 命中公司或金额）；每条可一键收藏（OPPORTUNITY，refId=`funding:<id>`）。
+- **待办**：接 Dealroom/data.gouv 结构化源；信号并入 intent 页；公司名解析仍有少量噪音（人名/榜单类）。
+
 ## 当前状态小结（截至本次会话）
 - 15 个模块均已上线，多数接真实数据（企业/招标 BOAMP+TED/市场 Eurostat/新闻 Google News/信用财务+法律 BODACC/机会发现/买家意向/网络/事件）。
 - 翻译：新闻/Dashboard/意向标题按界面语言用 LLM 翻译（JSON 数组解析，已修复对 DeepSeek 的兼容）。

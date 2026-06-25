@@ -22,7 +22,8 @@
     "settings": "Paramètres",
     "admin": "Admin",
     "watchlist": "Suivi",
-    "funding": "Financements"
+    "funding": "Financements",
+    "signals": "Signaux de levées"
   },
   "navGroup": {
     "overview": "Vue d'ensemble",
@@ -390,5 +391,15 @@
       "EQUITY": "Fonds propres",
       "ADVISORY": "Accompagnement"
     }
+  },
+  "signals": {
+    "title": "Signaux de levées & investissements",
+    "subtitle": "Les entreprises françaises qui viennent de lever des fonds — un budget frais = forte intention d’achat.",
+    "searchPlaceholder": "Filtrer par secteur ou entreprise…",
+    "read": "Lire",
+    "intent": "Intention",
+    "sampleData": "données d’exemple",
+    "empty": "Aucun signal de levée récent.",
+    "disclaimer": "Extrait automatiquement des titres d’actualité ; montants et noms d’entreprise indicatifs — vérifiez l’article source."
   }
 }
