@@ -1,0 +1,40 @@
+name: Deploy to VPS
+
+# 推送到 main(或手动触发)后，SSH 到 VPS 拉取最新代码、构建并零停机重启。
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script_stop: true
+          script: |
+            set -e
+            # 让非交互 SSH 也能找到 node/npm/pm2（nvm 或系统安装都兼容）
+            export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+            cd /home/france-infor/htdocs/infr.europeanaialliance.org
+            echo "→ git pull"
+            git pull --ff-only
+            echo "→ npm ci"
+            npm ci --include=dev
+            echo "→ prisma db push"
+            npx prisma db push
+            echo "→ build"
+            npm run build
+            echo "→ pm2 reload"
+            pm2 reload ecosystem.config.cjs
+            echo "✓ deployed"

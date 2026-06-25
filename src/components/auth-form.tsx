@@ -24,11 +24,11 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
       )}
       <div>
         <label className="mb-1 block text-sm font-medium">{t('email')}</label>
-        <Input name="email" type="email" required autoComplete="email" defaultValue={mode === 'login' ? 'demo@france-os.com' : ''} />
+        <Input name="email" type="email" required autoComplete="email" />
       </div>
       <div>
         <label className="mb-1 block text-sm font-medium">{t('password')}</label>
-        <Input name="password" type="password" required autoComplete={mode === 'login' ? 'current-password' : 'new-password'} defaultValue={mode === 'login' ? 'demo1234' : ''} />
+        <Input name="password" type="password" required autoComplete={mode === 'login' ? 'current-password' : 'new-password'} />
       </div>
 
       {state?.error && (

@@ -81,8 +81,7 @@
     "signInTitle": "Sign in to your account",
     "signUpTitle": "Create your account",
     "noAccount": "Don't have an account?",
-    "haveAccount": "Already have an account?",
-    "demoHint": "Demo: demo@france-os.com / demo1234"
+    "haveAccount": "Already have an account?"
   },
   "dashboard": {
     "goodMorning": "Good morning",

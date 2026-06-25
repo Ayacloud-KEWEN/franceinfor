@@ -81,8 +81,7 @@
     "signInTitle": "Connectez-vous à votre compte",
     "signUpTitle": "Créez votre compte",
     "noAccount": "Pas encore de compte ?",
-    "haveAccount": "Vous avez déjà un compte ?",
-    "demoHint": "Démo : demo@france-os.com / demo1234"
+    "haveAccount": "Vous avez déjà un compte ?"
   },
   "dashboard": {
     "goodMorning": "Bonjour",

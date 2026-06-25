@@ -5,8 +5,7 @@ export default async function LoginPage() {
   const t = await getTranslations('auth');
   return (
     <div>
-      <h2 className="mb-1 text-lg font-semibold">{t('signInTitle')}</h2>
-      <p className="mb-6 text-sm text-muted-foreground">{t('demoHint')}</p>
+      <h2 className="mb-6 text-lg font-semibold">{t('signInTitle')}</h2>
       <AuthForm mode="login" />
     </div>
   );

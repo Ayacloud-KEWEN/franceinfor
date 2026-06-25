@@ -81,8 +81,7 @@
     "signInTitle": "登录您的账户",
     "signUpTitle": "创建您的账户",
     "noAccount": "还没有账户？",
-    "haveAccount": "已有账户？",
-    "demoHint": "演示账户：demo@france-os.com / demo1234"
+    "haveAccount": "已有账户？"
   },
   "dashboard": {
     "goodMorning": "早上好",
