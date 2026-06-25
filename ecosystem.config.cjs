@@ -10,7 +10,7 @@ module.exports = {
     {
       name: 'france-os',
       script: 'node_modules/next/dist/bin/next',
-      args: 'start -p 3001',
+      args: 'start -p 3011',
       cwd: __dirname,
       interpreter: 'node',
       instances: 1,
@@ -19,7 +19,7 @@ module.exports = {
       max_memory_restart: '600M',
       env: {
         NODE_ENV: 'production',
-        PORT: '3001',
+        PORT: '3011',
       },
     },
   ],
