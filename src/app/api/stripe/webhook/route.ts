@@ -3,6 +3,15 @@ import { prisma } from '@/lib/prisma';
 import { stripe, planForPrice } from '@/lib/stripe';
 import type Stripe from 'stripe';
 
+// Period end moved from Subscription top-level to subscription items in the
+// 2025-03-31 (basil) API version. Read it defensively from either location.
+function periodEnd(sub: Stripe.Subscription): Date | undefined {
+  const ts =
+    (sub as unknown as { current_period_end?: number }).current_period_end ??
+    sub.items?.data?.[0]?.current_period_end;
+  return ts ? new Date(ts * 1000) : undefined;
+}
+
 // Stripe sends raw JSON; we must verify the signature against the raw body.
 export async function POST(req: NextRequest) {
   const secret = process.env.STRIPE_WEBHOOK_SECRET || '';
@@ -37,7 +46,7 @@ export async function POST(req: NextRequest) {
               stripeCustomerId: customerId ?? undefined,
               stripeSubscriptionId: subId,
               subscriptionStatus: sub.status,
-              currentPeriodEnd: new Date(sub.current_period_end * 1000),
+              currentPeriodEnd: periodEnd(sub),
             },
           });
         }
@@ -57,7 +66,7 @@ export async function POST(req: NextRequest) {
             data: {
               plan,
               subscriptionStatus: deleted ? 'canceled' : sub.status,
-              currentPeriodEnd: new Date(sub.current_period_end * 1000),
+              currentPeriodEnd: periodEnd(sub),
             },
           });
         }
