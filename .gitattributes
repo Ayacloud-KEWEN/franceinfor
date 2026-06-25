@@ -1,0 +1,11 @@
+# Normalize line endings: LF in the repo so Linux deploys are clean.
+* text=auto eol=lf
+
+# Windows-only scripts keep CRLF
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Binaries (none yet, but safe defaults)
+*.png binary
+*.jpg binary
+*.ico binary

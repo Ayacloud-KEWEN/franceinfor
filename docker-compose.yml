@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: france_os_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: france
+      POSTGRES_PASSWORD: france_dev_pwd
+      POSTGRES_DB: france_os
+    ports:
+      - "5436:5432"
+    volumes:
+      - france_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U france -d france_os"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: france_os_redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - france_redis_data:/data
+
+volumes:
+  france_pg_data:
+  france_redis_data:

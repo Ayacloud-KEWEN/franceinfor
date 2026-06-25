@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --primary: 222 72% 30%;            /* Deep Blue */
+    --primary-foreground: 210 40% 98%;
+    --secondary: 215 19% 35%;          /* Slate Gray */
+    --secondary-foreground: 210 40% 98%;
+    --accent: 160 84% 39%;             /* Emerald Green */
+    --accent-foreground: 0 0% 100%;
+    --muted: 210 30% 94%;
+    --muted-foreground: 215 16% 47%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214 25% 88%;
+    --input: 214 25% 88%;
+    --ring: 222 72% 30%;
+    --radius: 0.6rem;
+  }
+
+  .dark {
+    --background: 222 47% 7%;
+    --foreground: 210 40% 96%;
+    --card: 222 40% 11%;
+    --card-foreground: 210 40% 96%;
+    --primary: 213 80% 60%;            /* Brighter blue for dark */
+    --primary-foreground: 222 47% 9%;
+    --secondary: 215 20% 65%;
+    --secondary-foreground: 222 47% 9%;
+    --accent: 160 70% 45%;
+    --accent-foreground: 222 47% 9%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --destructive: 0 63% 50%;
+    --destructive-foreground: 210 40% 96%;
+    --border: 217 33% 20%;
+    --input: 217 33% 22%;
+    --ring: 213 80% 60%;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+  }
+}
+
+@layer utilities {
+  .gradient-hero {
+    background-image: radial-gradient(
+        1200px 400px at 0% 0%,
+        hsl(var(--primary) / 0.18),
+        transparent 60%
+      ),
+      radial-gradient(900px 400px at 100% 0%, hsl(var(--accent) / 0.12), transparent 55%);
+  }
+}

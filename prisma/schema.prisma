@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Plan {
+  FREE
+  PROFESSIONAL
+  BUSINESS
+  ENTERPRISE
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  role         Role     @default(USER)
+  plan         Plan     @default(FREE)
+  locale       String   @default("en")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions     Session[]
+  searches     SearchLog[]
+  savedItems   SavedItem[]
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// Usage tracking for quota enforcement (Free = 10 searches/day)
+model SearchLog {
+  id        String   @id @default(cuid())
+  userId    String
+  module    String
+  query     String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
+
+enum ItemType {
+  COMPANY
+  TENDER
+  OPPORTUNITY
+  CONTACT
+}
+
+// Bookmarked/saved entities across modules
+model SavedItem {
+  id        String   @id @default(cuid())
+  userId    String
+  type      ItemType
+  refId     String
+  label     String
+  data      Json
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, type, refId])
+  @@index([userId])
+}
