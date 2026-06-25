@@ -42,21 +42,30 @@ prisma/                        schema + seed
 - 服务器：root，目录 `/home/france-infor/htdocs/infr.europeanaialliance.org`，PM2 进程 `france-os`，端口 **3011**。
 - 改完代码本地 `git push` 即可；想手动：仓库 Actions → Run workflow。
 
-## 🔧 待激活：Stripe 真实订阅（代码已就绪，需配置才生效）
-代码框架已完成（结账/门户/Webhook + 设置页升级按钮）。**未配密钥时优雅降级**（设置页显示「未开通在线支付」）。激活步骤：
-1. Stripe 后台建 2 个**循环价格**：Professional €99/月、Business €299/月，记下 `price_xxx`。
-2. Stripe 后台建 **Webhook**：`https://infr.europeanaialliance.org/api/stripe/webhook`，勾选事件
-   `checkout.session.completed`、`customer.subscription.updated`、`customer.subscription.deleted`，记下签名密钥。
-3. 服务器 `.env` 填：
-   ```env
-   STRIPE_SECRET_KEY="sk_live_..."
-   STRIPE_WEBHOOK_SECRET="whsec_..."
-   STRIPE_PRICE_PROFESSIONAL="price_..."
-   STRIPE_PRICE_BUSINESS="price_..."
-   ```
-4. `pm2 restart france-os`（Stripe 变量是运行时读取，非 `NEXT_PUBLIC_`，**重启即可，无需重新构建**）。
-5. 设置页应出现「升级」按钮；走一遍 test 模式结账验证。
-- 计费逻辑：Webhook 根据 priceId 映射到 `Plan` 并更新 `User.plan`（见 `src/lib/stripe.ts`、`src/app/api/stripe/webhook/route.ts`）。配额按 `src/lib/plans.ts`。
+## ✅ 已上线：Stripe 真实订阅（Live 已激活并验证）
+全链路跑通：结账→支付→Webhook 入账→升级 `User.plan`→退订回落 FREE。本地 Test 模式 + 线上 Live 均已验证。**未配密钥时优雅降级**（设置页显示「未开通在线支付」）。
+- 计费逻辑：Webhook 按 priceId 映射 `Plan` 更新 `User.plan`（`src/lib/stripe.ts`、`src/app/api/stripe/webhook/route.ts`）。配额见 `src/lib/plans.ts`。
+- 服务器 `.env` 需要 4 个变量（**运行时读取，改完 `pm2 restart` 即可，无需 build**）：
+  ```env
+  STRIPE_SECRET_KEY="sk_live_..."      # 必须 sk_live_ 开头（不是 mk_/pk_）
+  STRIPE_WEBHOOK_SECRET="whsec_..."     # Live destination 的签名密钥
+  STRIPE_PRICE_PROFESSIONAL="price_..." # Live 模式重建的（Test 的在 Live 无效）
+  STRIPE_PRICE_BUSINESS="price_..."
+  ```
+  另需 `NEXT_PUBLIC_APP_URL="https://infr.europeanaialliance.org"`（**构建时注入**，改了要重新 build）。
+
+### 本地 Test 模式怎么跑（复现验证）
+- `.env.local`（git 忽略）填 `sk_test_` + 两个 test `price_` + `whsec_`。
+- Stripe CLI（`~/stripe-cli/stripe.exe`）转发 Webhook 到本地：
+  `stripe.exe listen --api-key sk_test_... --forward-to localhost:3000/api/stripe/webhook`（`--print-secret` 拿 whsec，免浏览器配对）。
+- 测试卡 `4242 4242 4242 4242`，任意未来日期 + 任意 CVC。
+- 退订验证：`curl -X DELETE https://api.stripe.com/v1/subscriptions/<sub_id> -u sk_test_...:` → 应触发 `customer.subscription.deleted` → plan 回 FREE。
+
+### 踩坑记录（重要）
+- **`current_period_end` 字段位置**：账户 API 版本 ≥ basil(2025-03) 后该字段从订阅顶层移到 `items`。Webhook 用 `periodEnd()` 兜底读两处；且 SDK v17(acacia) 类型里 `SubscriptionItem` 没有该字段，访问需 `as unknown` cast，否则 `next build` 类型检查会挂。
+- **密钥前缀**：Live secret key 必须 `sk_live_` 开头。曾误填 `mk_` 开头的值 → `StripeAuthenticationError 401` → 结账 500。
+- **零成本验证**：Stripe 建 100% off 优惠码（coupon + promotion code），结账页输入 → €0 下单走完真实 Live 链路。注意：€0 不产生 Payment/Transaction 记录（正常），看 Subscriptions + Webhook 200 即算成功。
+- **改 `STRIPE_*` 后服务器起不来 `Could not find a production build`**：通常是某次自动部署的 `next build` 失败（如类型错误）导致 `.next` 缺失，与 `.env` 无关。手动 `git pull && npm run build && pm2 restart france-os` 修复，并看 `npm run build` 自身输出而非 `pm2 logs` 的循环报错。
 
 ## 当前状态小结（截至本次会话）
 - 15 个模块均已上线，多数接真实数据（企业/招标 BOAMP+TED/市场 Eurostat/新闻 Google News/信用财务+法律 BODACC/机会发现/买家意向/网络/事件）。
@@ -66,6 +75,6 @@ prisma/                        schema + seed
 - Dashboard 移动端已优化。
 - 演示账号已删；登录页无 demo 信息。
 
-## 下一步建议（来自 ROADMAP 第一波）
-增值服务**留资闭环** → **关注列表/轻量 CRM** → **订阅提醒+每日邮件** → 激活 Stripe。
+## 下一步建议（来自 ROADMAP 第一波；Stripe 已上线）
+增值服务**留资闭环**（最快变现点）→ **关注列表/轻量 CRM** → **订阅提醒+每日邮件**。
 差异化大招：**补贴/扶持资金匹配**（les-aides.fr / Bpifrance / France 2030）。
