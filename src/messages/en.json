@@ -1,7 +1,9 @@
 {
   "brand": {
-    "name": "France Business Development OS",
-    "short": "France OS"
+    "name": "FranceGo",
+    "short": "FranceGo",
+    "tagline": "Your gateway to the French market",
+    "subtagline": "AI-powered market intelligence, opportunities and funding to grow your business in France."
   },
   "nav": {
     "dashboard": "Dashboard",

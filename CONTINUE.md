@@ -3,8 +3,10 @@
 新开会话后，先读这份文件即可快速接手继续开发。
 
 ## 这是什么
-**France Business Development OS** —— 面向出海客户的法国市场拓展 SaaS（商用）。
+**FranceGo**（原 France Business Development OS）—— 面向出海客户的法国市场拓展 SaaS（商用）。
 线上：**https://infr.europeanaialliance.org** · 仓库：`Ayacloud-KEWEN/franceinfor`（main 分支自动部署）。
+> 品牌名 = **FranceGo**（在 `messages/*.json` 的 `brand` 命名空间 + 各 logo）。**基础设施标识不要改**：pm2 进程 `france-os`、仓库 `franceinfor`、目录、数据库名都保持原样。
+> 资源在 `public/`：`logo.png`（侧栏/登录/favicon 来源）、`login.png`（登录页左侧视觉图）、`favicon.ico`/`icon-*`/`apple-touch-icon.png`（`layout.tsx` 的 `metadata.icons`）。
 
 ## 先读这几份文档
 - [README.md](README.md) — 概览 / 技术栈 / 本地运行 / AI 切换

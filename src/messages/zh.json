@@ -1,7 +1,9 @@
 {
   "brand": {
-    "name": "法国商业拓展操作系统",
-    "short": "France OS"
+    "name": "FranceGo",
+    "short": "FranceGo",
+    "tagline": "您进入法国市场的门户",
+    "subtagline": "由 AI 驱动的市场情报、商机与扶持资金，助您在法国拓展业务。"
   },
   "nav": {
     "dashboard": "仪表盘",

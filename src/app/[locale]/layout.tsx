@@ -7,9 +7,17 @@ import { Providers } from '@/components/providers';
 import '../globals.css';
 
 export const metadata: Metadata = {
-  title: 'France Business Development OS',
+  title: 'FranceGo — Your gateway to the French market',
   description:
-    'AI-powered Business Development and Market Entry Platform for France.',
+    'AI-powered market intelligence, opportunities and funding to grow your business in France.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon-192x192.png', type: 'image/png', sizes: '192x192' },
+      { url: '/icon-512x512.png', type: 'image/png', sizes: '512x512' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
 };
 
 export function generateStaticParams() {

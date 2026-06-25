@@ -73,9 +73,8 @@ export function Sidebar({ onNavigate, isAdmin }: { onNavigate?: () => void; isAd
   return (
     <nav className="flex h-full w-64 flex-col overflow-y-auto border-r border-border bg-card">
       <div className="flex items-center gap-2 px-5 py-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">
-          F
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.png" alt={tb('name')} className="h-9 w-9 rounded-lg object-contain" />
         <div className="leading-tight">
           <div className="text-sm font-semibold">{tb('short')}</div>
           <div className="text-[11px] text-muted-foreground">France Market Entry</div>

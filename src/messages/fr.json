@@ -1,7 +1,9 @@
 {
   "brand": {
-    "name": "France Business Development OS",
-    "short": "France OS"
+    "name": "FranceGo",
+    "short": "FranceGo",
+    "tagline": "Votre porte d’entrée sur le marché français",
+    "subtagline": "Intelligence de marché, opportunités et financements propulsés par l’IA pour développer votre activité en France."
   },
   "nav": {
     "dashboard": "Tableau de bord",
