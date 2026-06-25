@@ -18,7 +18,8 @@
     "reports": "Rapports",
     "copilot": "Copilote",
     "settings": "Paramètres",
-    "admin": "Admin"
+    "admin": "Admin",
+    "watchlist": "Suivi"
   },
   "navGroup": {
     "overview": "Vue d'ensemble",
@@ -323,6 +324,29 @@
       "submit": "Être rappelé",
       "thanks": "Merci ! Nous vous recontactons rapidement.",
       "error": "Une erreur est survenue, réessayez."
+    }
+  },
+  "watchlist": {
+    "title": "Liste de suivi",
+    "subtitle": "Vos entreprises et opportunités enregistrées — un pipeline CRM léger.",
+    "empty": "Rien d’enregistré. Ajoutez des entreprises depuis la recherche ou leur fiche pour les suivre ici.",
+    "save": "Enregistrer",
+    "saved": "Enregistré",
+    "remove": "Retirer",
+    "open": "Ouvrir",
+    "notePlaceholder": "Ajouter une note…",
+    "stage": {
+      "LEAD": "Piste",
+      "CONTACTED": "Contacté",
+      "NEGOTIATING": "En négociation",
+      "WON": "Gagné",
+      "LOST": "Perdu"
+    },
+    "type": {
+      "COMPANY": "Entreprise",
+      "TENDER": "Appel d’offres",
+      "OPPORTUNITY": "Opportunité",
+      "CONTACT": "Contact"
     }
   }
 }

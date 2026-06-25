@@ -18,7 +18,8 @@
     "reports": "Reports",
     "copilot": "Copilot",
     "settings": "Settings",
-    "admin": "Admin"
+    "admin": "Admin",
+    "watchlist": "Watchlist"
   },
   "navGroup": {
     "overview": "Overview",
@@ -323,6 +324,29 @@
       "submit": "Request a callback",
       "thanks": "Thanks! We’ll get back to you shortly.",
       "error": "Something went wrong, please retry."
+    }
+  },
+  "watchlist": {
+    "title": "Watchlist",
+    "subtitle": "Your saved companies & opportunities — a lightweight CRM pipeline.",
+    "empty": "Nothing saved yet. Bookmark companies from search or their profile to track them here.",
+    "save": "Save",
+    "saved": "Saved",
+    "remove": "Remove",
+    "open": "Open",
+    "notePlaceholder": "Add a note…",
+    "stage": {
+      "LEAD": "Lead",
+      "CONTACTED": "Contacted",
+      "NEGOTIATING": "Negotiating",
+      "WON": "Won",
+      "LOST": "Lost"
+    },
+    "type": {
+      "COMPANY": "Company",
+      "TENDER": "Tender",
+      "OPPORTUNITY": "Opportunity",
+      "CONTACT": "Contact"
     }
   }
 }

@@ -18,7 +18,8 @@
     "reports": "报告",
     "copilot": "智能助手",
     "settings": "设置",
-    "admin": "管理后台"
+    "admin": "管理后台",
+    "watchlist": "关注列表"
   },
   "navGroup": {
     "overview": "概览",
@@ -323,6 +324,29 @@
       "submit": "申请回电",
       "thanks": "已收到！我们会尽快联系您。",
       "error": "提交出错，请重试。"
+    }
+  },
+  "watchlist": {
+    "title": "关注列表",
+    "subtitle": "你收藏的企业与机会 —— 轻量 CRM 管道。",
+    "empty": "还没有收藏。在搜索结果或企业详情页点收藏，即可在这里跟进。",
+    "save": "收藏",
+    "saved": "已收藏",
+    "remove": "移除",
+    "open": "打开",
+    "notePlaceholder": "添加备注…",
+    "stage": {
+      "LEAD": "潜在",
+      "CONTACTED": "接触",
+      "NEGOTIATING": "商谈",
+      "WON": "赢单",
+      "LOST": "丢单"
+    },
+    "type": {
+      "COMPANY": "企业",
+      "TENDER": "招标",
+      "OPPORTUNITY": "机会",
+      "CONTACT": "联系人"
     }
   }
 }

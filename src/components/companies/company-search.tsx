@@ -10,6 +10,7 @@ import { ScorePill, Badge } from '@/components/ui/badge';
 import { Search, Loader2, ChevronDown, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link } from '@/i18n/routing';
+import { SaveButton } from '@/components/saved/save-button';
 import type { CompanyResult } from '@/lib/sources/recherche-entreprises';
 
 async function fetchCompanies(q: string): Promise<{ results: CompanyResult[]; total: number }> {
@@ -54,12 +55,20 @@ function Detail({ c }: { c: CompanyResult }) {
           </div>
         </div>
       )}
-      <Link
-        href={`/companies/${c.siren}`}
-        className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-      >
-        {t('viewProfile')} <ArrowRight size={12} />
-      </Link>
+      <div className="flex items-center justify-between gap-3">
+        <Link
+          href={`/companies/${c.siren}`}
+          className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+        >
+          {t('viewProfile')} <ArrowRight size={12} />
+        </Link>
+        <SaveButton
+          type="COMPANY"
+          refId={c.siren}
+          label={c.name}
+          data={{ city: c.city, industry: c.industry || c.nafCode, score: c.opportunityScore }}
+        />
+      </div>
     </div>
   );
 }

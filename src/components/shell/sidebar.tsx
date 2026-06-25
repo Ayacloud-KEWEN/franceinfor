@@ -19,6 +19,7 @@ import {
   Bot,
   Settings,
   ShieldAlert,
+  Bookmark,
 } from 'lucide-react';
 
 type Item = { href: string; key: string; Icon: typeof LayoutDashboard };
@@ -26,7 +27,10 @@ type Item = { href: string; key: string; Icon: typeof LayoutDashboard };
 const groups: { group: string; items: Item[] }[] = [
   {
     group: 'overview',
-    items: [{ href: '/dashboard', key: 'dashboard', Icon: LayoutDashboard }],
+    items: [
+      { href: '/dashboard', key: 'dashboard', Icon: LayoutDashboard },
+      { href: '/watchlist', key: 'watchlist', Icon: Bookmark },
+    ],
   },
   {
     group: 'intelligence',

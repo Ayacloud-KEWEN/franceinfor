@@ -122,7 +122,16 @@ model Event {
   @@index([createdAt])
 }
 
-// Bookmarked/saved entities across modules
+// Lightweight CRM pipeline stages for saved/watched items.
+enum Stage {
+  LEAD
+  CONTACTED
+  NEGOTIATING
+  WON
+  LOST
+}
+
+// Bookmarked/saved entities across modules (the watchlist / light CRM).
 model SavedItem {
   id        String   @id @default(cuid())
   userId    String
@@ -130,9 +139,13 @@ model SavedItem {
   refId     String
   label     String
   data      Json
+  note      String?
+  stage     Stage    @default(LEAD)
+  tags      String[] @default([])
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, type, refId])
-  @@index([userId])
+  @@index([userId, stage])
 }
