@@ -19,7 +19,8 @@
     "copilot": "Copilote",
     "settings": "Paramètres",
     "admin": "Admin",
-    "watchlist": "Suivi"
+    "watchlist": "Suivi",
+    "funding": "Financements"
   },
   "navGroup": {
     "overview": "Vue d'ensemble",
@@ -347,6 +348,45 @@
       "TENDER": "Appel d’offres",
       "OPPORTUNITY": "Opportunité",
       "CONTACT": "Contact"
+    }
+  },
+  "funding": {
+    "title": "Financements & aides",
+    "subtitle": "Associez subventions, prêts, crédits d’impôt et dispositifs français (Bpifrance, France 2030, ADEME, CCI…) à votre profil.",
+    "sector": "Secteur / activité",
+    "region": "Région (optionnel)",
+    "run": "Trouver des aides",
+    "match": "Score",
+    "stagePlaceholder": "Stade de l’entreprise",
+    "needPlaceholder": "Besoin principal",
+    "sourceLive": "en direct · Aides-territoires + sélection",
+    "sourceCurated": "dispositifs nationaux sélectionnés",
+    "learnMore": "En savoir plus",
+    "disclaimer": "Correspondances indicatives selon les critères publics — vérifiez l’éligibilité sur chaque page officielle avant de candidater.",
+    "stage": {
+      "idea": "Idée / pré-création",
+      "startup": "Startup (<3 ans)",
+      "growth": "Croissance / scale-up",
+      "sme": "PME",
+      "established": "Établie"
+    },
+    "need": {
+      "innovation": "Innovation",
+      "rd": "R&D",
+      "hiring": "Recrutement",
+      "export": "Export",
+      "digital": "Numérique",
+      "transition": "Transition écologique",
+      "investment": "Investissement",
+      "financing": "Financement"
+    },
+    "type": {
+      "GRANT": "Subvention",
+      "LOAN": "Prêt",
+      "TAX_CREDIT": "Crédit d’impôt",
+      "GUARANTEE": "Garantie",
+      "EQUITY": "Fonds propres",
+      "ADVISORY": "Accompagnement"
     }
   }
 }

@@ -88,6 +88,12 @@ prisma/                        schema + seed
 - **留资 `/api/leads`**（公开）：加**蜜罐字段** `website`(填了即静默丢弃) + **限流**(IP 3 次/10 分、邮箱 3 次/时)。限流器 `src/lib/rate-limit.ts`（内存滑窗，单 pm2 进程够用）。
 - **仍建议**（未做）：登录失败限流；整站挂 **Cloudflare**(免费版含 rate limit + bot + DDoS，比写代码更划算)；`consumeSearch` 竞态(非原子，影响极小)。
 
+## 🏆 补贴/扶持资金匹配（差异化大招，本次新增）
+- **页面** `/[locale]/funding`（导航在 opportunities 组）：输入 行业/阶段/需求/地区 → 匹配法国扶持项目并按分排序。组件 `components/funding/funding-matcher.tsx`。
+- **数据**：`lib/data/subsidies.ts` 内置真实国家级项目库（France 2030、Bpifrance Bourse French Tech/Prêt Innovation/Garantie/Assurance Prospection、CIR、CII、JEI、ADEME、France Num、alternance、CCI les-aides、区域补贴）+ `matchSubsidies()` 确定性打分。
+- **真实源切换**：`lib/sources/aides.ts` —— 配 `AIDES_API_TOKEN`（Aides-territoires，免费申请）即叠加实时地方补贴；未配/出错回退内置库。`/api/aides` 鉴权 + 配额（module='aides'）。
+- **待办**：申请 token 启用实时；补贴卡加 SaveButton（type 需扩展或复用 OPPORTUNITY）；评分权重微调（现多项满分 100）。
+
 ## 当前状态小结（截至本次会话）
 - 15 个模块均已上线，多数接真实数据（企业/招标 BOAMP+TED/市场 Eurostat/新闻 Google News/信用财务+法律 BODACC/机会发现/买家意向/网络/事件）。
 - 翻译：新闻/Dashboard/意向标题按界面语言用 LLM 翻译（JSON 数组解析，已修复对 DeepSeek 的兼容）。

@@ -76,7 +76,10 @@
 | **INPI RNE** | 企业法定信息 | `registre-national-entreprises.inpi.fr/api` | 🔑 免费账号(登录取 token) | RNE 数据再利用允许，注意个人数据限制 | [inpi.ts](src/lib/sources/inpi.ts) |
 | **EUIPO** | 欧盟商标(M4) | `api.euipo.europa.eu/trademark-search` | 🔑 免费开发者账号(OAuth2) | 商标数据复用允许，需遵守 EUIPO 条款 | [euipo.ts](src/lib/sources/euipo.ts) |
 
+| **Aides-territoires** | 补贴/扶持资金匹配 | `aides-territoires.beta.gouv.fr/api/aids/` | 🔑 免费 token(注册申请，`X-AUTH-TOKEN`) | 政府公共服务，开放数据，允许复用需署名 | [aides.ts](src/lib/sources/aides.ts) |
+
 > 启用方式：在 `.env` 填入对应密钥即可自动切换为真实数据；未配置时品牌(M4)走 mock、企业财务以 recherche-entreprises 为准。
+> **补贴匹配**：未配 `AIDES_API_TOKEN` 时用内置真实国家级项目库(`src/lib/data/subsidies.ts`，France 2030 / Bpifrance / CIR / CII / JEI / ADEME / CCI 等公开稳定事实)按用户画像打分匹配；配 token 后叠加 Aides-territoires 实时地方性补贴。
 
 ---
 

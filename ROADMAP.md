@@ -19,7 +19,7 @@
 
 ## 第二波 — 数据深度与差异化(护城河)
 
-- ☐ **🏆 补贴与扶持资金匹配**(差异化大招)：接 les-aides.fr / aides-entreprises.fr / Bpifrance / France 2030，按行业/地区/规模匹配「能拿哪些法国/欧盟资助」。
+- ☑ **🏆 补贴与扶持资金匹配**(差异化大招)：`/funding` 按 行业/阶段/需求/地区 匹配法国扶持项目并打分。内置真实国家级项目库(France 2030、Bpifrance 各产品、CIR/CII、JEI、ADEME、CCI les-aides 等)；配 `AIDES_API_TOKEN` 即叠加 **Aides-territoires** 实时数据。代码：`lib/data/subsidies.ts`、`lib/sources/aides.ts`、`/api/aides`。**待办**：申请 Aides-territoires token 启用实时源、补贴可收藏进 watchlist、评分权重微调(目前多项满分)。
 - ☐ **招聘信号(真实)**：接 France Travail(原 Pôle emploi)招聘 API，把「大量招某岗位」变成真实扩张/买入信号。
 - ☐ **Pappers 接入**(客户端已就绪，填 key 即用)：信用的付款风险/成长等占位维度变真实；企业档案补多年财务、股东、受益人。
 - ☐ 融资/投资事件(Dealroom / data.gouv)增强机会发现与意向。

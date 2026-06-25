@@ -19,7 +19,8 @@
     "copilot": "智能助手",
     "settings": "设置",
     "admin": "管理后台",
-    "watchlist": "关注列表"
+    "watchlist": "关注列表",
+    "funding": "扶持资金"
   },
   "navGroup": {
     "overview": "概览",
@@ -347,6 +348,45 @@
       "TENDER": "招标",
       "OPPORTUNITY": "机会",
       "CONTACT": "联系人"
+    }
+  },
+  "funding": {
+    "title": "补贴与扶持资金",
+    "subtitle": "按你的情况匹配法国的补贴、贷款、税收抵免与扶持计划（Bpifrance、France 2030、ADEME、CCI 等）。",
+    "sector": "行业 / 业务",
+    "region": "地区（选填）",
+    "run": "查找资金",
+    "match": "匹配度",
+    "stagePlaceholder": "企业阶段",
+    "needPlaceholder": "主要需求",
+    "sourceLive": "实时 · Aides-territoires + 精选",
+    "sourceCurated": "精选国家级项目",
+    "learnMore": "了解详情",
+    "disclaimer": "根据公开项目标准的指示性匹配——申请前请在各官方页面核实资格。",
+    "stage": {
+      "idea": "创意 / 创立前",
+      "startup": "初创（<3年）",
+      "growth": "成长 / 扩张",
+      "sme": "中小企业",
+      "established": "成熟企业"
+    },
+    "need": {
+      "innovation": "创新",
+      "rd": "研发",
+      "hiring": "招聘",
+      "export": "出口",
+      "digital": "数字化",
+      "transition": "生态转型",
+      "investment": "投资",
+      "financing": "融资"
+    },
+    "type": {
+      "GRANT": "补贴",
+      "LOAN": "贷款",
+      "TAX_CREDIT": "税收抵免",
+      "GUARANTEE": "担保",
+      "EQUITY": "股权投资",
+      "ADVISORY": "咨询辅导"
     }
   }
 }

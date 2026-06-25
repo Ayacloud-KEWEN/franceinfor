@@ -20,6 +20,7 @@ import {
   Settings,
   ShieldAlert,
   Bookmark,
+  Landmark,
 } from 'lucide-react';
 
 type Item = { href: string; key: string; Icon: typeof LayoutDashboard };
@@ -47,6 +48,7 @@ const groups: { group: string; items: Item[] }[] = [
     items: [
       { href: '/opportunities', key: 'opportunities', Icon: Gavel },
       { href: '/discover', key: 'discover', Icon: Target },
+      { href: '/funding', key: 'funding', Icon: Landmark },
       { href: '/intent', key: 'intent', Icon: Flame },
       { href: '/events', key: 'events', Icon: CalendarDays },
     ],

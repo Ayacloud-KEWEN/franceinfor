@@ -19,7 +19,8 @@
     "copilot": "Copilot",
     "settings": "Settings",
     "admin": "Admin",
-    "watchlist": "Watchlist"
+    "watchlist": "Watchlist",
+    "funding": "Funding"
   },
   "navGroup": {
     "overview": "Overview",
@@ -347,6 +348,45 @@
       "TENDER": "Tender",
       "OPPORTUNITY": "Opportunity",
       "CONTACT": "Contact"
+    }
+  },
+  "funding": {
+    "title": "Funding & Subsidies",
+    "subtitle": "Match French grants, loans, tax credits & support programmes (Bpifrance, France 2030, ADEME, CCI…) to your profile.",
+    "sector": "Sector / activity",
+    "region": "Region (optional)",
+    "run": "Find funding",
+    "match": "Match",
+    "stagePlaceholder": "Company stage",
+    "needPlaceholder": "Main need",
+    "sourceLive": "live · Aides-territoires + curated",
+    "sourceCurated": "curated national programmes",
+    "learnMore": "Learn more",
+    "disclaimer": "Indicative matches based on public programme criteria — verify eligibility on each official page before applying.",
+    "stage": {
+      "idea": "Idea / pre-creation",
+      "startup": "Startup (<3y)",
+      "growth": "Growth / scale-up",
+      "sme": "SME",
+      "established": "Established"
+    },
+    "need": {
+      "innovation": "Innovation",
+      "rd": "R&D",
+      "hiring": "Hiring",
+      "export": "Export",
+      "digital": "Digital",
+      "transition": "Ecological transition",
+      "investment": "Investment",
+      "financing": "Financing"
+    },
+    "type": {
+      "GRANT": "Grant",
+      "LOAN": "Loan",
+      "TAX_CREDIT": "Tax credit",
+      "GUARANTEE": "Guarantee",
+      "EQUITY": "Equity",
+      "ADVISORY": "Advisory"
     }
   }
 }
