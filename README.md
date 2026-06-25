@@ -1,8 +1,12 @@
 # France Business Development OS（法国商业拓展操作系统）
 
 面向法国市场的 AI 驱动商业拓展与市场进入平台，依据 `project.agent.v2.md` 构建。
-当前为**基础版 v0.1**：完整架构 + 认证 + 多语言 + 设计系统 + 仪表盘，并已接入
-**真实、免密钥的法国公共数据 API**（企业注册库 + 公共招标）。
+**线上：https://infr.europeanaialliance.org**
+
+📚 **文档导航**
+- [USER_GUIDE.md](USER_GUIDE.md) — 详细功能与使用手册（各模块怎么用）
+- [DEPLOYMENT.md](DEPLOYMENT.md) — CloudPanel/VPS 部署 + 自动部署 + 踩坑记录
+- [DATA_SOURCES.md](DATA_SOURCES.md) — 数据接口清单、免费/密钥、许可证与商用限制
 
 ## 技术栈
 
