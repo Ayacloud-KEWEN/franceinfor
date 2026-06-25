@@ -22,7 +22,8 @@
 - ☑ **🏆 补贴与扶持资金匹配**(差异化大招)：`/funding` 按 行业/阶段/需求/地区 匹配法国扶持项目并打分。内置真实国家级项目库(France 2030、Bpifrance 各产品、CIR/CII、JEI、ADEME、CCI les-aides 等)；配 `AIDES_API_TOKEN` 即叠加 **Aides-territoires** 实时数据。代码：`lib/data/subsidies.ts`、`lib/sources/aides.ts`、`/api/aides`。**待办**：申请 Aides-territoires token 启用实时源、补贴可收藏进 watchlist、评分权重微调(目前多项满分)。
 - ☐ **招聘信号(真实)**：接 France Travail(原 Pôle emploi)招聘 API，把「大量招某岗位」变成真实扩张/买入信号。
 - ☐ **Pappers 接入**(客户端已就绪，填 key 即用)：信用的付款风险/成长等占位维度变真实；企业档案补多年财务、股东、受益人。
-- ☑ 融资/投资事件 → `/signals`「融资动向」：复用 Google News(免密钥)按融资关键词抓取，从标题解析 **公司/金额/轮次**，按融资规模+时效打「购买意向」分；可一键收藏进 watchlist。代码 `lib/sources/funding-signals.ts`、`/api/signals`。**待办**：接 Dealroom/data.gouv 结构化源提升准确度、把信号并入 intent 页。
+- ☑ 融资/投资事件 → `/signals`「融资动向」：Google News(免密钥)抓融资新闻，解析 **公司/金额/轮次**，并用 **data.gouv 企业注册库(recherche-entreprises)校验富化** → 附真实 SIREN(深链企业页)+行业，过滤榜单/人名噪音；按规模+时效打分。**已并入 buyers intent 页统一打分**(BOAMP 采购方 + 刚融资公司混合排序)。代码 `lib/sources/funding-signals.ts`、`/api/signals`、`lib/sources/intent.ts`。
+  > 注：data.gouv **无**结构化"融资轮次"数据集(Dealroom/Crunchbase 需付费)；改用官方企业注册库做结构化校验，既加 SIREN 又去噪。
 - ☐ **报告接 RAG + 引用来源**：把真实数据喂给模型并标注来源，报告数字不再是模型编的(商用关键)。
 
 ## 第三波 — 出海专属价值

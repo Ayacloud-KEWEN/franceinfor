@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge, ScorePill } from '@/components/ui/badge';
 import { SaveButton } from '@/components/saved/save-button';
+import { Link } from '@/i18n/routing';
 import { Search, Loader2, ExternalLink, TrendingUp } from 'lucide-react';
 import type { FundingSignal } from '@/lib/sources/funding-signals';
 
@@ -70,9 +71,14 @@ export function FundingSignals() {
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
                       <TrendingUp size={15} className="shrink-0 text-accent" />
-                      {s.company && <span className="font-semibold">{s.company}</span>}
+                      {s.company && (s.siren ? (
+                        <Link href={`/companies/${s.siren}`} className="font-semibold hover:text-primary hover:underline">{s.company}</Link>
+                      ) : (
+                        <span className="font-semibold">{s.company}</span>
+                      ))}
                       {s.amount && <Badge tone="accent">{s.amount}</Badge>}
                       {s.round && <Badge tone="primary">{s.round}</Badge>}
+                      {s.industry && <span className="text-xs text-muted-foreground">{s.industry}</span>}
                     </div>
                     <p className="mt-1 text-sm text-muted-foreground">{s.title}</p>
                     <div className="mt-1.5 flex items-center gap-3 text-xs text-muted-foreground">

@@ -2,6 +2,7 @@
 // definition, actively purchasing — the strongest concrete buying signal.
 // Aggregates recent BOAMP tenders by buyer. Falls back to mock on error.
 import { searchTenders } from './boamp';
+import { fundingIntent } from './funding-signals';
 import { INTENT_COMPANIES, type IntentCompany } from '../data/modules';
 import { seededScore } from '../utils';
 
@@ -27,27 +28,38 @@ export async function buyingIntentReal(query = '', limit = 100): Promise<IntentC
     byBuyer.set(buyer, entry);
   }
 
-  const items: IntentCompany[] = [...byBuyer.entries()]
-    .map(([buyer, info]) => {
-      const count = info.titles.length;
-      // Intent grows with the number of live tenders.
-      const intentScore = Math.min(98, 68 + count * 6);
-      // Urgency from the nearest deadline (sooner = higher).
-      const urgencyScore =
-        info.soonest == null ? 60 : Math.max(40, Math.min(98, 100 - info.soonest));
-      return {
-        id: buyer.slice(0, 40),
-        name: buyer,
-        industry: info.region ? `Public sector · ${info.region}` : 'Public procurement',
-        signals: info.titles.slice(0, 2).map((t) => `Open tender: ${t.slice(0, 70)}`),
-        intentScore,
-        urgencyScore,
-        salesScore: seededScore(buyer + 'sales', 55, 95),
-        action: 'Review the open tender(s) and engage the buyer’s procurement team',
-      } satisfies IntentCompany;
-    })
+  const tenderItems: IntentCompany[] = [...byBuyer.entries()].map(([buyer, info]) => {
+    const count = info.titles.length;
+    // Intent grows with the number of live tenders.
+    const intentScore = Math.min(98, 68 + count * 6);
+    // Urgency from the nearest deadline (sooner = higher).
+    const urgencyScore =
+      info.soonest == null ? 60 : Math.max(40, Math.min(98, 100 - info.soonest));
+    return {
+      id: buyer.slice(0, 40),
+      name: buyer,
+      industry: info.region ? `Public sector · ${info.region}` : 'Public procurement',
+      signals: info.titles.slice(0, 2).map((t) => `Open tender: ${t.slice(0, 70)}`),
+      intentScore,
+      urgencyScore,
+      salesScore: seededScore(buyer + 'sales', 55, 95),
+      action: 'Review the open tender(s) and engage the buyer’s procurement team',
+    } satisfies IntentCompany;
+  });
+
+  // Merge in freshly-funded companies (private-sector buying intent), so the
+  // page blends public procurement signals with private budget signals. Both
+  // carry intentScore on the same 0–100 scale, so we just sort together.
+  let fundItems: IntentCompany[] = [];
+  try {
+    fundItems = await fundingIntent(8);
+  } catch {
+    fundItems = [];
+  }
+
+  const items = [...tenderItems, ...fundItems]
     .sort((a, b) => b.intentScore - a.intentScore)
-    .slice(0, 24);
+    .slice(0, 30);
 
   if (!items.length) return INTENT_COMPANIES;
   return items;

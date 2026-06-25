@@ -99,8 +99,10 @@ prisma/                        schema + seed
 ## 📈 融资动向（本次新增）
 - **页面** `/[locale]/signals`（导航 opportunities 组）：列出刚融资的法国公司作为强购买信号，进页自动加载。组件 `components/signals/funding-signals.tsx`。
 - **数据**：`lib/sources/funding-signals.ts` 复用 `fetchFranceNews`（Google News，免密钥）按融资关键词抓取，正则解析 **公司名/金额/轮次**，按规模+时效打意向分。出错/空 → `FUNDING_SIGNALS_MOCK`。`/api/signals` 鉴权 + 配额（module='signals'）。
-- 解析已用真实新闻验证（~11/14 命中公司或金额）；每条可一键收藏（OPPORTUNITY，refId=`funding:<id>`）。
-- **待办**：接 Dealroom/data.gouv 结构化源；信号并入 intent 页；公司名解析仍有少量噪音（人名/榜单类）。
+- **结构化校验/富化**：解析出的公司名打 **recherche-entreprises（data.gouv 官方注册库）** 做词边界匹配 → 命中则附真实 **SIREN**(深链 `/companies/[siren]`)+规范名+行业；过滤榜单(`LISTICLE` 正则)、人名(无 SIREN 降级)。注册库调用有 60s 缓存、限并发 4。
+  > data.gouv **无**结构化"融资轮次"数据集(实测 0 结果；Dealroom/Crunchbase 付费)，故用注册库校验代替。
+- **已并入 intent**：`lib/sources/intent.ts#buyingIntentReal` 把 `fundingIntent(8)` 的融资公司与 BOAMP 采购方**合并、按 intentScore 统一排序**。
+- 真实验证：榜单过滤 3/16、SIREN 解析 6/13、人名(Yann LeCun)正确无 SIREN；每条可收藏（OPPORTUNITY，refId=`funding:<id>`）。
 
 ## 当前状态小结（截至本次会话）
 - 15 个模块均已上线，多数接真实数据（企业/招标 BOAMP+TED/市场 Eurostat/新闻 Google News/信用财务+法律 BODACC/机会发现/买家意向/网络/事件）。
