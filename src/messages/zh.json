@@ -1,5 +1,8 @@
 {
-  "brand": { "name": "法国商业拓展操作系统", "short": "France OS" },
+  "brand": {
+    "name": "法国商业拓展操作系统",
+    "short": "France OS"
+  },
   "nav": {
     "dashboard": "仪表盘",
     "markets": "市场",
@@ -14,13 +17,15 @@
     "network": "人脉网络",
     "reports": "报告",
     "copilot": "智能助手",
-    "settings": "设置"
+    "settings": "设置",
+    "admin": "管理后台"
   },
   "navGroup": {
     "overview": "概览",
     "intelligence": "情报",
     "opportunities": "商机",
-    "engage": "触达"
+    "engage": "触达",
+    "admin": "管理"
   },
   "modules": {
     "discoverTitle": "机会发现引擎",
@@ -308,6 +313,16 @@
       "由商标局进行形式与实质审查",
       "公示 + 2 个月异议期",
       "完成注册——保护期 10 年，可续展"
-    ]
+    ],
+    "lead": {
+      "title": "想让我们代办？留下您的信息",
+      "name": "您的姓名",
+      "email": "邮箱",
+      "company": "公司（选填）",
+      "message": "您的需求？（选填）",
+      "submit": "申请回电",
+      "thanks": "已收到！我们会尽快联系您。",
+      "error": "提交出错，请重试。"
+    }
   }
 }

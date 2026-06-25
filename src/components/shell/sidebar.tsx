@@ -18,6 +18,7 @@ import {
   FileText,
   Bot,
   Settings,
+  ShieldAlert,
 } from 'lucide-react';
 
 type Item = { href: string; key: string; Icon: typeof LayoutDashboard };
@@ -57,7 +58,7 @@ const groups: { group: string; items: Item[] }[] = [
   },
 ];
 
-export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
+export function Sidebar({ onNavigate, isAdmin }: { onNavigate?: () => void; isAdmin?: boolean }) {
   const t = useTranslations('nav');
   const tg = useTranslations('navGroup');
   const tb = useTranslations('brand');
@@ -104,6 +105,27 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
             </div>
           </div>
         ))}
+
+        {isAdmin && (
+          <div>
+            <div className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+              {tg('admin')}
+            </div>
+            <Link
+              href="/admin"
+              onClick={onNavigate}
+              className={cn(
+                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                pathname === '/admin' || pathname.startsWith('/admin/')
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+              )}
+            >
+              <ShieldAlert size={17} className="shrink-0" />
+              {t('admin')}
+            </Link>
+          </div>
+        )}
       </div>
 
       <div className="px-5 py-4 text-[11px] text-muted-foreground">v0.1 · Foundation build</div>

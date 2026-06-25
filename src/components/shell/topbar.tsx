@@ -15,7 +15,7 @@ const locales = [
   { code: 'zh', label: '中文' },
 ];
 
-export function Topbar({ userName }: { userName: string }) {
+export function Topbar({ userName, isAdmin }: { userName: string; isAdmin?: boolean }) {
   const { theme, setTheme } = useTheme();
   const locale = useLocale();
   const router = useRouter();
@@ -78,7 +78,7 @@ export function Topbar({ userName }: { userName: string }) {
             onClick={() => setMobileOpen(false)}
           />
           <div className="absolute left-0 top-0 h-full">
-            <Sidebar onNavigate={() => setMobileOpen(false)} />
+            <Sidebar onNavigate={() => setMobileOpen(false)} isAdmin={isAdmin} />
           </div>
         </div>
       )}

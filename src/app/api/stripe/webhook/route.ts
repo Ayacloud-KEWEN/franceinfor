@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { stripe, planForPrice } from '@/lib/stripe';
+import { recordEvent } from '@/lib/events';
 import type Stripe from 'stripe';
 
 // Period end moved from Subscription top-level to subscription items in the
@@ -42,7 +43,7 @@ export async function POST(req: NextRequest) {
           const sub = await stripe.subscriptions.retrieve(subId);
           const priceId = sub.items.data[0]?.price?.id;
           const plan = planForPrice(priceId) ?? 'FREE';
-          await prisma.user.update({
+          const updated = await prisma.user.update({
             where: { id: userId },
             data: {
               plan,
@@ -51,6 +52,11 @@ export async function POST(req: NextRequest) {
               subscriptionStatus: sub.status,
               currentPeriodEnd: periodEnd(sub),
             },
+          });
+          await recordEvent('PLAN_UPGRADED', {
+            userId: updated.id,
+            email: updated.email,
+            meta: { plan },
           });
         }
         break;
@@ -72,6 +78,14 @@ export async function POST(req: NextRequest) {
               currentPeriodEnd: periodEnd(sub),
             },
           });
+          // Rank plans so an updated event can tell upgrade from downgrade.
+          const rank = { FREE: 0, PROFESSIONAL: 1, BUSINESS: 2, ENTERPRISE: 3 } as const;
+          const evt = deleted
+            ? 'SUBSCRIPTION_CANCELED'
+            : rank[plan] >= rank[user.plan]
+              ? 'PLAN_UPGRADED'
+              : 'PLAN_DOWNGRADED';
+          await recordEvent(evt, { userId: user.id, email: user.email, meta: { from: user.plan, to: plan } });
         }
         break;
       }

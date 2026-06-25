@@ -1,5 +1,8 @@
 {
-  "brand": { "name": "France Business Development OS", "short": "France OS" },
+  "brand": {
+    "name": "France Business Development OS",
+    "short": "France OS"
+  },
   "nav": {
     "dashboard": "Dashboard",
     "markets": "Markets",
@@ -14,13 +17,15 @@
     "network": "Network",
     "reports": "Reports",
     "copilot": "Copilot",
-    "settings": "Settings"
+    "settings": "Settings",
+    "admin": "Admin"
   },
   "navGroup": {
     "overview": "Overview",
     "intelligence": "Intelligence",
     "opportunities": "Opportunities",
-    "engage": "Engage"
+    "engage": "Engage",
+    "admin": "Admin"
   },
   "modules": {
     "discoverTitle": "Opportunity Discovery Engine",
@@ -308,6 +313,16 @@
       "Formal and substantive examination by the office",
       "Publication + a 2-month opposition window",
       "Registration — protection for 10 years, renewable"
-    ]
+    ],
+    "lead": {
+      "title": "Prefer we handle it? Leave your details",
+      "name": "Your name",
+      "email": "Email",
+      "company": "Company (optional)",
+      "message": "What do you need? (optional)",
+      "submit": "Request a callback",
+      "thanks": "Thanks! We’ll get back to you shortly.",
+      "error": "Something went wrong, please retry."
+    }
   }
 }

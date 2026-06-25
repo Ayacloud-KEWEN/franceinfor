@@ -67,6 +67,14 @@ prisma/                        schema + seed
 - **零成本验证**：Stripe 建 100% off 优惠码（coupon + promotion code），结账页输入 → €0 下单走完真实 Live 链路。注意：€0 不产生 Payment/Transaction 记录（正常），看 Subscriptions + Webhook 200 即算成功。
 - **改 `STRIPE_*` 后服务器起不来 `Could not find a production build`**：通常是某次自动部署的 `next build` 失败（如类型错误）导致 `.next` 缺失，与 `.env` 无关。手动 `git pull && npm run build && pm2 restart france-os` 修复，并看 `npm run build` 自身输出而非 `pm2 logs` 的循环报错。
 
+## 🛠️ 管理后台 + 留资闭环（本次新增）
+- **后台** `/[locale]/admin`（仅 `User.role=ADMIN`，非管理员 `notFound`）：KPI（用户/付费/各套餐/新线索）+ 留资表（可改状态）+ 用户表 + 事件流。守卫 `src/lib/admin.ts#getAdminUser`；侧栏对 ADMIN 显示入口。
+- **留资**：`components/services/lead-form.tsx`（内嵌进 ServiceGuide）→ `POST /api/leads` → `Lead` 表（带登录用户快照）→ `recordEvent('LEAD_CREATED')`。
+- **事件审计**：`src/lib/events.ts#recordEvent` 写 `Event` 表 + 通知管理员；埋点在注册(`actions/auth.ts`)、Stripe webhook(升级/降级/退订)、留资。
+- **邮件通知**：`src/lib/notify.ts#notifyAdmin` 目前**只写服务器日志**（`[notify:admin] ...`）。接真邮件：实现 `sendEmail()`（Resend/SMTP）即可，调用点不用改。收件人 `ADMIN_EMAIL`（默认 fdcaptain@gmail.com）。
+- **上线后必做**：把你的生产账号设 ADMIN —— 服务器执行
+  `docker exec ... psql ...` 或直接 `UPDATE "User" SET role='ADMIN' WHERE email='你的邮箱';`，否则看不到 `/admin` 入口。新表 `Lead`/`Event` 由自动部署的 `prisma db push` 自动建（纯新增，无数据丢失）。
+
 ## 当前状态小结（截至本次会话）
 - 15 个模块均已上线，多数接真实数据（企业/招标 BOAMP+TED/市场 Eurostat/新闻 Google News/信用财务+法律 BODACC/机会发现/买家意向/网络/事件）。
 - 翻译：新闻/Dashboard/意向标题按界面语言用 LLM 翻译（JSON 数组解析，已修复对 DeepSeek 的兼容）。

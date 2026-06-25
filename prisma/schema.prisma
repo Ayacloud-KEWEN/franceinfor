@@ -71,6 +71,57 @@ enum ItemType {
   CONTACT
 }
 
+// Value-added service inquiries (company / brand registration lead capture).
+enum LeadKind {
+  COMPANY
+  BRAND
+  OTHER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  WON
+  LOST
+}
+
+model Lead {
+  id        String     @id @default(cuid())
+  kind      LeadKind   @default(OTHER)
+  name      String
+  email     String
+  company   String?
+  message   String?
+  locale    String     @default("en")
+  status    LeadStatus @default(NEW)
+  userId    String? // set when submitted by a logged-in user
+  userEmail String? // snapshot of the submitter's account email, if any
+  createdAt DateTime   @default(now())
+
+  @@index([status, createdAt])
+}
+
+// Audit/event stream surfaced in the admin console.
+enum EventType {
+  USER_REGISTERED
+  PLAN_UPGRADED
+  PLAN_DOWNGRADED
+  SUBSCRIPTION_CANCELED
+  LEAD_CREATED
+}
+
+model Event {
+  id        String    @id @default(cuid())
+  type      EventType
+  userId    String?
+  email     String?
+  meta      Json?
+  createdAt DateTime  @default(now())
+
+  @@index([type, createdAt])
+  @@index([createdAt])
+}
+
 // Bookmarked/saved entities across modules
 model SavedItem {
   id        String   @id @default(cuid())

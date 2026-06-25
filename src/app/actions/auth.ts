@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
+import { recordEvent } from '@/lib/events';
 import {
   hashPassword,
   verifyPassword,
@@ -27,6 +28,7 @@ export async function registerAction(
   const user = await prisma.user.create({
     data: { email, name, passwordHash: await hashPassword(password), locale },
   });
+  await recordEvent('USER_REGISTERED', { userId: user.id, email: user.email, meta: { name } });
   await createSession(user.id);
   redirect(`/${locale}/dashboard`);
 }

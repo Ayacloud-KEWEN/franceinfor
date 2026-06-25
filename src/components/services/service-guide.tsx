@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Building2, Tag, ArrowRight, Clock, Sparkles } from 'lucide-react';
+import { LeadForm } from './lead-form';
 
 // "如何在法国注册公司 / 商标" 增值服务板块。
 // 合作伙伴办理链接通过 env 配置，未配置则为占位（#）。
@@ -66,6 +67,10 @@ export async function ServiceGuide({ kind }: { kind: 'company' | 'brand' }) {
               {t('ctaPartner')} <ArrowRight size={14} />
             </Button>
           </a>
+
+          <div className="mt-4 border-t border-accent/20 pt-3">
+            <LeadForm kind={isCompany ? 'COMPANY' : 'BRAND'} />
+          </div>
         </div>
 
         <p className="mt-3 text-[11px] text-muted-foreground">{t('disclaimer')}</p>

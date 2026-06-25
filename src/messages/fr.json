@@ -1,5 +1,8 @@
 {
-  "brand": { "name": "France Business Development OS", "short": "France OS" },
+  "brand": {
+    "name": "France Business Development OS",
+    "short": "France OS"
+  },
   "nav": {
     "dashboard": "Tableau de bord",
     "markets": "Marchés",
@@ -14,13 +17,15 @@
     "network": "Réseau",
     "reports": "Rapports",
     "copilot": "Copilote",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "admin": "Admin"
   },
   "navGroup": {
     "overview": "Vue d'ensemble",
     "intelligence": "Intelligence",
     "opportunities": "Opportunités",
-    "engage": "Engagement"
+    "engage": "Engagement",
+    "admin": "Admin"
   },
   "modules": {
     "discoverTitle": "Moteur de découverte d'opportunités",
@@ -308,6 +313,16 @@
       "Examen formel et au fond par l'office",
       "Publication + délai d'opposition de 2 mois",
       "Enregistrement — protection 10 ans, renouvelable"
-    ]
+    ],
+    "lead": {
+      "title": "Vous préférez qu’on s’en occupe ? Laissez vos coordonnées",
+      "name": "Votre nom",
+      "email": "E-mail",
+      "company": "Société (optionnel)",
+      "message": "Votre besoin ? (optionnel)",
+      "submit": "Être rappelé",
+      "thanks": "Merci ! Nous vous recontactons rapidement.",
+      "error": "Une erreur est survenue, réessayez."
+    }
   }
 }
