@@ -256,7 +256,15 @@
     "aiProvider": "提供方",
     "aiModel": "模型",
     "aiMockNote": "当前为 mock 回退 — 请在 .env 配置 AI_PROVIDER 与 API Key。",
-    "aiOkNote": "已生效。提供方不可达时自动回退到 mock。"
+    "aiOkNote": "已生效。提供方不可达时自动回退到 mock。",
+    "upgrade": "升级",
+    "downgrade": "切换",
+    "currentPlan": "当前套餐",
+    "manageBilling": "管理订阅",
+    "perMonth": "/月",
+    "billingSuccess": "订阅已生效，感谢！状态可能需几秒钟刷新。",
+    "billingCanceled": "已取消支付，你可以随时升级。",
+    "billingUnconfigured": "在线支付尚未开通。如需升级请联系我们。"
   },
   "common": {
     "comingSoon": "即将推出",

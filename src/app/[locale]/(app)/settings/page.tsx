@@ -1,11 +1,14 @@
+import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { getCurrentUser } from '@/lib/auth';
 import { searchesUsedToday } from '@/lib/usage';
 import { PLAN_LIMITS } from '@/lib/plans';
 import { providerStatus } from '@/lib/ai';
+import { stripeConfigured } from '@/lib/stripe';
 import { PageHeader } from '@/components/page-header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { BillingPanel } from '@/components/settings/billing-panel';
 
 export default async function SettingsPage() {
   const [t, user] = await Promise.all([
@@ -17,10 +20,6 @@ export default async function SettingsPage() {
   const used = await searchesUsedToday(user.id);
   const limit = PLAN_LIMITS[user.plan].searchesPerDay;
   const limitLabel = limit === Number.MAX_SAFE_INTEGER ? '∞' : limit;
-
-  const plans = (['FREE', 'PROFESSIONAL', 'BUSINESS', 'ENTERPRISE'] as const).map(
-    (p) => ({ key: p, ...PLAN_LIMITS[p] })
-  );
 
   const ai = providerStatus();
 
@@ -71,36 +70,13 @@ export default async function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base text-foreground">{t('plan')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {plans.map((p) => (
-                <div
-                  key={p.key}
-                  className={`rounded-lg border p-4 ${
-                    p.key === user.plan ? 'border-primary bg-primary/5' : 'border-border'
-                  }`}
-                >
-                  <div className="font-semibold">{p.label}</div>
-                  <div className="mt-1 text-2xl font-bold">
-                    {p.price === 'Custom' ? 'Custom' : `€${p.price}`}
-                    {p.price !== 'Custom' && p.price !== '0' && (
-                      <span className="text-sm font-normal text-muted-foreground">/mo</span>
-                    )}
-                  </div>
-                  <div className="mt-1 text-xs text-muted-foreground">
-                    {p.searchesPerDay === Number.MAX_SAFE_INTEGER
-                      ? 'Unlimited searches'
-                      : `${p.searchesPerDay} searches / day`}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        <Suspense fallback={null}>
+          <BillingPanel
+            currentPlan={user.plan}
+            configured={stripeConfigured()}
+            hasSubscription={Boolean(user.stripeCustomerId)}
+          />
+        </Suspense>
       </div>
     </div>
   );

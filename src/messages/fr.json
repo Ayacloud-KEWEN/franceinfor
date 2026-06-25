@@ -256,7 +256,15 @@
     "aiProvider": "Fournisseur",
     "aiModel": "Modèle",
     "aiMockNote": "Mode mock — configurez un fournisseur dans .env (AI_PROVIDER + clé API).",
-    "aiOkNote": "Actif. Bascule en mock si le fournisseur est injoignable."
+    "aiOkNote": "Actif. Bascule en mock si le fournisseur est injoignable.",
+    "upgrade": "Passer à l'offre",
+    "downgrade": "Changer",
+    "currentPlan": "Offre actuelle",
+    "manageBilling": "Gérer l'abonnement",
+    "perMonth": "/mois",
+    "billingSuccess": "Abonnement actif — merci ! L'affichage peut prendre quelques secondes.",
+    "billingCanceled": "Paiement annulé. Vous pouvez vous abonner à tout moment.",
+    "billingUnconfigured": "Le paiement en ligne n'est pas encore activé. Contactez-nous pour passer à l'offre supérieure."
   },
   "common": {
     "comingSoon": "Bientôt disponible",

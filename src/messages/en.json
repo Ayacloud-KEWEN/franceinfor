@@ -256,7 +256,15 @@
     "aiProvider": "Provider",
     "aiModel": "Model",
     "aiMockNote": "Using mock fallback — configure a provider in .env (AI_PROVIDER + API key).",
-    "aiOkNote": "Active. Falls back to mock if the provider is unreachable."
+    "aiOkNote": "Active. Falls back to mock if the provider is unreachable.",
+    "upgrade": "Upgrade",
+    "downgrade": "Switch",
+    "currentPlan": "Current plan",
+    "manageBilling": "Manage subscription",
+    "perMonth": "/mo",
+    "billingSuccess": "Subscription active — thank you! It may take a few seconds to reflect.",
+    "billingCanceled": "Checkout canceled. You can upgrade anytime.",
+    "billingUnconfigured": "Online payment is not enabled yet. Contact us to upgrade."
   },
   "common": {
     "comingSoon": "Coming soon",
