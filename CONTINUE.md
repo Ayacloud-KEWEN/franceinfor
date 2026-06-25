@@ -82,6 +82,12 @@ prisma/                        schema + seed
 - **Schema**：`SavedItem` 加 `note/stage(Stage 枚举)/tags(String[])/updatedAt`；索引 `@@index([userId, stage])`。新列纯增，自动部署 `prisma db push` 会自动建。
 - 全链路本地验证：收藏→列表→改阶段+备注→看板渲染→删除。
 
+## 🔒 安全加固（本次）
+- **付款**：审过无可攻击面 —— Webhook 验签、价格取服务器 env、`client_reference_id` 服务端写入、接口均鉴权。
+- **LLM 接口**：全部 `getCurrentUser` + `consumeSearch` 配额；`/api/news/translate` 之前漏计 → 现加**独立日配额**(`consumeTranslate`，FREE 30/PRO 300/BIZ 2000) + **突发限流**(15 次/分/用户)，超限优雅降级(返回原文)。
+- **留资 `/api/leads`**（公开）：加**蜜罐字段** `website`(填了即静默丢弃) + **限流**(IP 3 次/10 分、邮箱 3 次/时)。限流器 `src/lib/rate-limit.ts`（内存滑窗，单 pm2 进程够用）。
+- **仍建议**（未做）：登录失败限流；整站挂 **Cloudflare**(免费版含 rate limit + bot + DDoS，比写代码更划算)；`consumeSearch` 竞态(非原子，影响极小)。
+
 ## 当前状态小结（截至本次会话）
 - 15 个模块均已上线，多数接真实数据（企业/招标 BOAMP+TED/市场 Eurostat/新闻 Google News/信用财务+法律 BODACC/机会发现/买家意向/网络/事件）。
 - 翻译：新闻/Dashboard/意向标题按界面语言用 LLM 翻译（JSON 数组解析，已修复对 DeepSeek 的兼容）。

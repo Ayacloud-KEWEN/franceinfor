@@ -26,6 +26,7 @@ export function LeadForm({ kind }: { kind: 'COMPANY' | 'BRAND' }) {
           email: fd.get('email'),
           company: fd.get('company'),
           message: fd.get('message'),
+          website: fd.get('website'), // honeypot — must stay empty
           locale,
         }),
       });
@@ -46,6 +47,15 @@ export function LeadForm({ kind }: { kind: 'COMPANY' | 'BRAND' }) {
   return (
     <form onSubmit={onSubmit} className="mt-3 space-y-2.5">
       <p className="text-sm font-medium text-foreground">{t('title')}</p>
+      {/* Honeypot: hidden from humans, bots tend to fill it. */}
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="hidden"
+      />
       <div className="grid gap-2.5 sm:grid-cols-2">
         <Input name="name" required placeholder={t('name')} autoComplete="name" />
         <Input name="email" type="email" required placeholder={t('email')} autoComplete="email" />

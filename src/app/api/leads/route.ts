@@ -2,10 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import { recordEvent } from '@/lib/events';
+import { rateLimit, clientIp } from '@/lib/rate-limit';
 import type { LeadKind } from '@prisma/client';
 
 const KINDS: LeadKind[] = ['COMPANY', 'BRAND', 'OTHER'];
 
+// This endpoint is intentionally public (the value-added service form is shown
+// to logged-out visitors too), so it carries its own anti-abuse defenses:
+// a honeypot field plus per-IP / per-email rate limits.
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => ({}));
   const name = String(body?.name || '').trim();
@@ -15,8 +19,20 @@ export async function POST(req: NextRequest) {
   const locale = String(body?.locale || 'en');
   const kind: LeadKind = KINDS.includes(body?.kind) ? body.kind : 'OTHER';
 
+  // Honeypot: real users never see/fill `website`. Bots that auto-fill all
+  // fields do. Pretend success so they don't learn they were filtered.
+  if (String(body?.website || '').trim()) {
+    return NextResponse.json({ ok: true });
+  }
+
   if (!name || !email || !/.+@.+\..+/.test(email)) {
     return NextResponse.json({ error: 'invalid_input' }, { status: 400 });
+  }
+
+  // Rate limit: max 3 submissions / 10 min per IP, and 3 / hour per email.
+  const ip = clientIp(req);
+  if (!rateLimit(`lead:ip:${ip}`, 3, 10 * 60_000) || !rateLimit(`lead:email:${email}`, 3, 60 * 60_000)) {
+    return NextResponse.json({ error: 'rate_limited' }, { status: 429 });
   }
 
   // Attach the submitter's account if they're logged in.
