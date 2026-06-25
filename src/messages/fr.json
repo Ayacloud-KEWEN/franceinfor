@@ -257,5 +257,38 @@
     "live": "en direct",
     "noLiveItems": "Aucun élément en direct pour le moment.",
     "moduleStub": "Ce module fait partie de la feuille de route. L'architecture et la navigation sont en place ; l'implémentation détaillée suit."
+  },
+  "services": {
+    "sectionLabel": "Service à valeur ajoutée",
+    "cost": "Coût estimé",
+    "time": "Délai estimé",
+    "steps": "Étapes",
+    "ctaPartner": "Se faire accompagner par un partenaire certifié",
+    "partnerNote": "Nous vous mettons en relation avec des partenaires locaux vérifiés (avocats, experts-comptables, conseils en PI) pour gérer toute la procédure.",
+    "disclaimer": "Information générale — ne constitue pas un conseil juridique.",
+    "companyTitle": "Créer une société en France",
+    "companyIntro": "Aperçu pratique de l'immatriculation d'une société française (SAS / SARL …).",
+    "companyCost": "≈ 200–400 € de frais",
+    "companyTime": "≈ 1–3 semaines",
+    "companySteps": [
+      "Choisir une forme juridique (SAS/SASU, SARL/EURL…) et rédiger les statuts",
+      "Déposer le capital social sur un compte dédié",
+      "Publier une annonce légale de constitution",
+      "Déposer en ligne via le Guichet unique de l'INPI (remplace le CFE depuis 2023)",
+      "Obtenir le SIREN / SIRET et l'extrait Kbis",
+      "Immatriculer à la TVA intracommunautaire et, si besoin, au régime social / employeur"
+    ],
+    "brandTitle": "Déposer une marque en France",
+    "brandIntro": "Aperçu pratique de la protection de votre marque via l'INPI (France) ou l'EUIPO (UE).",
+    "brandCost": "≈ 190 € (1 classe, INPI)",
+    "brandTime": "≈ 4–6 mois",
+    "brandSteps": [
+      "Effectuer une recherche d'antériorité / disponibilité dans la base INPI",
+      "Choisir les classes de produits & services (classification de Nice)",
+      "Déposer en ligne à l'INPI (France) — ou à l'EUIPO pour toute l'UE",
+      "Examen formel et au fond par l'office",
+      "Publication + délai d'opposition de 2 mois",
+      "Enregistrement — protection 10 ans, renouvelable"
+    ]
   }
 }

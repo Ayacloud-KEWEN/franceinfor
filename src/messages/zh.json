@@ -257,5 +257,38 @@
     "live": "实时",
     "noLiveItems": "暂无实时内容。",
     "moduleStub": "该模块属于路线图规划。架构和导航已就绪，详细实现将随后推出。"
+  },
+  "services": {
+    "sectionLabel": "增值服务",
+    "cost": "预估费用",
+    "time": "预估时长",
+    "steps": "办理步骤",
+    "ctaPartner": "通过认证合作伙伴办理",
+    "partnerNote": "我们将为你对接经核验的本地合作伙伴（律师 / 会计 / 知识产权代理），协助你完成全流程。",
+    "disclaimer": "仅为一般性指引，不构成法律意见。",
+    "companyTitle": "在法国注册公司",
+    "companyIntro": "注册法国公司（SAS / SARL 等）的实用流程概览。",
+    "companyCost": "约 €200–400 行政费用",
+    "companyTime": "约 1–3 周",
+    "companySteps": [
+      "选择法律形式（SAS/SASU、SARL/EURL 等）并起草公司章程",
+      "将注册资本存入专用银行账户",
+      "在法定公告报刊发布设立公告（annonce légale）",
+      "通过 INPI 一站式窗口（Guichet unique，2023 年起取代 CFE）在线提交",
+      "取得 SIREN / SIRET 与 Kbis 营业执照",
+      "登记欧盟增值税号（TVA），按需办理社保 / 雇主登记"
+    ],
+    "brandTitle": "在法国注册商标",
+    "brandIntro": "通过 INPI（法国）或 EUIPO（全欧盟）保护你的品牌的实用流程概览。",
+    "brandCost": "约 €190（单类别，INPI）",
+    "brandTime": "约 4–6 个月",
+    "brandSteps": [
+      "在 INPI 数据库做可注册性 / 在先权利检索",
+      "确定商品与服务类别（尼斯分类）",
+      "通过 INPI（法国）在线提交申请——或 EUIPO 覆盖全欧盟",
+      "由商标局进行形式与实质审查",
+      "公示 + 2 个月异议期",
+      "完成注册——保护期 10 年，可续展"
+    ]
   }
 }
