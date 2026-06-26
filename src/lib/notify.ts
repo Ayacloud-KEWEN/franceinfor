@@ -9,10 +9,28 @@ import 'server-only';
 
 export const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'fdcaptain@gmail.com';
 
-async function sendEmail(_to: string, _subject: string, _body: string): Promise<boolean> {
-  // Not configured yet — return false so callers know it only logged.
-  // Future: const r = new Resend(process.env.RESEND_API_KEY); await r.emails.send(...)
-  return false;
+// Sends via Resend when RESEND_API_KEY is set; otherwise returns false so
+// callers fall back to logging. From address must be on a Resend-verified
+// domain in production (onboarding@resend.dev works for testing).
+async function sendEmail(to: string, subject: string, body: string): Promise<boolean> {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) return false;
+  const from = process.env.RESEND_FROM || 'FranceGo <onboarding@resend.dev>';
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
+      body: JSON.stringify({ from, to, subject, text: body }),
+    });
+    if (!res.ok) {
+      console.error('[resend]', res.status, await res.text().catch(() => ''));
+      return false;
+    }
+    return true;
+  } catch (e) {
+    console.error('[resend] failed:', (e as Error).message);
+    return false;
+  }
 }
 
 // Notify the site operator. Never throws — notification failure must not break
