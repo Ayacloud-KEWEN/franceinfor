@@ -451,5 +451,142 @@
       "energy": "Énergie & GreenTech"
     },
     "exportPdf": "Exporter en PDF"
+  },
+  "landing": {
+    "signIn": "Se connecter",
+    "getStarted": "Commencer gratuitement",
+    "openApp": "Ouvrir l'app",
+    "hero": {
+      "badge": "Implantation en France propulsée par l'IA",
+      "title": "Gagnez le marché français, plus vite",
+      "subtitle": "FranceGo transforme les données françaises en direct — entreprises, appels d'offres, levées, aides et conformité — en opportunités, signaux et plans d'action pour vous implanter et croître en France.",
+      "ctaPrimary": "Commencer gratuitement",
+      "ctaSecondary": "Voir les tarifs",
+      "note": "Sans carte bancaire · 3 langues · Données françaises en temps réel"
+    },
+    "trust": "Basé sur les données ouvertes officielles françaises et européennes (INSEE, BOAMP, TED, Eurostat, BODACC).",
+    "features": {
+      "heading": "Tout pour réussir votre implantation",
+      "subheading": "Une plateforme, quinze modules — du premier signal au contrat signé.",
+      "items": [
+        {
+          "title": "Intelligence entreprises",
+          "desc": "Cherchez parmi 25M+ d'entreprises françaises : finances, dirigeants, actionnaires et score d'opportunité."
+        },
+        {
+          "title": "Appels d'offres & acheteurs publics",
+          "desc": "Appels d'offres BOAMP + TED en direct, adaptés à vous, avec échéances et probabilité de gain."
+        },
+        {
+          "title": "Signaux de levées & investissements",
+          "desc": "Repérez les entreprises qui viennent de lever des fonds — budget frais, forte intention d'achat."
+        },
+        {
+          "title": "Aides & subventions",
+          "desc": "Associez France 2030, Bpifrance, CIR/CII et aides régionales à votre profil."
+        },
+        {
+          "title": "Conformité & implantation",
+          "desc": "Forme juridique, fiscalité, droit du travail, certifications et RGPD par secteur — export PDF."
+        },
+        {
+          "title": "Copilote IA & rapports",
+          "desc": "Posez toutes vos questions sur le marché français et générez des rapports de niveau conseil en quelques secondes."
+        }
+      ]
+    },
+    "pricing": {
+      "heading": "Une tarification simple et transparente",
+      "subheading": "Commencez gratuitement. Évoluez quand vous grandissez.",
+      "perMonth": "/mois",
+      "mostPopular": "Le plus choisi",
+      "items": [
+        {
+          "name": "Gratuit",
+          "price": "0 €",
+          "desc": "Explorez le marché français.",
+          "features": [
+            "10 recherches / jour",
+            "Modules essentiels",
+            "3 langues"
+          ],
+          "cta": "Commencer"
+        },
+        {
+          "name": "Professional",
+          "price": "99 €",
+          "desc": "Pour les équipes actives.",
+          "features": [
+            "200 recherches / jour",
+            "Tous les modules d'intelligence",
+            "Aides & subventions",
+            "Conformité + PDF"
+          ],
+          "cta": "Choisir Professional"
+        },
+        {
+          "name": "Business",
+          "price": "299 €",
+          "desc": "Pour passer à l'échelle.",
+          "features": [
+            "1 000 recherches / jour",
+            "Tout Professional",
+            "Rafraîchissement prioritaire",
+            "Liste de suivi / CRM léger"
+          ],
+          "cta": "Choisir Business"
+        }
+      ],
+      "enterprise": {
+        "name": "Enterprise",
+        "price": "Sur devis",
+        "desc": "Usage illimité, sièges équipe, marque blanche et support dédié.",
+        "cta": "Contacter l'équipe"
+      }
+    },
+    "faq": {
+      "heading": "Questions fréquentes",
+      "items": [
+        {
+          "q": "Qu'est-ce que FranceGo ?",
+          "a": "FranceGo est une plateforme propulsée par l'IA qui aide les entreprises étrangères à s'implanter et croître sur le marché français, en combinant données réelles (entreprises, appels d'offres, levées, aides, conformité) et analyse IA."
+        },
+        {
+          "q": "D'où viennent les données ?",
+          "a": "De sources ouvertes officielles françaises et européennes : registre INSEE/SIRENE, appels d'offres BOAMP et TED, statistiques Eurostat et annonces BODACC — en temps réel."
+        },
+        {
+          "q": "Quelles langues sont prises en charge ?",
+          "a": "L'ensemble du produit et du contenu est disponible en anglais, français et chinois."
+        },
+        {
+          "q": "Combien ça coûte ?",
+          "a": "Un plan gratuit offre 10 recherches par jour. Professional est à 99 €/mois et Business à 299 €/mois. Enterprise est sur devis."
+        },
+        {
+          "q": "Faut-il une carte bancaire ?",
+          "a": "Non. Vous pouvez créer un compte gratuit et explorer le marché français sans carte bancaire."
+        }
+      ]
+    },
+    "finalCta": {
+      "title": "Prêt à vous implanter en France ?",
+      "subtitle": "Créez votre compte gratuit en moins d'une minute.",
+      "button": "Commencer gratuitement"
+    },
+    "footer": {
+      "tagline": "Votre porte d'entrée sur le marché français.",
+      "rights": "Tous droits réservés."
+    },
+    "cookie": {
+      "message": "Nous utilisons des cookies de mesure d'audience pour améliorer votre expérience. Vous pouvez accepter ou refuser.",
+      "accept": "Accepter",
+      "decline": "Refuser",
+      "learnMore": "En savoir plus"
+    },
+    "meta": {
+      "title": "FranceGo — Plateforme d'implantation en France propulsée par l'IA",
+      "description": "Implantez-vous et développez-vous en France avec FranceGo : intelligence en temps réel sur les entreprises, appels d'offres, levées, aides et conformité, plus un copilote IA. Gratuit, en français, anglais et chinois."
+    }
   }
 }

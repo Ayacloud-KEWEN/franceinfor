@@ -120,6 +120,14 @@ prisma/                        schema + seed
 - **邮件**：重置链接经 `notify.ts#notifyEmail` 发给用户——**接通 Resend/SMTP 前先打服务器日志**(`[notify:email] …`)，接通后立即真发。**这是唯一待办**。
 - 验证：令牌生命周期(有效/单次/过期/改密)用 prisma 直测全 OK；各页 200、三语、登录页链接均在。
 
+## 🚀 营销落地页（本次新增）
+- **公开根路由** `/[locale]`（原来 redirect 到 dashboard，现改为营销页；不依赖 DB、可静态缓存）。三语 hero/亮点(6)/价格(Free·Pro·Business·Enterprise)/FAQ/CTA/footer，全部 CTA 指向 `/register`、`/login`。
+- **SEO/AIO**：`generateMetadata` 输出 per-locale title/description + **hreflang(en/fr/zh) + canonical + OpenGraph/Twitter**；页内 **JSON-LD**(`SoftwareApplication` 含价格 Offer + `FAQPage`) 利于搜索与 AI 答案引擎。文案在 `messages/*.json` 的 `landing` 命名空间。
+- **GA4**：`components/landing/analytics.tsx` —— **仅在用户同意 Cookie 后**才注入 gtag（GDPR 友好）。measurement id 用 `NEXT_PUBLIC_GA_ID`（**构建时注入**，服务器改了要重新 build，非仅 restart）。
+- **Cookie 合规**：`components/landing/cookie-consent.tsx` 横幅，选择存 localStorage `fg_consent`，accept 才广播 `fg-consent` 事件让 GA 加载。
+- 验证：/en /fr /zh 均 200，hreflang/canonical/OG/JSON-LD/三语正文/Cookie 横幅均确认；预览截图外观专业。
+- **上线注意**：要开 GA 就把 `NEXT_PUBLIC_GA_ID` 填进服务器 `.env` 并**重新 build**（不是只 restart）。
+
 ## 当前状态小结（截至本次会话）
 - 15 个模块均已上线，多数接真实数据（企业/招标 BOAMP+TED/市场 Eurostat/新闻 Google News/信用财务+法律 BODACC/机会发现/买家意向/网络/事件）。
 - 翻译：新闻/Dashboard/意向标题按界面语言用 LLM 翻译（JSON 数组解析，已修复对 DeepSeek 的兼容）。

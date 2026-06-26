@@ -451,5 +451,142 @@
       "energy": "Energy & GreenTech"
     },
     "exportPdf": "Export PDF"
+  },
+  "landing": {
+    "signIn": "Sign in",
+    "getStarted": "Get started free",
+    "openApp": "Open app",
+    "hero": {
+      "badge": "AI-powered France market entry",
+      "title": "Win the French market, faster",
+      "subtitle": "FranceGo turns live French data — companies, tenders, funding, subsidies and compliance — into the opportunities, signals and playbooks your team needs to land and grow in France.",
+      "ctaPrimary": "Start free",
+      "ctaSecondary": "See pricing",
+      "note": "No credit card required · 3 languages · Real-time French data"
+    },
+    "trust": "Built on official French & EU open data (INSEE, BOAMP, TED, Eurostat, BODACC).",
+    "features": {
+      "heading": "Everything you need to enter France",
+      "subheading": "One platform, fifteen modules — from first signal to signed deal.",
+      "items": [
+        {
+          "title": "Company intelligence",
+          "desc": "Search 25M+ French companies with financials, executives, shareholders and an opportunity score."
+        },
+        {
+          "title": "Tenders & public buyers",
+          "desc": "Live BOAMP + TED public tenders matched to you, with deadlines and win probability."
+        },
+        {
+          "title": "Funding & investment signals",
+          "desc": "Spot French companies that just raised capital — fresh budget, strong buying intent."
+        },
+        {
+          "title": "Subsidy & grant matching",
+          "desc": "Match France 2030, Bpifrance, CIR/CII and regional aids to your profile."
+        },
+        {
+          "title": "Compliance & landing checklist",
+          "desc": "Sector-by-sector legal form, tax, employment, certification and GDPR — exportable to PDF."
+        },
+        {
+          "title": "AI copilot & reports",
+          "desc": "Ask anything about the French market and generate consultant-grade reports in seconds."
+        }
+      ]
+    },
+    "pricing": {
+      "heading": "Simple, transparent pricing",
+      "subheading": "Start free. Upgrade when you scale.",
+      "perMonth": "/month",
+      "mostPopular": "Most popular",
+      "items": [
+        {
+          "name": "Free",
+          "price": "€0",
+          "desc": "Explore the French market.",
+          "features": [
+            "10 searches / day",
+            "Core modules",
+            "3 languages"
+          ],
+          "cta": "Start free"
+        },
+        {
+          "name": "Professional",
+          "price": "€99",
+          "desc": "For active market-entry teams.",
+          "features": [
+            "200 searches / day",
+            "All intelligence modules",
+            "Funding & subsidy matching",
+            "Compliance checklist + PDF"
+          ],
+          "cta": "Choose Professional"
+        },
+        {
+          "name": "Business",
+          "price": "€299",
+          "desc": "For scaling operations.",
+          "features": [
+            "1,000 searches / day",
+            "Everything in Professional",
+            "Priority data refresh",
+            "Watchlist / light CRM"
+          ],
+          "cta": "Choose Business"
+        }
+      ],
+      "enterprise": {
+        "name": "Enterprise",
+        "price": "Custom",
+        "desc": "Unlimited usage, team seats, white-label and dedicated support.",
+        "cta": "Contact sales"
+      }
+    },
+    "faq": {
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "q": "What is FranceGo?",
+          "a": "FranceGo is an AI-powered platform that helps foreign companies enter and grow in the French market, combining real French company, tender, funding, subsidy and compliance data with AI analysis."
+        },
+        {
+          "q": "Where does the data come from?",
+          "a": "From official French and EU open data sources: INSEE/SIRENE company registry, BOAMP and TED public tenders, Eurostat market statistics and BODACC legal notices — refreshed in real time."
+        },
+        {
+          "q": "Which languages are supported?",
+          "a": "The entire product and content are available in English, French and Chinese."
+        },
+        {
+          "q": "How much does it cost?",
+          "a": "There is a free plan with 10 searches per day. Professional is €99/month and Business is €299/month. Enterprise pricing is custom."
+        },
+        {
+          "q": "Do I need a credit card to start?",
+          "a": "No. You can create a free account and explore the French market without a credit card."
+        }
+      ]
+    },
+    "finalCta": {
+      "title": "Ready to land in France?",
+      "subtitle": "Create your free account in under a minute.",
+      "button": "Get started free"
+    },
+    "footer": {
+      "tagline": "Your gateway to the French market.",
+      "rights": "All rights reserved."
+    },
+    "cookie": {
+      "message": "We use cookies for analytics to improve your experience. You can accept or decline.",
+      "accept": "Accept",
+      "decline": "Decline",
+      "learnMore": "Learn more"
+    },
+    "meta": {
+      "title": "FranceGo — AI-powered France market entry platform",
+      "description": "Enter and grow in the French market with FranceGo: real-time company, tender, funding, subsidy and compliance intelligence plus an AI copilot. Free to start, in English, French and Chinese."
+    }
   }
 }
