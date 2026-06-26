@@ -25,6 +25,7 @@
 - ☑ 融资/投资事件 → `/signals`「融资动向」：Google News(免密钥)抓融资新闻，解析 **公司/金额/轮次**，并用 **data.gouv 企业注册库(recherche-entreprises)校验富化** → 附真实 SIREN(深链企业页)+行业，过滤榜单/人名噪音；按规模+时效打分。**已并入 buyers intent 页统一打分**(BOAMP 采购方 + 刚融资公司混合排序)。代码 `lib/sources/funding-signals.ts`、`/api/signals`、`lib/sources/intent.ts`。
   > 注：data.gouv **无**结构化"融资轮次"数据集(Dealroom/Crunchbase 需付费)；改用官方企业注册库做结构化校验，既加 SIREN 又去噪。
 - ☐ **报告接 RAG + 引用来源**：把真实数据喂给模型并标注来源，报告数字不再是模型编的(商用关键)。
+- ◐ **🧠 Knowledge OS**（长期战略资产，见 `KNOWLEDGE_OS.md`）：四层(原始数据→知识图谱→Playbook→项目经验)+ Copilot 改 RAG。**已落地 L3 Playbook 库** `/playbooks`（内置"在法国建数据中心"完整 playbook，可搜索匹配/PDF/留资）。待建：L1 抓取+对象存储、L2 pgvector 知识图谱、L4 项目经验统计。架构已为**无缝迁移 VPS/扩容**设计（无状态应用 + Postgres 单一事实源 + 限流换 Redis + 对象存储 + 容器化）。
 
 ## 第三波 — 出海专属价值
 

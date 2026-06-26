@@ -24,7 +24,8 @@
     "watchlist": "关注列表",
     "funding": "扶持资金",
     "signals": "融资动向",
-    "compliance": "落地合规"
+    "compliance": "落地合规",
+    "playbooks": "操作手册"
   },
   "navGroup": {
     "overview": "概览",
@@ -597,5 +598,26 @@
       "title": "FranceGo —— AI 驱动的法国市场拓展平台",
       "description": "用 FranceGo 进入并拓展法国市场：企业、招标、融资、补贴与合规的实时情报，外加 AI 助手。免费开始，支持中英法三语。"
     }
+  },
+  "playbooks": {
+    "title": "业务操作手册（Playbooks）",
+    "subtitle": "按步骤、带来源的法国落地流程——例如在法国建数据中心。",
+    "searchPlaceholder": "提问，如「如何在法国建数据中心」",
+    "bestMatch": "最匹配的操作手册",
+    "noMatch": "暂无匹配的手册——更多正在补充。",
+    "library": "手册库",
+    "steps": "步",
+    "back": "全部手册",
+    "exportPdf": "导出 PDF",
+    "applicableTo": "适用对象",
+    "prerequisites": "前置条件",
+    "tasks": "流程",
+    "authority": "主管机构",
+    "permit": "许可",
+    "documents": "材料",
+    "keyRisks": "关键风险",
+    "disclaimer": "指示性、带来源的流程——不构成法律意见，请在各官方页面与持牌顾问处核实。",
+    "ctaTitle": "想让我们陪你一起落地执行？",
+    "ctaIntro": "我们可代办注册，并对接经筛选的法律、地产与能源合作伙伴。留下您的信息即可。"
   }
 }

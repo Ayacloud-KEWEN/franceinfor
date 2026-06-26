@@ -24,7 +24,8 @@
     "watchlist": "Suivi",
     "funding": "Financements",
     "signals": "Signaux de levées",
-    "compliance": "Conformité"
+    "compliance": "Conformité",
+    "playbooks": "Playbooks"
   },
   "navGroup": {
     "overview": "Vue d'ensemble",
@@ -597,5 +598,26 @@
       "title": "FranceGo — Plateforme d'implantation en France propulsée par l'IA",
       "description": "Implantez-vous et développez-vous en France avec FranceGo : intelligence en temps réel sur les entreprises, appels d'offres, levées, aides et conformité, plus un copilote IA. Gratuit, en français, anglais et chinois."
     }
+  },
+  "playbooks": {
+    "title": "Playbooks métier",
+    "subtitle": "Procédures sourcées, étape par étape, pour exécuter en France — ex. créer un data center.",
+    "searchPlaceholder": "Demandez, ex. « comment créer un data center en France »",
+    "bestMatch": "Playbook le plus pertinent",
+    "noMatch": "Aucun playbook correspondant pour l’instant — d’autres arrivent.",
+    "library": "Bibliothèque",
+    "steps": "étapes",
+    "back": "Tous les playbooks",
+    "exportPdf": "Exporter en PDF",
+    "applicableTo": "Pour qui",
+    "prerequisites": "Prérequis",
+    "tasks": "Déroulé",
+    "authority": "Autorité",
+    "permit": "Autorisation",
+    "documents": "Documents",
+    "keyRisks": "Risques clés",
+    "disclaimer": "Procédure indicative et sourcée — ne constitue pas un conseil juridique. Vérifiez sur chaque page officielle.",
+    "ctaTitle": "Vous voulez qu’on l’exécute avec vous ?",
+    "ctaIntro": "Nous gérons la création et vous mettons en relation avec des partenaires juridiques, immobiliers et énergie. Laissez vos coordonnées."
   }
 }

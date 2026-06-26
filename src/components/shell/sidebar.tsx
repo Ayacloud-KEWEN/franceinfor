@@ -23,6 +23,7 @@ import {
   Landmark,
   TrendingUp,
   ClipboardCheck,
+  BookOpen,
 } from 'lucide-react';
 
 type Item = { href: string; key: string; Icon: typeof LayoutDashboard };
@@ -61,6 +62,7 @@ const groups: { group: string; items: Item[] }[] = [
     items: [
       { href: '/network', key: 'network', Icon: Network },
       { href: '/compliance', key: 'compliance', Icon: ClipboardCheck },
+      { href: '/playbooks', key: 'playbooks', Icon: BookOpen },
       { href: '/copilot', key: 'copilot', Icon: Bot },
       { href: '/reports', key: 'reports', Icon: FileText },
       { href: '/settings', key: 'settings', Icon: Settings },

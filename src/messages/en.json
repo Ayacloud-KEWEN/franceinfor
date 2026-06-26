@@ -24,7 +24,8 @@
     "watchlist": "Watchlist",
     "funding": "Funding",
     "signals": "Funding signals",
-    "compliance": "Compliance"
+    "compliance": "Compliance",
+    "playbooks": "Playbooks"
   },
   "navGroup": {
     "overview": "Overview",
@@ -597,5 +598,26 @@
       "title": "FranceGo — AI-powered France market entry platform",
       "description": "Enter and grow in the French market with FranceGo: real-time company, tender, funding, subsidy and compliance intelligence plus an AI copilot. Free to start, in English, French and Chinese."
     }
+  },
+  "playbooks": {
+    "title": "Business Playbooks",
+    "subtitle": "Step-by-step, sourced workflows for executing in France — e.g. setting up a data center.",
+    "searchPlaceholder": "Ask, e.g. “how to set up a data center in France”",
+    "bestMatch": "Best matching playbook",
+    "noMatch": "No playbook matches yet — more are being added.",
+    "library": "Library",
+    "steps": "steps",
+    "back": "All playbooks",
+    "exportPdf": "Export PDF",
+    "applicableTo": "Applicable to",
+    "prerequisites": "Prerequisites",
+    "tasks": "Workflow",
+    "authority": "Authority",
+    "permit": "Permit",
+    "documents": "Documents",
+    "keyRisks": "Key risks",
+    "disclaimer": "Indicative, sourced workflow — not legal advice. Verify on each official page and with qualified advisors.",
+    "ctaTitle": "Want us to execute this with you?",
+    "ctaIntro": "We can run the registration and connect you with vetted legal, real-estate and energy partners. Leave your details."
   }
 }
