@@ -23,7 +23,8 @@
     "admin": "Admin",
     "watchlist": "Suivi",
     "funding": "Financements",
-    "signals": "Signaux de levées"
+    "signals": "Signaux de levées",
+    "compliance": "Conformité"
   },
   "navGroup": {
     "overview": "Vue d'ensemble",
@@ -411,5 +412,31 @@
     "sampleData": "données d’exemple",
     "empty": "Aucun signal de levée récent.",
     "disclaimer": "Extrait automatiquement des titres d’actualité ; montants et noms d’entreprise indicatifs — vérifiez l’article source."
+  },
+  "compliance": {
+    "title": "Conformité & implantation",
+    "subtitle": "Exigences par secteur pour s'implanter et opérer en France — forme juridique, fiscalité, droit du travail, réglementation et RGPD.",
+    "selectSector": "Votre secteur",
+    "disclaimer": "Informations générales — ne constitue pas un conseil juridique ou fiscal. Vérifiez avec un conseil qualifié avant d'agir.",
+    "ctaTitle": "Besoin d’aide pour vous implanter ?",
+    "ctaIntro": "Nous gérons la création de société et vous mettons en relation avec des partenaires juridiques/fiscaux. Laissez vos coordonnées.",
+    "section": {
+      "legalForm": "Forme juridique",
+      "tax": "TVA & fiscalité",
+      "employment": "Droit du travail",
+      "sector": "Réglementation sectorielle & certifications",
+      "gdpr": "RGPD & données"
+    },
+    "sector": {
+      "generic": "Général",
+      "food": "Agroalimentaire",
+      "health": "Santé & MedTech",
+      "construction": "Construction & BTP",
+      "finance": "Finance & Fintech",
+      "cosmetics": "Cosmétique",
+      "tech": "Logiciel & SaaS",
+      "retail": "Commerce & e-commerce",
+      "energy": "Énergie & GreenTech"
+    }
   }
 }

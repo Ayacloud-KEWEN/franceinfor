@@ -104,6 +104,13 @@ prisma/                        schema + seed
 - **已并入 intent**：`lib/sources/intent.ts#buyingIntentReal` 把 `fundingIntent(8)` 的融资公司与 BOAMP 采购方**合并、按 intentScore 统一排序**。
 - 真实验证：榜单过滤 3/16、SIREN 解析 6/13、人名(Yann LeCun)正确无 SIREN；每条可收藏（OPPORTUNITY，refId=`funding:<id>`）。
 
+## 📋 分行业落地合规清单（本次新增）
+- **页面** `/[locale]/compliance`（导航 engage 组）：选行业 → 5 栏清单(法律形式 / TVA·税务 / 雇佣法 / 行业监管认证 / GDPR)。组件 `components/compliance/compliance-checklist.tsx`（纯客户端，import 静态数据，无 API）。
+- **数据** `lib/data/compliance.ts`：通用基础(BASE) + 9 个行业监管叠加层(OVERLAYS：food/health/construction/finance/cosmetics/tech/retail/energy/generic)。`getCompliance(sector)` 合成。**内容是人工整理的真实法规事实，非 LLM 生成**（合规不能幻觉），带免责声明。
+- **咨询+落地组合**：底部嵌 `LeadForm(kind=COMPANY)` → 留资进 `Lead` 表/后台，承接公司注册增值服务。
+- 验证：curl /compliance 返回 200，标题/各栏/CTA/三语 key 均正常渲染（预览浏览器本次崩溃，未截图）。
+- **待办**：清单正文目前为英文（仅标题/UI 三语）；可加按公司画像自动选行业、清单 PDF 导出。
+
 ## 当前状态小结（截至本次会话）
 - 15 个模块均已上线，多数接真实数据（企业/招标 BOAMP+TED/市场 Eurostat/新闻 Google News/信用财务+法律 BODACC/机会发现/买家意向/网络/事件）。
 - 翻译：新闻/Dashboard/意向标题按界面语言用 LLM 翻译（JSON 数组解析，已修复对 DeepSeek 的兼容）。

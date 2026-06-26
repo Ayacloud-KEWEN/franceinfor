@@ -23,7 +23,8 @@
     "admin": "管理后台",
     "watchlist": "关注列表",
     "funding": "扶持资金",
-    "signals": "融资动向"
+    "signals": "融资动向",
+    "compliance": "落地合规"
   },
   "navGroup": {
     "overview": "概览",
@@ -411,5 +412,31 @@
     "sampleData": "示例数据",
     "empty": "未发现近期融资动向。",
     "disclaimer": "自动从实时新闻标题中提取；金额与公司名为尽力解析，请以来源文章为准。"
+  },
+  "compliance": {
+    "title": "落地合规清单",
+    "subtitle": "按行业列出在法国设立与经营的要点：法律形式、税务、雇佣、监管与 GDPR。",
+    "selectSector": "你的行业",
+    "disclaimer": "仅供参考，不构成法律或税务意见；行动前请咨询法国持牌顾问。",
+    "ctaTitle": "需要落地协助？",
+    "ctaIntro": "我们可代办公司注册，并对接经过筛选的法律/税务合作伙伴。留下您的信息即可。",
+    "section": {
+      "legalForm": "法律形式",
+      "tax": "TVA 与税务",
+      "employment": "雇佣法",
+      "sector": "行业监管与认证",
+      "gdpr": "GDPR 与数据"
+    },
+    "sector": {
+      "generic": "通用",
+      "food": "食品饮料",
+      "health": "健康与医疗器械",
+      "construction": "建筑工程",
+      "finance": "金融与金融科技",
+      "cosmetics": "化妆品",
+      "tech": "软件与 SaaS",
+      "retail": "零售与电商",
+      "energy": "能源与绿色科技"
+    }
   }
 }

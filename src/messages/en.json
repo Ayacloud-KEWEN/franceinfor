@@ -23,7 +23,8 @@
     "admin": "Admin",
     "watchlist": "Watchlist",
     "funding": "Funding",
-    "signals": "Funding signals"
+    "signals": "Funding signals",
+    "compliance": "Compliance"
   },
   "navGroup": {
     "overview": "Overview",
@@ -411,5 +412,31 @@
     "sampleData": "sample data",
     "empty": "No recent funding signals found.",
     "disclaimer": "Auto-extracted from live news headlines; amounts and company names are best-effort — verify on the source article."
+  },
+  "compliance": {
+    "title": "Compliance & landing checklist",
+    "subtitle": "Sector-by-sector requirements to set up and operate in France — legal form, tax, employment, regulation and GDPR.",
+    "selectSector": "Your sector",
+    "disclaimer": "Informational only — not legal or tax advice. Verify with a qualified French advisor before acting.",
+    "ctaTitle": "Need help landing in France?",
+    "ctaIntro": "We can handle company registration and connect you with vetted legal/tax partners. Leave your details.",
+    "section": {
+      "legalForm": "Legal form",
+      "tax": "VAT & tax",
+      "employment": "Employment law",
+      "sector": "Sector regulation & certification",
+      "gdpr": "GDPR & data"
+    },
+    "sector": {
+      "generic": "General",
+      "food": "Food & beverage",
+      "health": "Health & MedTech",
+      "construction": "Construction & BTP",
+      "finance": "Finance & Fintech",
+      "cosmetics": "Cosmetics",
+      "tech": "Software & SaaS",
+      "retail": "Retail & e-commerce",
+      "energy": "Energy & GreenTech"
+    }
   }
 }
