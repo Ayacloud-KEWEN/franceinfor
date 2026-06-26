@@ -297,7 +297,13 @@
     "perMonth": "/月",
     "billingSuccess": "订阅已生效，感谢！状态可能需几秒钟刷新。",
     "billingCanceled": "已取消支付，你可以随时升级。",
-    "billingUnconfigured": "在线支付尚未开通。如需升级请联系我们。"
+    "billingUnconfigured": "在线支付尚未开通。如需升级请联系我们。",
+    "digestTitle": "每日机会邮件",
+    "digestIntro": "每天收到「法国机会雷达」——按你的关键词匹配的新招标、融资信号与新闻。",
+    "digestEnable": "给我发送每日摘要",
+    "digestKeywords": "关键词（选填）",
+    "digestKeywordsPlaceholder": "如 物流、santé、Lyon",
+    "digestKeywordsHint": "用逗号分隔。留空则接收全行业的重点信号。"
   },
   "common": {
     "comingSoon": "即将推出",

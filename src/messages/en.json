@@ -297,7 +297,13 @@
     "perMonth": "/mo",
     "billingSuccess": "Subscription active — thank you! It may take a few seconds to reflect.",
     "billingCanceled": "Checkout canceled. You can upgrade anytime.",
-    "billingUnconfigured": "Online payment is not enabled yet. Contact us to upgrade."
+    "billingUnconfigured": "Online payment is not enabled yet. Contact us to upgrade.",
+    "digestTitle": "Daily opportunity email",
+    "digestIntro": "Get a daily “France opportunity radar” — new tenders, funding signals and news matched to your keywords.",
+    "digestEnable": "Send me the daily digest",
+    "digestKeywords": "Keywords (optional)",
+    "digestKeywordsPlaceholder": "e.g. logistics, santé, Lyon",
+    "digestKeywordsHint": "Comma-separated. Leave empty to receive top signals across all sectors."
   },
   "common": {
     "comingSoon": "Coming soon",

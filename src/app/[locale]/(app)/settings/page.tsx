@@ -9,6 +9,7 @@ import { PageHeader } from '@/components/page-header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { BillingPanel } from '@/components/settings/billing-panel';
+import { DigestPanel } from '@/components/settings/digest-panel';
 
 export default async function SettingsPage() {
   const [t, user] = await Promise.all([
@@ -69,6 +70,8 @@ export default async function SettingsPage() {
             </p>
           </CardContent>
         </Card>
+
+        <DigestPanel enabled={user.digestEnabled} keywords={user.digestKeywords} />
 
         <Suspense fallback={null}>
           <BillingPanel

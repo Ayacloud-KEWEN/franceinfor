@@ -297,7 +297,13 @@
     "perMonth": "/mois",
     "billingSuccess": "Abonnement actif — merci ! L'affichage peut prendre quelques secondes.",
     "billingCanceled": "Paiement annulé. Vous pouvez vous abonner à tout moment.",
-    "billingUnconfigured": "Le paiement en ligne n'est pas encore activé. Contactez-nous pour passer à l'offre supérieure."
+    "billingUnconfigured": "Le paiement en ligne n'est pas encore activé. Contactez-nous pour passer à l'offre supérieure.",
+    "digestTitle": "E-mail quotidien d’opportunités",
+    "digestIntro": "Recevez chaque jour votre « radar d’opportunités France » — nouveaux appels d’offres, levées et actualités selon vos mots-clés.",
+    "digestEnable": "M’envoyer le résumé quotidien",
+    "digestKeywords": "Mots-clés (optionnel)",
+    "digestKeywordsPlaceholder": "ex. logistique, santé, Lyon",
+    "digestKeywordsHint": "Séparés par des virgules. Laissez vide pour recevoir les meilleurs signaux tous secteurs."
   },
   "common": {
     "comingSoon": "Bientôt disponible",

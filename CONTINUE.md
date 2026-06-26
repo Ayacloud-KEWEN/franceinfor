@@ -134,6 +134,14 @@ prisma/                        schema + seed
 - **配额说明**：每日翻译配额仍按"调用次数"计（缓存命中不耗 token，仅限免费用户每天触发次数）。
 - Schema 新增 `Translation` 表（纯增量，自动部署 `prisma db push` 自动建）。验证：键计算/命中/未命中/去重幂等均 OK。
 
+## 📬 每日机会邮件 + 订阅提醒（本次新增）
+- **订阅设置**：设置页新增「每日机会邮件」面板（`components/settings/digest-panel.tsx` + `actions/digest.ts`）：开关 + 关键词（逗号分隔，留空=全行业重点）。存 `User.digestEnabled/digestKeywords/digestLastSentAt`。
+- **摘要内容**：`lib/digest.ts#buildDigest` 聚合当天 新闻 + BOAMP 招标 + 融资信号（按关键词过滤），组成「法国机会雷达」邮件（三语问候/标题/页脚链接）。`sendDailyDigests` 遍历已订阅用户，**当天已发则跳过**（`digestLastSentAt`），经 `notify.ts#notifyEmail`（Resend）发送。
+- **触发**：`GET /api/cron/digest?key=<CRON_SECRET>`（或 Bearer），需配 `CRON_SECRET`。由**外部调度**每天调一次（服务器 crontab 或 GitHub Actions）。
+- 验证：无 key→401、触发→sent:1（正文含真实新闻+招标+链接）、重复触发→skipped:1（当天不重发）。
+- **上线要做**：① 服务器 `.env` 设 `CRON_SECRET="<随机串>"` + `pm2 restart`；② 加每日定时：
+  `crontab -e` → `0 7 * * * curl -s "https://infr.europeanaialliance.org/api/cron/digest?key=<CRON_SECRET>" >/dev/null`（每天 07:00）。依赖邮件已接通（[[email-and-resend]]）。
+
 ## 当前状态小结（截至本次会话）
 - 15 个模块均已上线，多数接真实数据（企业/招标 BOAMP+TED/市场 Eurostat/新闻 Google News/信用财务+法律 BODACC/机会发现/买家意向/网络/事件）。
 - 翻译：新闻/Dashboard/意向标题按界面语言用 LLM 翻译（JSON 数组解析，已修复对 DeepSeek 的兼容）。

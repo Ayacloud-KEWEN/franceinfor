@@ -36,7 +36,13 @@ model User {
   subscriptionStatus   String?
   currentPeriodEnd     DateTime?
 
+  // Daily "France opportunity radar" email digest
+  digestEnabled    Boolean   @default(false)
+  digestKeywords   String[]  @default([])
+  digestLastSentAt DateTime?
+
   @@index([stripeCustomerId])
+  @@index([digestEnabled])
 
   sessions     Session[]
   searches     SearchLog[]
