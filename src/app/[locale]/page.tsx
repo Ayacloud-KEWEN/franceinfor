@@ -13,7 +13,7 @@ import {
   Check, ArrowRight, Sparkles,
 } from 'lucide-react';
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://infr.europeanaialliance.org';
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://francego.fr';
 // GA4 measurement id is public (exposed in the gtag URL); env can override it.
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-DR6YV2QTQN';
 

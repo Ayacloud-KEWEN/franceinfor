@@ -6,7 +6,7 @@ import { searchTenders } from './sources/boamp';
 import { fundingSignalsReal } from './sources/funding-signals';
 import type { User } from '@prisma/client';
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://infr.europeanaialliance.org';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://francego.fr';
 
 function matchesKeywords(text: string, keywords: string[]): boolean {
   if (!keywords.length) return true;
