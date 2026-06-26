@@ -61,7 +61,7 @@
 ## 3. 迁移/扩容 Checklist（按此顺序补齐）
 
 1. ☑ 应用无状态、状态在 Postgres（已具备）。
-2. ☐ **限流换 Redis**（多实例前必做；项目已有 Redis）。
+2. ☑ **限流换 Redis**（已完成：`lib/rate-limit.ts` 配 `REDIS_URL` 时用 Redis 固定窗口，否则内存兜底；Redis 故障放行）。
 3. ☐ **对象存储**接入（开始抓原始文档前定好；存 PDF/原网页）。
 4. ☐ **pgvector** 扩展 + embedding 列（上 RAG/知识图谱时）。
 5. ☐ **Dockerfile + compose**（让迁移=拉镜像；当前是 CloudPanel + pm2，可平滑过渡）。

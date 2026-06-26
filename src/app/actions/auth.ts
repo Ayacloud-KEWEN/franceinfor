@@ -64,7 +64,7 @@ export async function requestPasswordResetAction(
   const locale = String(formData.get('locale') || 'en');
   if (!email) return { error: 'Email required.' };
 
-  if (!rateLimit(`pwreset:${email}`, 3, 60 * 60_000)) return { sent: true };
+  if (!(await rateLimit(`pwreset:${email}`, 3, 60 * 60_000))) return { sent: true };
 
   const user = await prisma.user.findUnique({ where: { email } });
   if (user) {

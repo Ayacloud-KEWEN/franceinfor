@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   if (!titles.length) return NextResponse.json({ translations: [] });
 
   // Burst limit: max 15 translate calls per minute per user.
-  if (!rateLimit(`translate:${user.id}`, 15, 60_000)) {
+  if (!(await rateLimit(`translate:${user.id}`, 15, 60_000))) {
     return NextResponse.json({ translations: titles, limited: 'rate' });
   }
 

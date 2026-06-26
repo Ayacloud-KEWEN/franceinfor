@@ -31,7 +31,11 @@ export async function POST(req: NextRequest) {
 
   // Rate limit: max 3 submissions / 10 min per IP, and 3 / hour per email.
   const ip = clientIp(req);
-  if (!rateLimit(`lead:ip:${ip}`, 3, 10 * 60_000) || !rateLimit(`lead:email:${email}`, 3, 60 * 60_000)) {
+  const [ipOk, emailOk] = await Promise.all([
+    rateLimit(`lead:ip:${ip}`, 3, 10 * 60_000),
+    rateLimit(`lead:email:${email}`, 3, 60 * 60_000),
+  ]);
+  if (!ipOk || !emailOk) {
     return NextResponse.json({ error: 'rate_limited' }, { status: 429 });
   }
 
