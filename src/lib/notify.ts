@@ -27,3 +27,16 @@ export async function notifyAdmin(subject: string, body: string): Promise<void> 
     console.error('[notify:admin] failed:', (e as Error).message);
   }
 }
+
+// Email a specific user (e.g. password-reset link). Until sendEmail is wired,
+// the message is logged server-side. Returns whether it was actually emailed.
+export async function notifyEmail(to: string, subject: string, body: string): Promise<boolean> {
+  try {
+    const sent = await sendEmail(to, subject, body);
+    if (!sent) console.log(`[notify:email] to=${to} ${subject}\n${body}`);
+    return sent;
+  } catch (e) {
+    console.error('[notify:email] failed:', (e as Error).message);
+    return false;
+  }
+}

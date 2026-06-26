@@ -59,6 +59,39 @@ export async function getCurrentUser(): Promise<User | null> {
   return session.user;
 }
 
+const RESET_TTL_MS = 1000 * 60 * 60; // 1 hour
+
+// Create a single-use reset token; returns the raw token for the email link.
+export async function createPasswordResetToken(userId: string): Promise<string> {
+  const token = generateSessionToken();
+  await prisma.passwordResetToken.create({
+    data: { id: hashToken(token), userId, expiresAt: new Date(Date.now() + RESET_TTL_MS) },
+  });
+  return token;
+}
+
+// Validate + consume a reset token. Returns the userId, or null if invalid/expired.
+export async function consumePasswordResetToken(token: string): Promise<string | null> {
+  if (!token) return null;
+  const id = hashToken(token);
+  const row = await prisma.passwordResetToken.findUnique({ where: { id } });
+  if (!row) return null;
+  // Single-use: delete regardless of outcome.
+  await prisma.passwordResetToken.delete({ where: { id } }).catch(() => {});
+  if (row.expiresAt < new Date()) return null;
+  return row.userId;
+}
+
+// Set a new password and invalidate all existing sessions + reset tokens.
+export async function setPassword(userId: string, password: string): Promise<void> {
+  await prisma.user.update({
+    where: { id: userId },
+    data: { passwordHash: await hashPassword(password) },
+  });
+  await prisma.session.deleteMany({ where: { userId } });
+  await prisma.passwordResetToken.deleteMany({ where: { userId } });
+}
+
 export async function destroySession(): Promise<void> {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE)?.value;

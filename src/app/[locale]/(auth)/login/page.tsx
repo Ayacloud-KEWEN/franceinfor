@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { AuthForm } from '@/components/auth-form';
 
@@ -6,7 +7,9 @@ export default async function LoginPage() {
   return (
     <div>
       <h2 className="mb-6 text-lg font-semibold">{t('signInTitle')}</h2>
-      <AuthForm mode="login" />
+      <Suspense fallback={null}>
+        <AuthForm mode="login" />
+      </Suspense>
     </div>
   );
 }

@@ -52,6 +52,17 @@ model Session {
   @@index([userId])
 }
 
+// Single-use password-reset tokens. `id` stores sha256(token); the raw token
+// only ever lives in the emailed link.
+model PasswordResetToken {
+  id        String   @id
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
 // Usage tracking for quota enforcement (Free = 10 searches/day)
 model SearchLog {
   id        String   @id @default(cuid())

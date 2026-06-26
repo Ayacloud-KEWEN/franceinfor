@@ -106,7 +106,19 @@
     "signInTitle": "Connectez-vous à votre compte",
     "signUpTitle": "Créez votre compte",
     "noAccount": "Pas encore de compte ?",
-    "haveAccount": "Vous avez déjà un compte ?"
+    "haveAccount": "Vous avez déjà un compte ?",
+    "forgotPassword": "Mot de passe oublié ?",
+    "forgotTitle": "Réinitialiser le mot de passe",
+    "forgotIntro": "Saisissez l’e-mail de votre compte et nous vous enverrons un lien de réinitialisation.",
+    "sendResetLink": "Envoyer le lien",
+    "resetSent": "Si un compte existe pour cet e-mail, un lien de réinitialisation arrive. Vérifiez votre boîte.",
+    "backToLogin": "Retour à la connexion",
+    "resetTitle": "Définir un nouveau mot de passe",
+    "newPassword": "Nouveau mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "resetPassword": "Réinitialiser",
+    "resetNoToken": "Lien de réinitialisation manquant ou invalide. Demandez-en un nouveau.",
+    "resetDone": "Votre mot de passe a été réinitialisé. Veuillez vous connecter."
   },
   "dashboard": {
     "goodMorning": "Bonjour",

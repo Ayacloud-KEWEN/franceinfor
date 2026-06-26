@@ -106,7 +106,19 @@
     "signInTitle": "Sign in to your account",
     "signUpTitle": "Create your account",
     "noAccount": "Don't have an account?",
-    "haveAccount": "Already have an account?"
+    "haveAccount": "Already have an account?",
+    "forgotPassword": "Forgot password?",
+    "forgotTitle": "Reset your password",
+    "forgotIntro": "Enter your account email and we’ll send you a reset link.",
+    "sendResetLink": "Send reset link",
+    "resetSent": "If an account exists for that email, a reset link is on its way. Check your inbox.",
+    "backToLogin": "Back to sign in",
+    "resetTitle": "Set a new password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "resetPassword": "Reset password",
+    "resetNoToken": "Missing or invalid reset link. Request a new one.",
+    "resetDone": "Your password has been reset. Please sign in."
   },
   "dashboard": {
     "goodMorning": "Good morning",

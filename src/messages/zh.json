@@ -106,7 +106,19 @@
     "signInTitle": "登录您的账户",
     "signUpTitle": "创建您的账户",
     "noAccount": "还没有账户？",
-    "haveAccount": "已有账户？"
+    "haveAccount": "已有账户？",
+    "forgotPassword": "忘记密码？",
+    "forgotTitle": "重置密码",
+    "forgotIntro": "输入你的账户邮箱，我们会发送重置链接。",
+    "sendResetLink": "发送重置链接",
+    "resetSent": "若该邮箱存在账户，重置链接已在发送途中，请查收邮箱。",
+    "backToLogin": "返回登录",
+    "resetTitle": "设置新密码",
+    "newPassword": "新密码",
+    "confirmPassword": "确认密码",
+    "resetPassword": "重置密码",
+    "resetNoToken": "重置链接缺失或无效，请重新申请。",
+    "resetDone": "密码已重置，请登录。"
   },
   "dashboard": {
     "goodMorning": "早上好",

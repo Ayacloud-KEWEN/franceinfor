@@ -113,6 +113,13 @@ prisma/                        schema + seed
 - 验证：curl /zh/compliance 200，中文正文/导出按钮/打印表头均命中（预览浏览器本次崩溃，未截图）。
 - **待办**：按公司画像自动选行业、fr 正文、服务端直接生成可下载 .pdf（需嵌 CJK 字体）。
 
+## 🔑 找回密码（本次新增）
+- **流程**：登录页「忘记密码?」→ `/forgot-password`(输邮箱)→ 邮件发重置链接 → `/reset-password?token=…`(设新密码)→ 跳回登录(`?reset=done` 横幅)。
+- **服务端**：`actions/auth.ts` 的 `requestPasswordResetAction`(总是报成功、不泄露邮箱是否存在、按邮箱限流 3次/时)、`resetPasswordAction`(校验令牌+两次密码一致+≥6位)。令牌助手在 `lib/auth.ts`：`createPasswordResetToken`/`consumePasswordResetToken`(单次性、1h 过期、sha256 存储)/`setPassword`(改密 + 清空该用户所有 session 和令牌)。
+- **Schema**：新增 `PasswordResetToken` 表(id=sha256(token))，纯增量，自动部署 `prisma db push` 自动建。
+- **邮件**：重置链接经 `notify.ts#notifyEmail` 发给用户——**接通 Resend/SMTP 前先打服务器日志**(`[notify:email] …`)，接通后立即真发。**这是唯一待办**。
+- 验证：令牌生命周期(有效/单次/过期/改密)用 prisma 直测全 OK；各页 200、三语、登录页链接均在。
+
 ## 当前状态小结（截至本次会话）
 - 15 个模块均已上线，多数接真实数据（企业/招标 BOAMP+TED/市场 Eurostat/新闻 Google News/信用财务+法律 BODACC/机会发现/买家意向/网络/事件）。
 - 翻译：新闻/Dashboard/意向标题按界面语言用 LLM 翻译（JSON 数组解析，已修复对 DeepSeek 的兼容）。
