@@ -5,7 +5,8 @@
 ## 这是什么
 **FranceGo**（原 France Business Development OS）—— 面向出海客户的法国市场拓展 SaaS（商用）。
 线上：**https://francego.fr** · 仓库：`Ayacloud-KEWEN/franceinfor`（main 分支自动部署）。
-> 品牌名 = **FranceGo**（在 `messages/*.json` 的 `brand` 命名空间 + 各 logo）。**基础设施标识不要改**：pm2 进程 `france-os`、仓库 `franceinfor`、目录、数据库名都保持原样。
+> 品牌名 = **FranceGo**（在 `messages/*.json` 的 `brand` 命名空间 + 各 logo）。**基础设施标识不要改**：pm2 进程 `france-os`、仓库 `franceinfor`、目录 `htdocs/infr.europeanaialliance.org`、数据库名都保持原样。
+> **域名迁移已完成并线上验证**：主域 `francego.fr`（Cloudflare），旧域 `infr.europeanaialliance.org` 由中间件 301 跳转；SEO canonical/hreflang/og、SSL、三语、各端点线上均确认。发信域 `send.francego.fr` 已在 Resend 验证。Resend key 由用户更换过（本地 `.env.local` 旧 key 已失效，仅影响本地）。
 > 资源在 `public/`：`logo.png`（侧栏/登录/favicon 来源）、`login.png`（登录页左侧视觉图）、`favicon.ico`/`icon-*`/`apple-touch-icon.png`（`layout.tsx` 的 `metadata.icons`）。
 
 ## 先读这几份文档

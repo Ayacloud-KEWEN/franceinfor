@@ -66,7 +66,11 @@ export function BillingPanel({
           {ORDER.map((p) => {
             const info = PLAN_LIMITS[p];
             const isCurrent = p === currentPlan;
-            const canBuy = PURCHASABLE.includes(p) && !isCurrent;
+            // Only offer a purchasable plan that is strictly higher than the
+            // current one — never "upgrade" to a lower tier (e.g. an Enterprise
+            // user shouldn't see Professional/Business buttons).
+            const canBuy =
+              PURCHASABLE.includes(p) && ORDER.indexOf(p) > ORDER.indexOf(currentPlan);
             return (
               <div
                 key={p}
