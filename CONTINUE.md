@@ -4,7 +4,7 @@
 
 ## 这是什么
 **FranceGo**（原 France Business Development OS）—— 面向出海客户的法国市场拓展 SaaS（商用）。
-线上：**https://infr.europeanaialliance.org** · 仓库：`Ayacloud-KEWEN/franceinfor`（main 分支自动部署）。
+线上：**https://francego.fr** · 仓库：`Ayacloud-KEWEN/franceinfor`（main 分支自动部署）。
 > 品牌名 = **FranceGo**（在 `messages/*.json` 的 `brand` 命名空间 + 各 logo）。**基础设施标识不要改**：pm2 进程 `france-os`、仓库 `franceinfor`、目录、数据库名都保持原样。
 > 资源在 `public/`：`logo.png`（侧栏/登录/favicon 来源）、`login.png`（登录页左侧视觉图）、`favicon.ico`/`icon-*`/`apple-touch-icon.png`（`layout.tsx` 的 `metadata.icons`）。
 
@@ -54,7 +54,7 @@ prisma/                        schema + seed
   STRIPE_PRICE_PROFESSIONAL="price_..." # Live 模式重建的（Test 的在 Live 无效）
   STRIPE_PRICE_BUSINESS="price_..."
   ```
-  另需 `NEXT_PUBLIC_APP_URL="https://infr.europeanaialliance.org"`（**构建时注入**，改了要重新 build）。
+  另需 `NEXT_PUBLIC_APP_URL="https://francego.fr"`（**构建时注入**，改了要重新 build）。
 
 ### 本地 Test 模式怎么跑（复现验证）
 - `.env.local`（git 忽略）填 `sk_test_` + 两个 test `price_` + `whsec_`。
@@ -140,7 +140,7 @@ prisma/                        schema + seed
 - **触发**：`GET /api/cron/digest?key=<CRON_SECRET>`（或 Bearer），需配 `CRON_SECRET`。由**外部调度**每天调一次（服务器 crontab 或 GitHub Actions）。
 - 验证：无 key→401、触发→sent:1（正文含真实新闻+招标+链接）、重复触发→skipped:1（当天不重发）。
 - **上线要做**：① 服务器 `.env` 设 `CRON_SECRET="<随机串>"` + `pm2 restart`；② 加每日定时：
-  `crontab -e` → `0 7 * * * curl -s "https://infr.europeanaialliance.org/api/cron/digest?key=<CRON_SECRET>" >/dev/null`（每天 07:00）。依赖邮件已接通（[[email-and-resend]]）。
+  `crontab -e` → `0 7 * * * curl -s "https://francego.fr/api/cron/digest?key=<CRON_SECRET>" >/dev/null`（每天 07:00）。依赖邮件已接通（[[email-and-resend]]）。
 
 ## 当前状态小结（截至本次会话）
 - 15 个模块均已上线，多数接真实数据（企业/招标 BOAMP+TED/市场 Eurostat/新闻 Google News/信用财务+法律 BODACC/机会发现/买家意向/网络/事件）。

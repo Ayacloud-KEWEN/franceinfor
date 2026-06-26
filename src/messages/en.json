@@ -303,7 +303,9 @@
     "digestEnable": "Send me the daily digest",
     "digestKeywords": "Keywords (optional)",
     "digestKeywordsPlaceholder": "e.g. logistics, santé, Lyon",
-    "digestKeywordsHint": "Comma-separated. Leave empty to receive top signals across all sectors."
+    "digestKeywordsHint": "Comma-separated. Leave empty to receive top signals across all sectors.",
+    "save": "Save",
+    "saved": "Saved"
   },
   "common": {
     "comingSoon": "Coming soon",

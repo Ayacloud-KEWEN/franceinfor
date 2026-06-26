@@ -1,6 +1,6 @@
 # 部署指南 — CloudPanel VPS（实战版）
 
-**线上地址：https://infr.europeanaialliance.org**
+**线上地址：https://francego.fr**
 本指南记录本项目在 **CloudPanel VPS（与其他站点共存）** 的完整部署流程，以及实战中踩过的坑。
 方案：复用现有 PostgreSQL（独立库）· 在线大模型 + API Key · Git 拉取 + GitHub Actions 自动部署。
 
@@ -60,7 +60,7 @@ git clone https://github.com/Ayacloud-KEWEN/franceinfor.git .
 - `DATABASE_URL`（第 3 步，注意 `%24`）
 - `SESSION_SECRET`（`openssl rand -hex 32`）
 - `AI_PROVIDER` + 对应 `*_API_KEY`（在线模型；空着会自动回退 mock，不崩）
-- `PORT="3011"`、`NEXT_PUBLIC_APP_URL="https://infr.europeanaialliance.org"`
+- `PORT="3011"`、`NEXT_PUBLIC_APP_URL="https://francego.fr"`
 
 ### 功能性变量（按需启用；运行时读取，改完 `pm2 restart` 即可，无需 build）
 ```env
@@ -71,7 +71,7 @@ STRIPE_PRICE_PROFESSIONAL="price_..."      # Live 价格
 STRIPE_PRICE_BUSINESS="price_..."
 # 邮件（找回密码 / 留资·注册通知 / 每日摘要）—— Resend
 RESEND_API_KEY="re_..."
-RESEND_FROM="FranceGo <noreply@send.ayacloud.fr>"   # 发信域名已验证
+RESEND_FROM="FranceGo <noreply@send.francego.fr>"   # 发信域名（需在 Resend 验证 send.francego.fr）
 ADMIN_EMAIL="wenke2012@gmail.com"          # 留资/注册通知收件人（默认 fdcaptain@gmail.com）
 # 每日机会邮件 cron 密钥
 CRON_SECRET="<openssl rand -hex 16>"
@@ -83,7 +83,7 @@ NEWS_REVALIDATE_SECONDS="43200"
 ### 每日机会邮件定时（设完 `CRON_SECRET` 后）
 `crontab -e` 加一行（每天 07:00 触发摘要）：
 ```cron
-0 7 * * * curl -s "https://infr.europeanaialliance.org/api/cron/digest?key=<CRON_SECRET>" >/dev/null
+0 7 * * * curl -s "https://francego.fr/api/cron/digest?key=<CRON_SECRET>" >/dev/null
 ```
 
 ## 6. 安装 / 建表 / 构建
@@ -105,7 +105,17 @@ curl -I http://127.0.0.1:3011/en/login   # 期望 200
 ```
 
 ## 8. SSL
-CloudPanel 站点 → SSL/TLS → Let's Encrypt → 签发 `infr.europeanaialliance.org`。
+CloudPanel 站点 → SSL/TLS → Let's Encrypt → 签发对应域名。
+
+## 8b. 域名迁移到 francego.fr（实操记录）
+主域已从 `infr.europeanaialliance.org` 迁到 **`francego.fr`**（DNS 在 **Cloudflare**，灰云 DNS-only）。**应用、pm2 进程、站点目录都不变**——只是多挂一个域名指向同一个 app（`127.0.0.1:3011`）。
+1. **Cloudflare DNS**：`A @ → 51.210.7.13`、`A www → 51.210.7.13`，**灰云**（Proxied 关）；删除任何指向 OVH 停放 `213.186.33.5` 的旧记录；OVH 注册商 NS 已切到 Cloudflare（`dig NS francego.fr` 确认）。
+   > 踩坑：CloudPanel 反代站点**不能在「Domains」加多域名** → 给 francego.fr **单独新建一个 Reverse Proxy 站点**（Add Site → Create a Reverse Proxy，URL `http://127.0.0.1:3011`），再签 SSL。SSL 报 `unauthorized / 213.186.33.5 ... Site en construction` = DNS 还指着 OVH 停放，没指向 VPS。
+2. **应用 URL**：服务器 `.env` 设 `NEXT_PUBLIC_APP_URL="https://francego.fr"` → 因是构建时注入，须 `npm run build && pm2 reload france-os`（或 push 触发自动部署）。
+3. **Stripe**：Webhook URL 改 `https://francego.fr/api/stripe/webhook`。
+4. **Resend**：在 Resend 验证 `send.francego.fr`（DNS 记录加到 Cloudflare）→ `.env` 改 `RESEND_FROM="FranceGo <noreply@send.francego.fr>"` → `pm2 restart`。
+5. **旧域名 301**：编辑旧站点 Vhost，把 `location / { proxy_pass ... }` 换成 `location / { return 301 https://francego.fr$request_uri; }`。
+6. **cron**：把每日摘要 crontab 的 URL 改成 francego.fr。
 
 ## 9. 安全收尾（重要）
 `prisma/seed.ts` 会建一个**公开已知密码的演示管理员** `demo@france-os.com / demo1234`。上线后务必：

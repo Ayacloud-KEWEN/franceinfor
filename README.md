@@ -1,7 +1,7 @@
 # FranceGo（原 France Business Development OS）
 
 面向出海客户的 **AI 驱动法国市场拓展 SaaS**（商用）。把法国实时数据——企业、招标、融资、补贴、合规——转化为商机、信号与落地方案。
-**线上：https://infr.europeanaialliance.org** · 品牌名 = **FranceGo**（基础设施标识 pm2 `france-os`/仓库 `franceinfor` 保持不变）。
+**线上：https://francego.fr**（旧域名 `infr.europeanaialliance.org` 301 跳转至此）· 品牌名 = **FranceGo**（基础设施标识 pm2 `france-os`/仓库 `franceinfor`/服务器目录 `htdocs/infr.europeanaialliance.org` 保持不变）。
 
 📚 **文档导航**
 - [USER_GUIDE.md](USER_GUIDE.md) — 详细功能与使用手册（各模块怎么用）
@@ -47,7 +47,7 @@
 | **每日机会邮件** — 订阅关键词 → 每日「法国机会雷达」邮件（cron 触发） | ✅ |
 | **Stripe 真实订阅** — Professional €99 / Business €299，结账/门户/Webhook，**Live 已激活** | ✅ |
 | **找回密码** — 自助重置（令牌单次/1h 过期）+ 邮件 | ✅ |
-| **事务邮件（Resend）** — 发信域名 `send.ayacloud.fr` 已验证 | ✅ |
+| **事务邮件（Resend）** — 发信域名 `send.francego.fr`（迁移后需在 Resend 重新验证；`send.ayacloud.fr` 仍可用作过渡） | ✅ |
 
 > 15 个核心模块 + 变现/留存/合规/营销全链路已上线。后续可选：注册画像个性化、团队账号/白标、招聘信号(France Travail)、报告 RAG+引用。详见 [ROADMAP.md](ROADMAP.md)。
 
@@ -106,7 +106,7 @@ npm run dev          # http://localhost:3000
 | 变量 | 用途 |
 |------|------|
 | `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` / `STRIPE_PRICE_PROFESSIONAL` / `STRIPE_PRICE_BUSINESS` | Stripe 订阅（未配则设置页显示「未开通在线支付」） |
-| `RESEND_API_KEY` / `RESEND_FROM` | 事务邮件（找回密码、留资/注册通知、每日摘要）；`RESEND_FROM="FranceGo <noreply@send.ayacloud.fr>"` |
+| `RESEND_API_KEY` / `RESEND_FROM` | 事务邮件（找回密码、留资/注册通知、每日摘要）；`RESEND_FROM="FranceGo <noreply@send.francego.fr>"` |
 | `ADMIN_EMAIL` | 留资/注册通知收件人（默认 `fdcaptain@gmail.com`） |
 | `CRON_SECRET` | 保护 `/api/cron/digest` 的密钥；外部调度每天调用一次 |
 | `NEWS_REVALIDATE_SECONDS` | 新闻抓取缓存秒数（默认 43200=12h；设 86400 改为一天一拉） |

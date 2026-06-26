@@ -303,7 +303,9 @@
     "digestEnable": "M’envoyer le résumé quotidien",
     "digestKeywords": "Mots-clés (optionnel)",
     "digestKeywordsPlaceholder": "ex. logistique, santé, Lyon",
-    "digestKeywordsHint": "Séparés par des virgules. Laissez vide pour recevoir les meilleurs signaux tous secteurs."
+    "digestKeywordsHint": "Séparés par des virgules. Laissez vide pour recevoir les meilleurs signaux tous secteurs.",
+    "save": "Enregistrer",
+    "saved": "Enregistré"
   },
   "common": {
     "comingSoon": "Bientôt disponible",

@@ -303,7 +303,9 @@
     "digestEnable": "给我发送每日摘要",
     "digestKeywords": "关键词（选填）",
     "digestKeywordsPlaceholder": "如 物流、santé、Lyon",
-    "digestKeywordsHint": "用逗号分隔。留空则接收全行业的重点信号。"
+    "digestKeywordsHint": "用逗号分隔。留空则接收全行业的重点信号。",
+    "save": "保存",
+    "saved": "已保存"
   },
   "common": {
     "comingSoon": "即将推出",
