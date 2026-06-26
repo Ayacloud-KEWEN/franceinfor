@@ -15,10 +15,65 @@ export interface ChecklistSection {
   items: string[];
 }
 
+export interface ResourceLink {
+  label: string;
+  url: string;
+}
+
 export interface SectorCompliance {
   sector: string; // key
   sections: ChecklistSection[];
+  links: ResourceLink[];
 }
+
+// Official websites — common to every sector.
+const LINKS_BASE: ResourceLink[] = [
+  { label: 'Guichet unique (company registration)', url: 'https://formalites.entreprises.gouv.fr/' },
+  { label: 'INPI', url: 'https://www.inpi.fr/' },
+  { label: 'impots.gouv.fr (tax / VAT)', url: 'https://www.impots.gouv.fr/' },
+  { label: 'URSSAF (social contributions)', url: 'https://www.urssaf.fr/' },
+  { label: 'service-public.fr — entreprises', url: 'https://entreprendre.service-public.fr/' },
+  { label: 'CNIL (GDPR)', url: 'https://www.cnil.fr/' },
+  { label: 'DGCCRF (consumer protection)', url: 'https://www.economie.gouv.fr/dgccrf' },
+];
+
+// Sector-specific official websites.
+const LINKS_OVERLAY: Record<string, ResourceLink[]> = {
+  generic: [],
+  food: [
+    { label: 'Ministère de l’Agriculture (sécurité sanitaire)', url: 'https://agriculture.gouv.fr/' },
+    { label: 'HACCP — service-public', url: 'https://entreprendre.service-public.fr/vosdroits/F32285' },
+  ],
+  health: [
+    { label: 'ANSM', url: 'https://ansm.sante.fr/' },
+    { label: 'HAS (Haute Autorité de Santé)', url: 'https://www.has-sante.fr/' },
+  ],
+  construction: [
+    { label: 'Qualibat', url: 'https://www.qualibat.com/' },
+    { label: 'France Rénov’ (RGE)', url: 'https://france-renov.gouv.fr/' },
+  ],
+  finance: [
+    { label: 'ACPR (Banque de France)', url: 'https://acpr.banque-france.fr/' },
+    { label: 'AMF', url: 'https://www.amf-france.org/' },
+    { label: 'TRACFIN', url: 'https://www.economie.gouv.fr/tracfin' },
+  ],
+  cosmetics: [
+    { label: 'EU CPNP (cosmetics notification)', url: 'https://ec.europa.eu/growth/sectors/cosmetics_en' },
+    { label: 'ANSM — cosmétiques', url: 'https://ansm.sante.fr/' },
+  ],
+  tech: [
+    { label: 'Accessibilité numérique (RGAA)', url: 'https://accessibilite.numerique.gouv.fr/' },
+    { label: 'CNIL', url: 'https://www.cnil.fr/' },
+  ],
+  retail: [
+    { label: 'Citeo (packaging EPR)', url: 'https://www.citeo.com/' },
+    { label: 'Droit de rétractation — service-public', url: 'https://www.economie.gouv.fr/dgccrf' },
+  ],
+  energy: [
+    { label: 'ADEME', url: 'https://www.ademe.fr/' },
+    { label: 'ICPE — Géorisques', url: 'https://www.georisques.gouv.fr/' },
+  ],
+};
 
 function pick(l: Localized, loc: Loc): string[] {
   return loc === 'zh' ? l.zh : l.en; // fr → en fallback
@@ -223,5 +278,6 @@ export function getCompliance(sectorKey: string, loc: Loc = 'en'): SectorComplia
       { id: 'sector', items: pick(OVERLAYS[key], loc) },
       { id: 'gdpr', items: pick(BASE.gdpr, loc) },
     ],
+    links: [...LINKS_BASE, ...(LINKS_OVERLAY[key] ?? [])],
   };
 }

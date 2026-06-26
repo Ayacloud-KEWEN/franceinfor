@@ -450,7 +450,8 @@
       "retail": "Retail & e-commerce",
       "energy": "Energy & GreenTech"
     },
-    "exportPdf": "Export PDF"
+    "exportPdf": "Export PDF",
+    "resources": "Official resources"
   },
   "landing": {
     "signIn": "Sign in",

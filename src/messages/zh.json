@@ -450,7 +450,8 @@
       "retail": "零售与电商",
       "energy": "能源与绿色科技"
     },
-    "exportPdf": "导出 PDF"
+    "exportPdf": "导出 PDF",
+    "resources": "官方资源链接"
   },
   "landing": {
     "signIn": "登录",

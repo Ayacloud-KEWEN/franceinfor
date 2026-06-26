@@ -4,8 +4,15 @@ import { prisma } from '@/lib/prisma';
 import { PageHeader } from '@/components/page-header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { LeadStatusSelect } from '@/components/admin/lead-status-select';
+import { BarChart3, ExternalLink } from 'lucide-react';
 import type { Plan } from '@prisma/client';
+
+// Google Analytics property dashboard (GA4). Opens GA where the admin selects
+// the property; override with NEXT_PUBLIC_GA_DASHBOARD_URL if you have a direct link.
+const GA_DASHBOARD_URL =
+  process.env.NEXT_PUBLIC_GA_DASHBOARD_URL || 'https://analytics.google.com/analytics/web/';
 
 export const dynamic = 'force-dynamic';
 
@@ -46,7 +53,17 @@ export default async function AdminPage() {
 
   return (
     <div className="max-w-6xl space-y-6">
-      <PageHeader title="Admin" subtitle="Users, billing events & service inquiries" />
+      <PageHeader
+        title="Admin"
+        subtitle="Users, billing events & service inquiries"
+        action={
+          <a href={GA_DASHBOARD_URL} target="_blank" rel="noopener noreferrer">
+            <Button variant="outline" size="sm">
+              <BarChart3 size={15} /> Google Analytics <ExternalLink size={13} />
+            </Button>
+          </a>
+        }
+      />
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
         {stats.map((s) => (
