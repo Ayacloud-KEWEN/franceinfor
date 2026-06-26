@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://infr.europeanaialliance.org';
+// GA4 measurement id is public (exposed in the gtag URL); env can override it.
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-DR6YV2QTQN';
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -216,7 +218,7 @@ export default async function LandingPage({
       </footer>
 
       <CookieConsent />
-      <Analytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+      <Analytics gaId={GA_ID} />
     </div>
   );
 }
