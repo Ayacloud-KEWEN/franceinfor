@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { LeadForm } from '@/components/services/lead-form';
-import { getCompliance, COMPLIANCE_SECTORS } from '@/lib/data/compliance';
-import { Scale, Receipt, Users, ShieldCheck, Lock, Check, Sparkles } from 'lucide-react';
+import { getCompliance, COMPLIANCE_SECTORS, type Loc } from '@/lib/data/compliance';
+import { Scale, Receipt, Users, ShieldCheck, Lock, Check, Sparkles, Download } from 'lucide-react';
 import type { ChecklistSection } from '@/lib/data/compliance';
 
 const SECTION_ICON: Record<ChecklistSection['id'], typeof Scale> = {
@@ -18,12 +19,15 @@ const SECTION_ICON: Record<ChecklistSection['id'], typeof Scale> = {
 
 export function ComplianceChecklist() {
   const t = useTranslations('compliance');
+  const locale = useLocale() as Loc;
   const [sector, setSector] = useState('generic');
-  const data = getCompliance(sector);
+  const data = getCompliance(sector, locale);
+  const today = new Date().toLocaleDateString(locale === 'zh' ? 'zh-CN' : locale === 'fr' ? 'fr-FR' : 'en-GB');
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-center gap-3">
+      {/* Controls — hidden when printing */}
+      <div className="flex flex-wrap items-center gap-3 print:hidden">
         <label className="text-sm font-medium">{t('selectSector')}</label>
         <select
           value={sector}
@@ -34,16 +38,26 @@ export function ComplianceChecklist() {
             <option key={s} value={s}>{t(`sector.${s}`)}</option>
           ))}
         </select>
+        <Button variant="outline" size="sm" onClick={() => window.print()} className="ml-auto">
+          <Download size={15} /> {t('exportPdf')}
+        </Button>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      {/* Print-only header (FranceGo · sector · date) */}
+      <div className="hidden print:block">
+        <div className="mb-1 text-lg font-bold">FranceGo — {t('title')}</div>
+        <div className="text-sm text-muted-foreground">{t(`sector.${sector}`)} · {today}</div>
+        <hr className="my-3" />
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2 print:grid-cols-2">
         {data.sections.map((section) => {
           const Icon = SECTION_ICON[section.id];
           return (
-            <Card key={section.id}>
+            <Card key={section.id} className="print:break-inside-avoid print:border print:shadow-none">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base text-foreground">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 text-primary print:hidden">
                     <Icon size={15} />
                   </span>
                   {t(`section.${section.id}`)}
@@ -53,7 +67,7 @@ export function ComplianceChecklist() {
                 <ul className="space-y-2">
                   {section.items.map((item, i) => (
                     <li key={i} className="flex gap-2 text-sm">
-                      <Check size={15} className="mt-0.5 shrink-0 text-accent" />
+                      <Check size={15} className="mt-0.5 shrink-0 text-accent print:hidden" />
                       <span className="text-muted-foreground">{item}</span>
                     </li>
                   ))}
@@ -67,7 +81,7 @@ export function ComplianceChecklist() {
       <p className="text-[11px] text-muted-foreground">{t('disclaimer')}</p>
 
       {/* Consulting + landing combo: hand off to the registration service */}
-      <Card className="border-accent/30">
+      <Card className="border-accent/30 print:hidden">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base text-foreground">
             <Sparkles size={15} className="text-accent" />

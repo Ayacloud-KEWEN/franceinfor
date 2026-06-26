@@ -16,7 +16,7 @@ export default async function AppLayout({
 
   return (
     <div className="flex min-h-screen">
-      <aside className="hidden lg:block">
+      <aside className="hidden lg:block print:!hidden">
         <div className="sticky top-0 h-screen">
           <Sidebar isAdmin={user.role === 'ADMIN'} />
         </div>

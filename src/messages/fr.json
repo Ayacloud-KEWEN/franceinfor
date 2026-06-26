@@ -437,6 +437,7 @@
       "tech": "Logiciel & SaaS",
       "retail": "Commerce & e-commerce",
       "energy": "Énergie & GreenTech"
-    }
+    },
+    "exportPdf": "Exporter en PDF"
   }
 }

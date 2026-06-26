@@ -24,7 +24,7 @@ export function Topbar({ userName, isAdmin }: { userName: string; isAdmin?: bool
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-background/80 px-4 backdrop-blur sm:px-6">
+      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-background/80 px-4 backdrop-blur sm:px-6 print:hidden">
         <Button
           variant="ghost"
           size="icon"

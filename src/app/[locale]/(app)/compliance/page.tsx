@@ -6,7 +6,9 @@ export default async function CompliancePage() {
   const t = await getTranslations('compliance');
   return (
     <div>
-      <PageHeader title={t('title')} subtitle={t('subtitle')} />
+      <div className="print:hidden">
+        <PageHeader title={t('title')} subtitle={t('subtitle')} />
+      </div>
       <ComplianceChecklist />
     </div>
   );

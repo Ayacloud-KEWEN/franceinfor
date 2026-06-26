@@ -108,8 +108,10 @@ prisma/                        schema + seed
 - **页面** `/[locale]/compliance`（导航 engage 组）：选行业 → 5 栏清单(法律形式 / TVA·税务 / 雇佣法 / 行业监管认证 / GDPR)。组件 `components/compliance/compliance-checklist.tsx`（纯客户端，import 静态数据，无 API）。
 - **数据** `lib/data/compliance.ts`：通用基础(BASE) + 9 个行业监管叠加层(OVERLAYS：food/health/construction/finance/cosmetics/tech/retail/energy/generic)。`getCompliance(sector)` 合成。**内容是人工整理的真实法规事实，非 LLM 生成**（合规不能幻觉），带免责声明。
 - **咨询+落地组合**：底部嵌 `LeadForm(kind=COMPANY)` → 留资进 `Lead` 表/后台，承接公司注册增值服务。
-- 验证：curl /compliance 返回 200，标题/各栏/CTA/三语 key 均正常渲染（预览浏览器本次崩溃，未截图）。
-- **待办**：清单正文目前为英文（仅标题/UI 三语）；可加按公司画像自动选行业、清单 PDF 导出。
+- **正文中英双语**：`compliance.ts` 内容按 `{en, zh}` 存，`getCompliance(sector, locale)` 选语言（fr 回退 en）。
+- **一键导出 PDF**：组件里「导出 PDF」按钮调 `window.print()`；打印时用 Tailwind `print:` 变体隐藏侧栏(`(app)/layout` aside `print:!hidden`)、顶栏(`topbar` header `print:hidden`)、控件与 CTA，显示 `hidden print:block` 的 FranceGo 品牌表头(行业+日期)，卡片 `print:break-inside-avoid`。浏览器打印引擎完美渲染中文 → 另存为 PDF 即可发客户。
+- 验证：curl /zh/compliance 200，中文正文/导出按钮/打印表头均命中（预览浏览器本次崩溃，未截图）。
+- **待办**：按公司画像自动选行业、fr 正文、服务端直接生成可下载 .pdf（需嵌 CJK 字体）。
 
 ## 当前状态小结（截至本次会话）
 - 15 个模块均已上线，多数接真实数据（企业/招标 BOAMP+TED/市场 Eurostat/新闻 Google News/信用财务+法律 BODACC/机会发现/买家意向/网络/事件）。

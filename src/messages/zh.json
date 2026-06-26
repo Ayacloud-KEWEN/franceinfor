@@ -437,6 +437,7 @@
       "tech": "软件与 SaaS",
       "retail": "零售与电商",
       "energy": "能源与绿色科技"
-    }
+    },
+    "exportPdf": "导出 PDF"
   }
 }
