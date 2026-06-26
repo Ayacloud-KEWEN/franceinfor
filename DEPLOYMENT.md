@@ -62,6 +62,30 @@ git clone https://github.com/Ayacloud-KEWEN/franceinfor.git .
 - `AI_PROVIDER` + 对应 `*_API_KEY`（在线模型；空着会自动回退 mock，不崩）
 - `PORT="3011"`、`NEXT_PUBLIC_APP_URL="https://infr.europeanaialliance.org"`
 
+### 功能性变量（按需启用；运行时读取，改完 `pm2 restart` 即可，无需 build）
+```env
+# Stripe 订阅（未配则设置页显示「未开通在线支付」）
+STRIPE_SECRET_KEY="sk_live_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."          # Webhook 指向 /api/stripe/webhook
+STRIPE_PRICE_PROFESSIONAL="price_..."      # Live 价格
+STRIPE_PRICE_BUSINESS="price_..."
+# 邮件（找回密码 / 留资·注册通知 / 每日摘要）—— Resend
+RESEND_API_KEY="re_..."
+RESEND_FROM="FranceGo <noreply@send.ayacloud.fr>"   # 发信域名已验证
+ADMIN_EMAIL="wenke2012@gmail.com"          # 留资/注册通知收件人（默认 fdcaptain@gmail.com）
+# 每日机会邮件 cron 密钥
+CRON_SECRET="<openssl rand -hex 16>"
+# 新闻抓取频率（默认 12h；一天一拉填 86400）
+NEWS_REVALIDATE_SECONDS="43200"
+```
+> ⚠️ **构建时注入**（改了必须重新 `npm run build`，不是只 restart）：`NEXT_PUBLIC_APP_URL`、`NEXT_PUBLIC_GA_ID`（GA4，默认已内置 `G-DR6YV2QTQN`，要换才需设）。自动部署会重新 build，所以改这些 push 一次即可。
+
+### 每日机会邮件定时（设完 `CRON_SECRET` 后）
+`crontab -e` 加一行（每天 07:00 触发摘要）：
+```cron
+0 7 * * * curl -s "https://infr.europeanaialliance.org/api/cron/digest?key=<CRON_SECRET>" >/dev/null
+```
+
 ## 6. 安装 / 建表 / 构建
 ```bash
 node -v                   # 确认 ≥ 20

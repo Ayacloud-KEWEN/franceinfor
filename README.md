@@ -1,7 +1,7 @@
-# France Business Development OS（法国商业拓展操作系统）
+# FranceGo（原 France Business Development OS）
 
-面向法国市场的 AI 驱动商业拓展与市场进入平台，依据 `project.agent.v2.md` 构建。
-**线上：https://infr.europeanaialliance.org**
+面向出海客户的 **AI 驱动法国市场拓展 SaaS**（商用）。把法国实时数据——企业、招标、融资、补贴、合规——转化为商机、信号与落地方案。
+**线上：https://infr.europeanaialliance.org** · 品牌名 = **FranceGo**（基础设施标识 pm2 `france-os`/仓库 `franceinfor` 保持不变）。
 
 📚 **文档导航**
 - [USER_GUIDE.md](USER_GUIDE.md) — 详细功能与使用手册（各模块怎么用）
@@ -35,11 +35,21 @@
 | **市场进入 Copilot（模块 13/14）** — 8 智能体编排生成市场进入报告 | ✅ |
 | **新闻雷达（模块 15）** — 商业新闻转化为可行动信号 | ✅ |
 | **报告中心** — 8 种模板，AI 生成，打印 PDF / 导出 .md | ✅ |
-| Copilot 智能助手（mock AI，已预留真实 Claude） | ✅ |
-| 订阅套餐 + 每日配额追踪 | ✅ |
+| Copilot 智能助手（可配置 LLM） | ✅ |
 | 暗黑/明亮模式、移动端优先布局 | ✅ |
+| **营销落地页** — 公开根路由 `/[locale]`，三语，SEO/AIO(hreflang+JSON-LD)、GA4(同意后加载)、Cookie 合规 | ✅ |
+| **补贴/扶持资金匹配** — `/funding`，按行业/阶段/需求匹配 France 2030/Bpifrance/CIR 等 | ✅ |
+| **融资动向** — `/signals`，Google News 解析+注册库校验出刚融资公司（强购买信号），并入买家意向 | ✅ |
+| **落地合规清单** — `/compliance`，按行业法律形式/税务/雇佣/认证/GDPR + 官方链接，中英双语，一键导出 PDF | ✅ |
+| **关注列表 / 轻量 CRM** — `/watchlist`，收藏企业/招标/机会，看板按阶段(潜在→赢单)管理 | ✅ |
+| **管理后台** — `/[locale]/admin`(ADMIN)，用户/事件流/留资 + GA 入口 | ✅ |
+| **留资闭环** — 增值服务内嵌留资表单 → `Lead` 表 + 后台 + 邮件通知（蜜罐+限流防刷） | ✅ |
+| **每日机会邮件** — 订阅关键词 → 每日「法国机会雷达」邮件（cron 触发） | ✅ |
+| **Stripe 真实订阅** — Professional €99 / Business €299，结账/门户/Webhook，**Live 已激活** | ✅ |
+| **找回密码** — 自助重置（令牌单次/1h 过期）+ 邮件 | ✅ |
+| **事务邮件（Resend）** — 发信域名 `send.ayacloud.fr` 已验证 | ✅ |
 
-> 当前 15 个模块均已具备可用界面与数据流。后续重点：接入更多真实数据源（INPI/Pappers/EUIPO/TED 等）、真实 Claude 智能体、以及把 mock 评分替换为真实模型。
+> 15 个核心模块 + 变现/留存/合规/营销全链路已上线。后续可选：注册画像个性化、团队账号/白标、招聘信号(France Travail)、报告 RAG+引用。详见 [ROADMAP.md](ROADMAP.md)。
 
 ## 本地运行
 
@@ -91,6 +101,19 @@ npm run dev          # http://localhost:3000
 - `DATABASE_URL` — Postgres，端口 5436
 - `RECHERCHE_ENTREPRISES_API`、`BOAMP_API`、`TED_API` — 免密钥公共端点。
 
+#### 变现 / 邮件 / 分析 / 定时（运行时读取，改完 `pm2 restart` 即可，无需 build）
+
+| 变量 | 用途 |
+|------|------|
+| `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` / `STRIPE_PRICE_PROFESSIONAL` / `STRIPE_PRICE_BUSINESS` | Stripe 订阅（未配则设置页显示「未开通在线支付」） |
+| `RESEND_API_KEY` / `RESEND_FROM` | 事务邮件（找回密码、留资/注册通知、每日摘要）；`RESEND_FROM="FranceGo <noreply@send.ayacloud.fr>"` |
+| `ADMIN_EMAIL` | 留资/注册通知收件人（默认 `fdcaptain@gmail.com`） |
+| `CRON_SECRET` | 保护 `/api/cron/digest` 的密钥；外部调度每天调用一次 |
+| `NEWS_REVALIDATE_SECONDS` | 新闻抓取缓存秒数（默认 43200=12h；设 86400 改为一天一拉） |
+| `PARTNER_*` / `NEXT_PUBLIC_PARTNER_*` | 增值服务合作伙伴链接 |
+
+> ⚠️ **构建时注入**（改了要重新 `npm run build`，不是只 restart）：`NEXT_PUBLIC_APP_URL`、`NEXT_PUBLIC_GA_ID`（GA4，默认已内置 `G-DR6YV2QTQN`）。
+
 ### AI 引擎（可配置多 provider）
 
 通过 `AI_PROVIDER` 选择大模型后端，无需改代码；不可达或未配置时自动回退 mock：
@@ -137,19 +160,21 @@ DEEPSEEK_API_KEY="sk-你的key"
 **更新模型版本**：只改对应的 `*_MODEL`（如 `OPENAI_MODEL="gpt-4o"`），重启即可。
 **注意**：任一 provider 若 key 错误或服务不可达，会**自动回退 mock**，不会崩溃。
 影响范围：Copilot 对话、市场进入报告编排、报告中心生成、各处 AI 摘要、**新闻/动态流标题翻译**。
+> **省 token**：标题翻译走持久化 DB 缓存（`lib/translation-cache.ts` + `Translation` 表，按 sha1(目标语+原文) 永久存储）——同一标题只翻一次，跨用户/刷新复用，不重复消耗 token。
 
 ## 目录结构
 
 ```
 src/
-  app/[locale]/(auth)/    登录、注册
-  app/[locale]/(app)/     认证后的外壳 + 各模块页面
-  app/api/                companies / tenders / copilot / reports 接口
-  app/actions/            服务端动作（认证）
-  components/             ui/、shell/、dashboard/、各模块组件
-  lib/                    auth、prisma、配额、套餐、ai、sources/、data/
+  app/[locale]/page.tsx   公开营销落地页（SEO/AIO + GA + Cookie 同意）
+  app/[locale]/(auth)/    登录、注册、忘记/重置密码
+  app/[locale]/(app)/     认证后的外壳 + 各模块页面（含 watchlist/funding/signals/compliance/admin）
+  app/api/                各模块 + stripe(checkout/portal/webhook) + leads/saved/aides/signals/cron/digest
+  app/actions/            服务端动作（auth、admin、digest）
+  components/             ui/、shell/、dashboard/、landing/、saved/、signals/、funding/、compliance/、admin/、settings/、services/
+  lib/                    auth、prisma、配额、套餐、ai、stripe、notify、events、digest、dashboard-metrics、translation-cache、sources/、data/
   i18n/ + messages/       next-intl 配置 + en/fr/zh
-prisma/                   数据库结构 + 种子
+prisma/                   数据库结构（User/Session/Lead/Event/SavedItem/PasswordResetToken/Translation…）+ 种子
 ```
 
 ## 故障排查
