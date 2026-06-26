@@ -128,6 +128,12 @@ prisma/                        schema + seed
 - 验证：/en /fr /zh 均 200，hreflang/canonical/OG/JSON-LD/三语正文/Cookie 横幅均确认；预览截图外观专业。
 - **上线注意**：要开 GA 就把 `NEXT_PUBLIC_GA_ID` 填进服务器 `.env` 并**重新 build**（不是只 restart）。
 
+## 🗞️ 新闻周期 + 翻译缓存（本次新增，省 token）
+- **新闻拉取周期**：`news.ts` 的 `revalidate` 由 15 分钟改为**默认 12 小时**（`NEWS_REVALIDATE` 读 `NEWS_REVALIDATE_SECONDS`，设 `86400` = 每天一次）。
+- **翻译 DB 缓存**：`lib/translation-cache.ts#translateBatchCached` —— 标题先查 `Translation` 表（id=sha1(target+source)），**只把未缓存的发给 LLM**，结果存库永久复用（新闻标题不变）。`/api/news/translate` 已切到这个函数（覆盖 dashboard/news/intent 四处调用）。失败/无变化（identity）不缓存以便后续重试。
+- **配额说明**：每日翻译配额仍按"调用次数"计（缓存命中不耗 token，仅限免费用户每天触发次数）。
+- Schema 新增 `Translation` 表（纯增量，自动部署 `prisma db push` 自动建）。验证：键计算/命中/未命中/去重幂等均 OK。
+
 ## 当前状态小结（截至本次会话）
 - 15 个模块均已上线，多数接真实数据（企业/招标 BOAMP+TED/市场 Eurostat/新闻 Google News/信用财务+法律 BODACC/机会发现/买家意向/网络/事件）。
 - 翻译：新闻/Dashboard/意向标题按界面语言用 LLM 翻译（JSON 数组解析，已修复对 DeepSeek 的兼容）。

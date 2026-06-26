@@ -54,13 +54,17 @@ function tag(block: string, name: string): string | null {
 const DEFAULT_QUERY =
   'entreprise OR acquisition OR "levée de fonds" OR partenariat OR "appel d\'offres" France';
 
+// How long Google News results are cached before refetching. Default 12h
+// (half a day); set NEWS_REVALIDATE_SECONDS (e.g. 86400 for daily) to override.
+const NEWS_REVALIDATE = Number(process.env.NEWS_REVALIDATE_SECONDS) || 43200;
+
 export async function fetchFranceNews(query?: string, limit = 24): Promise<LiveNewsItem[]> {
   const q = (query && query.trim()) || DEFAULT_QUERY;
   const url = `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=fr&gl=FR&ceid=FR:fr`;
 
   const res = await fetch(url, {
     headers: { 'user-agent': 'Mozilla/5.0 (compatible; france-os/1.0)' },
-    next: { revalidate: 900 },
+    next: { revalidate: NEWS_REVALIDATE },
   });
   if (!res.ok) throw new Error(`google-news ${res.status}`);
   const xml = await res.text();

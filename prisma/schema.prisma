@@ -52,6 +52,16 @@ model Session {
   @@index([userId])
 }
 
+// Cache of LLM translations to avoid re-translating identical source strings.
+// `id` = sha1(target + source); news titles are immutable so entries never go
+// stale. Saves tokens since the same headlines are viewed by many users.
+model Translation {
+  id        String   @id
+  target    String
+  text      String
+  createdAt DateTime @default(now())
+}
+
 // Single-use password-reset tokens. `id` stores sha256(token); the raw token
 // only ever lives in the emailed link.
 model PasswordResetToken {

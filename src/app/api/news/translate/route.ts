@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { consumeTranslate } from '@/lib/usage';
 import { rateLimit } from '@/lib/rate-limit';
-import { translateBatch } from '@/lib/ai';
+import { translateBatchCached } from '@/lib/translation-cache';
 
 // Translates headline titles into the target locale. Has its own (plan-based)
 // daily budget plus a short-window burst limit, since each call hits the LLM.
@@ -28,6 +28,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ translations: titles, limited: 'quota', limit: quota.limit });
   }
 
-  const translations = await translateBatch(titles, target);
+  const translations = await translateBatchCached(titles, target);
   return NextResponse.json({ translations });
 }
