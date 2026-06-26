@@ -1,19 +1,21 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Search, BookOpen, ArrowRight, Clock } from 'lucide-react';
-import { PLAYBOOKS, matchPlaybook } from '@/lib/data/playbooks';
+import { listPlaybooks, matchPlaybook, type Loc } from '@/lib/data/playbooks';
 
 export function PlaybookFinder() {
   const t = useTranslations('playbooks');
+  const loc = useLocale() as Loc;
   const [q, setQ] = useState('');
-  const match = q.trim() ? matchPlaybook(q) : null;
+  const match = q.trim() ? matchPlaybook(q, loc) : null;
+  const playbooks = listPlaybooks(loc);
 
   return (
     <div className="space-y-5">
@@ -44,7 +46,7 @@ export function PlaybookFinder() {
       <div>
         <h2 className="mb-3 text-sm font-semibold text-muted-foreground">{t('library')}</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          {PLAYBOOKS.map((p) => (
+          {playbooks.map((p) => (
             <Link key={p.slug} href={`/playbooks/${p.slug}`}>
               <Card className="h-full p-5 transition-colors hover:border-primary">
                 <div className="flex items-center gap-2">
