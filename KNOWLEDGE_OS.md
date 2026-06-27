@@ -8,7 +8,7 @@
 
 | 规格层 | 现状 | 落地方案（增量） |
 |---|---|---|
-| **L1 原始数据层**（每日抓取、版本化、不覆盖） | 已有实时源适配器（recherche-entreprises / BOAMP / TED / BODACC / Eurostat / Google News，见 `lib/sources/`） | 新增 `RawDocument` 表（source/url/lang/checksum/fetchedAt/version/type/status，**永不覆盖**，按 checksum 去重）；定时抓取走已有 `/api/cron/*` 模式 + crontab |
+| **L1 原始数据层**（每日抓取、版本化、不覆盖） | 已有实时源适配器（recherche-entreprises / BOAMP / TED / BODACC / Eurostat / Google News，见 `lib/sources/`） | ✅ **已落地基座**：`RawDocument` 表（source/url/lang/checksum/version/status，**永不覆盖**，url+checksum 去重、内容变更新版本+supersede）+ `lib/raw-ingest.ts`；`GET /api/cron/ingest?key=CRON_SECRET` 定时抓官方源入库。文本内容内嵌入库(随 pg_dump 迁移)，大/二进制走对象存储 `storageKey`(待接 S3) |
 | **L2 知识图谱层**（实体+关系，带置信度/来源/版本） | 翻译已有持久缓存（`Translation` 表）证明"DB 即资产"模式可行 | 新增 `KnowledgeNode` / `KnowledgeEdge` 表（type、props Json、confidence、sourceRef、version、updatedAt）；抽取管线：chunk → embedding(**pgvector**) → LLM 抽取 → 候选 → 人工审核 → 入库。**AI 不得凭空造关系**，每个节点可溯源 |
 | **L3 Playbook 库**（结构化工作流，模块化、可版本化） | ✅ **本次已交付**：`/playbooks`，内置"在法国建数据中心" playbook（任务/机构/许可/成本/工期/风险/官方链接），可搜索匹配、PDF 导出、留资 CTA。数据在 `lib/data/playbooks.ts`（git 版本化） | ✅ **已入库 + 版本历史**：`Playbook`/`PlaybookVersion` 表 + `lib/playbooks-db.ts`（按内容哈希幂等 sync、内容变更快照新版本）；页面从 DB 读取、code 兜底；admin `POST /api/playbooks/sync`。任务 `dependsOn` 已具备 DAG 结构，可引用 L2 节点 |
 | **L4 项目经验层**（真实执行沉淀、统计） | 已有 `Lead`/`Event` 审计表的沉淀模式 | ✅ **已落地**：`Project`/`ProjectStep` 表（实际工期/成本/审批时长/问题/解决/经验教训，不覆盖历史）+ `lib/projects.ts`；admin `/admin/projects` 录入与管理；`experienceStats()` 聚合(平均工期/成功率/常见问题)，**呈现在 admin 项目页 + playbook 详情页**(L4→L3 闭环) |
@@ -66,7 +66,7 @@
 4. ☐ **pgvector** 扩展 + embedding 列（上 RAG/知识图谱时）。
 5. ☑ **Dockerfile + compose**（已完成并实测：`Dockerfile`(Next standalone)+ `docker-compose.prod.yml`(app+pg+redis+migrate)；镜像 477MB，容器启动/渲染/Prisma 引擎均 OK）。
 6. ☐ **定时 pg_dump 异地备份**。
-7. ◐ L4 `Project`/`ProjectStep` 已建；待建 L1 `RawDocument` / L2 `KnowledgeNode·Edge`（按 L 层推进，纯增量 `prisma db push`）。
+7. ◐ L1 `RawDocument` + L4 `Project`/`ProjectStep` 已建；待建 L2 `KnowledgeNode·Edge`（按 L 层推进，纯增量 `prisma db push`）。
 
 > 当前生产（CloudPanel + pm2 + 本地 Postgres）已能跑；要"无缝迁移/扩容"，**第 2、3、5 步**是关键转折点。在引入原始文档抓取（L1）之前先把"对象存储 + Redis 限流"定下来，后面就不会被本地状态绑死。
 
@@ -76,7 +76,7 @@
 
 - ✅ **L3 Playbook 库**（`/playbooks` + 数据中心 playbook + 搜索匹配 + PDF + 留资）。
 - ✅ 知识资产"在 Postgres"的范式验证（`Translation`/`Lead`/`Event`）。
-- ☐ L1 RawDocument 抓取+版本化 → 对象存储。
+- ◐ L1 RawDocument 抓取+版本化（已落地基座 + cron 抓取；对象存储 storageKey 待接 S3）。
 - ☐ L2 知识图谱 + pgvector 抽取管线。
 - ☑ L4 项目经验表 + Experience Intelligence 统计（`/admin/projects`，回灌 playbook 详情）。
 - ◐ Copilot RAG：已接 L3/L4 检索+来源；待接 L2 语义检索(pgvector)。

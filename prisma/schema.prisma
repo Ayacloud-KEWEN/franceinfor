@@ -153,6 +153,34 @@ model PlaybookVersion {
   @@index([playbookId, createdAt])
 }
 
+// Knowledge OS L1 — raw documents, versioned and never overwritten. Same
+// url+content (checksum) is deduped; changed content creates a new version and
+// supersedes the old. Text content is stored inline (migrates with pg_dump);
+// large/binary objects go to object storage via `storageKey`.
+enum RawDocStatus {
+  ACTIVE
+  SUPERSEDED
+}
+
+model RawDocument {
+  id         String       @id @default(cuid())
+  source     String
+  url        String
+  lang       String?
+  docType    String?
+  checksum   String
+  version    Int          @default(1)
+  status     RawDocStatus @default(ACTIVE)
+  storageKey String? // object-storage key when stored externally
+  content    String? // inline text content (keyless default)
+  meta       Json?
+  fetchedAt  DateTime     @default(now())
+
+  @@unique([url, checksum])
+  @@index([source, fetchedAt])
+  @@index([url])
+}
+
 // Knowledge OS L4 — real-project execution knowledge. Each customer project
 // (optionally following a Playbook) accumulates steps with actual durations,
 // costs, problems and lessons. History is never overwritten; aggregate stats
