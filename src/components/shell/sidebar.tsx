@@ -24,6 +24,7 @@ import {
   TrendingUp,
   ClipboardCheck,
   BookOpen,
+  HelpCircle,
 } from 'lucide-react';
 
 type Item = { href: string; key: string; Icon: typeof LayoutDashboard };
@@ -66,6 +67,7 @@ const groups: { group: string; items: Item[] }[] = [
       { href: '/copilot', key: 'copilot', Icon: Bot },
       { href: '/reports', key: 'reports', Icon: FileText },
       { href: '/settings', key: 'settings', Icon: Settings },
+      { href: '/help', key: 'help', Icon: HelpCircle },
     ],
   },
 ];

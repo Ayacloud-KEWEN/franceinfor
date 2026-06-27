@@ -25,7 +25,8 @@
     "funding": "扶持资金",
     "signals": "融资动向",
     "compliance": "落地合规",
-    "playbooks": "操作手册"
+    "playbooks": "操作手册",
+    "help": "帮助"
   },
   "navGroup": {
     "overview": "概览",
@@ -631,5 +632,10 @@
     "avgDuration": "平均工期",
     "successRate": "成功率",
     "avgCost": "平均成本"
+  },
+  "help": {
+    "title": "帮助与使用说明",
+    "subtitle": "如何用 FranceGo 进入并拓展法国市场——逐个模块说明。",
+    "openModule": "打开"
   }
 }

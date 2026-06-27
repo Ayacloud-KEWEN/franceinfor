@@ -25,7 +25,8 @@
     "funding": "Financements",
     "signals": "Signaux de levées",
     "compliance": "Conformité",
-    "playbooks": "Playbooks"
+    "playbooks": "Playbooks",
+    "help": "Aide"
   },
   "navGroup": {
     "overview": "Vue d'ensemble",
@@ -631,5 +632,10 @@
     "avgDuration": "Durée moy.",
     "successRate": "Taux de réussite",
     "avgCost": "Coût moyen"
+  },
+  "help": {
+    "title": "Aide & guide d’utilisation",
+    "subtitle": "Comment utiliser FranceGo pour s’implanter et croître en France — module par module.",
+    "openModule": "Ouvrir"
   }
 }

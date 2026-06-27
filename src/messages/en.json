@@ -25,7 +25,8 @@
     "funding": "Funding",
     "signals": "Funding signals",
     "compliance": "Compliance",
-    "playbooks": "Playbooks"
+    "playbooks": "Playbooks",
+    "help": "Help"
   },
   "navGroup": {
     "overview": "Overview",
@@ -631,5 +632,10 @@
     "avgDuration": "Avg duration",
     "successRate": "Success rate",
     "avgCost": "Avg cost"
+  },
+  "help": {
+    "title": "Help & user guide",
+    "subtitle": "How to use FranceGo to enter and grow in the French market — module by module.",
+    "openModule": "Open"
   }
 }
