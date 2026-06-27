@@ -143,6 +143,27 @@ prisma/                        schema + seed
 - **上线要做**：① 服务器 `.env` 设 `CRON_SECRET="<随机串>"` + `pm2 restart`；② 加每日定时：
   `crontab -e` → `0 7 * * * curl -s "https://francego.fr/api/cron/digest?key=<CRON_SECRET>" >/dev/null`（每天 07:00）。依赖邮件已接通（[[email-and-resend]]）。
 
+## 🧠 下一块：L2 知识图谱 + pgvector（最重，待动工）
+目标：把 L1 原始文档（`RawDocument`）抽取成知识图谱，用 pgvector 做语义检索，让 Copilot RAG 从"关键词匹配 playbook"升级为"语义检索整个图谱"。详见 `KNOWLEDGE_OS.md` L2 行。
+
+**实现步骤**：
+1. **pgvector**：本地 compose 把 `postgres:16-alpine` 换 `pgvector/pgvector:pg16`（或 `CREATE EXTENSION vector`）；生产 PG 也装扩展。
+2. **schema**：`KnowledgeNode`(type/props Json/confidence/sourceRef/version) + `KnowledgeEdge`(from/to/relation/confidence/sourceRef) + `DocChunk`(rawDocId/text/embedding `vector`)。
+3. **抽取管线**（`/api/cron/extract`，cron 保护）：取 ACTIVE `RawDocument` → chunk → embed → LLM 抽实体/关系（带 confidence+sourceRef，**不得凭空造**）→ 候选表 → 人工审核（admin）→ 入图。幂等。
+4. **检索**：`lib/rag.ts` 增加向量召回（chunk/node 相似度）合并进 grounding；Copilot 引用来源。
+
+**待用户拍板：embedding 提供方**（OpenAI vs 本地 Ollama）。成本/资源/优劣对比：
+| 维度 | OpenAI `text-embedding-3-small` | 本地 Ollama `nomic-embed-text` |
+|---|---|---|
+| 费用 | ~$0.02 / 100万 token（约 €0.02/百万）；首轮全量抓取几百万 token 仅几美元，日增量近乎免费 | €0（自托管） |
+| 资源占用 | 几乎不占 VPS（调 API） | 需 VPS **常驻 ~1–2GB 内存**跑模型；CPU 推理慢、GPU 更快 |
+| 质量/维度 | 1536 维，检索质量业界领先、稳定 | 768 维，质量不错但略逊；多语种（中法英）OpenAI 更稳 |
+| 速度 | 批量快（网络往返） | CPU 上慢（每千 chunk 数分钟级） |
+| 隐私/合规 | 文本出境到 OpenAI（公开法规文本无所谓；含个人数据需注意） | 全本地，**数据不出服务器**（GDPR/主权友好） |
+| 依赖/可迁移 | 需 `OPENAI_API_KEY`；换机只改 env | 需在每台机装 Ollama+模型；迁移多一步 |
+| 锁定 | 依赖外部 API 可用性 | 无外部依赖 |
+> 建议：**起步用 OpenAI**（省内存、质量稳、成本极低，先把图谱跑通）；若后续对**数据主权**有硬要求或量极大，再切本地 Ollama（embedding 接口已抽象，切换只改 provider）。抽象层：在 `lib/ai.ts` 加 `embed(texts): number[][]`，按 `EMBED_PROVIDER` 选 OpenAI/Ollama。
+
 ## 当前状态小结（截至本次会话）
 - 15 个模块均已上线，多数接真实数据（企业/招标 BOAMP+TED/市场 Eurostat/新闻 Google News/信用财务+法律 BODACC/机会发现/买家意向/网络/事件）。
 - 翻译：新闻/Dashboard/意向标题按界面语言用 LLM 翻译（JSON 数组解析，已修复对 DeepSeek 的兼容）。

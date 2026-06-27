@@ -26,6 +26,8 @@
   > 注：data.gouv **无**结构化"融资轮次"数据集(Dealroom/Crunchbase 需付费)；改用官方企业注册库做结构化校验，既加 SIREN 又去噪。
 - ☐ **报告接 RAG + 引用来源**：把真实数据喂给模型并标注来源，报告数字不再是模型编的(商用关键)。
 - ◐ **🧠 Knowledge OS**（长期战略资产，见 `KNOWLEDGE_OS.md`）：四层(原始数据→知识图谱→Playbook→项目经验)+ Copilot 改 RAG。**已落地 L3 Playbook 库** `/playbooks`（内置"在法国建数据中心"完整 playbook，可搜索匹配/PDF/留资）。待建：L1 抓取+对象存储、L2 pgvector 知识图谱、L4 项目经验统计。架构已为**无缝迁移 VPS/扩容**设计（无状态应用 + Postgres 单一事实源 + 限流换 Redis + 对象存储 + 容器化）。
+  **已落地**：L1 抓取入库(`RawDocument`+`/api/cron/ingest`)、L3 库+版本+三语、L4 项目经验+Experience Intelligence、Copilot RAG(L3/L4 grounding+来源)、Redis 限流、Dockerfile+compose。
+- ☐ **🧠 L2 知识图谱 + pgvector（下一块，最重）**：把 L1 原始文档抽取成 `KnowledgeNode`/`KnowledgeEdge`(实体+关系，带 confidence/来源/版本)，用 **pgvector** 做语义检索，让 Copilot RAG 从"关键词匹配 playbook"升级为"语义检索整个知识图谱"。**前置决策待定**：① pgvector 镜像/扩展；② **embedding 提供方(OpenAI vs 本地 Ollama)** —— 成本/资源/优劣对比见 `CONTINUE.md`，待用户拍板；③ 抽取管线(chunk→embed→LLM 抽取→候选+审核→入图)。详见 `KNOWLEDGE_OS.md` L2 行。
 
 ## 第三波 — 出海专属价值
 
