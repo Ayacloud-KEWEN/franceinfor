@@ -12,7 +12,7 @@
 | **L2 知识图谱层**（实体+关系，带置信度/来源/版本） | 翻译已有持久缓存（`Translation` 表）证明"DB 即资产"模式可行 | 新增 `KnowledgeNode` / `KnowledgeEdge` 表（type、props Json、confidence、sourceRef、version、updatedAt）；抽取管线：chunk → embedding(**pgvector**) → LLM 抽取 → 候选 → 人工审核 → 入库。**AI 不得凭空造关系**，每个节点可溯源 |
 | **L3 Playbook 库**（结构化工作流，模块化、可版本化） | ✅ **本次已交付**：`/playbooks`，内置"在法国建数据中心" playbook（任务/机构/许可/成本/工期/风险/官方链接），可搜索匹配、PDF 导出、留资 CTA。数据在 `lib/data/playbooks.ts`（git 版本化） | ✅ **已入库 + 版本历史**：`Playbook`/`PlaybookVersion` 表 + `lib/playbooks-db.ts`（按内容哈希幂等 sync、内容变更快照新版本）；页面从 DB 读取、code 兜底；admin `POST /api/playbooks/sync`。任务 `dependsOn` 已具备 DAG 结构，可引用 L2 节点 |
 | **L4 项目经验层**（真实执行沉淀、统计） | 已有 `Lead`/`Event` 审计表的沉淀模式 | ✅ **已落地**：`Project`/`ProjectStep` 表（实际工期/成本/审批时长/问题/解决/经验教训，不覆盖历史）+ `lib/projects.ts`；admin `/admin/projects` 录入与管理；`experienceStats()` 聚合(平均工期/成功率/常见问题)，**呈现在 admin 项目页 + playbook 详情页**(L4→L3 闭环) |
-| **Copilot RAG**（不直接由 LLM 回答，先检索知识） | 现 Copilot 直接调 LLM | 改为：问题 → L2/L3/L4 检索（pgvector + 关键词，`matchPlaybook` 已是雏形）→ RAG → 带**官方来源引用**的回答 |
+| **Copilot RAG**（不直接由 LLM 回答，先检索知识） | ✅ **已改 RAG**：`lib/rag.ts` 检索 L3 playbook + L4 经验作为 grounding，`/api/copilot` 先检索再答、附**官方来源**；无命中则 `grounded:false` 普通回答 | 后续：接 L2 知识图谱 + pgvector 语义检索 |
 
 > **本次已落地 L3 的第一块**：Playbook 是"知识资产"的最小可用形态——客户问"如何在法国建数据中心"，`matchPlaybook()` 直接返回结构化 playbook。新增 playbook 只是往 `PLAYBOOKS`（或将来 `Playbook` 表）加一条。
 
@@ -79,5 +79,5 @@
 - ☐ L1 RawDocument 抓取+版本化 → 对象存储。
 - ☐ L2 知识图谱 + pgvector 抽取管线。
 - ☑ L4 项目经验表 + Experience Intelligence 统计（`/admin/projects`，回灌 playbook 详情）。
-- ☐ Copilot 改 RAG（先检索 L2/L3/L4，带来源引用）。
+- ◐ Copilot RAG：已接 L3/L4 检索+来源；待接 L2 语义检索(pgvector)。
 - ☐ 容器化 + Redis 限流（扩容前置）。

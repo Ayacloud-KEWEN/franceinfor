@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { consumeSearch } from '@/lib/usage';
 import { complete, type AiMessage } from '@/lib/ai';
+import { retrieveContext, RAG_SYSTEM } from '@/lib/rag';
+import type { Loc } from '@/lib/data/playbooks';
 
 export async function POST(req: NextRequest) {
   const user = await getCurrentUser();
@@ -24,6 +26,20 @@ export async function POST(req: NextRequest) {
       { status: 429 }
     );
 
-  const reply = await complete(messages);
-  return NextResponse.json({ reply });
+  // RAG: retrieve grounding knowledge (L3 playbooks + L4 experience) before
+  // answering, so the copilot cites curated French knowledge, not just the LLM.
+  const lastQuestion = messages[messages.length - 1]?.content || '';
+  const retrieval = await retrieveContext(lastQuestion, user.locale as Loc);
+
+  let reply = retrieval.grounded
+    ? await complete(messages, RAG_SYSTEM(retrieval.context))
+    : await complete(messages);
+
+  // Append the official sources used to ground the answer.
+  if (retrieval.grounded && retrieval.sources.length) {
+    const label = user.locale === 'fr' ? 'Sources' : user.locale === 'zh' ? '来源' : 'Sources';
+    reply += `\n\n— ${label}:\n` + retrieval.sources.slice(0, 6).map((src) => `• ${src.label}: ${src.url}`).join('\n');
+  }
+
+  return NextResponse.json({ reply, grounded: retrieval.grounded });
 }
