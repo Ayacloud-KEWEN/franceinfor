@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { LeadStatusSelect } from '@/components/admin/lead-status-select';
 import { Link } from '@/i18n/routing';
-import { BarChart3, ExternalLink, Brain } from 'lucide-react';
+import { BarChart3, ExternalLink, Brain, Network } from 'lucide-react';
 import type { Plan } from '@prisma/client';
 
 // Google Analytics property dashboard (GA4). Opens GA where the admin selects
@@ -61,6 +61,9 @@ export default async function AdminPage() {
           <div className="flex gap-2">
             <Link href="/admin/projects">
               <Button variant="outline" size="sm"><Brain size={15} /> Projects</Button>
+            </Link>
+            <Link href="/admin/knowledge">
+              <Button variant="outline" size="sm"><Network size={15} /> Knowledge</Button>
             </Link>
             <a href={GA_DASHBOARD_URL} target="_blank" rel="noopener noreferrer">
               <Button variant="outline" size="sm">
