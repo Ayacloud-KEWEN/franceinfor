@@ -72,35 +72,26 @@ export function ComplianceChecklist() {
                     </li>
                   ))}
                 </ul>
+                {section.links.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2 border-t border-border pt-3">
+                    {section.links.map((l) => (
+                      <a
+                        key={l.url}
+                        href={l.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1 text-xs text-foreground hover:border-primary hover:text-primary"
+                      >
+                        {l.label} <ExternalLink size={11} className="text-muted-foreground" />
+                      </a>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           );
         })}
       </div>
-
-      {/* Official resource links */}
-      <Card className="print:break-inside-avoid">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base text-foreground">
-            <ExternalLink size={15} className="text-primary" /> {t('resources')}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {data.links.map((l) => (
-              <a
-                key={l.url}
-                href={l.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1.5 text-xs text-foreground hover:border-primary hover:text-primary"
-              >
-                {l.label} <ExternalLink size={11} className="text-muted-foreground" />
-              </a>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
 
       <p className="text-[11px] text-muted-foreground">{t('disclaimer')}</p>
 

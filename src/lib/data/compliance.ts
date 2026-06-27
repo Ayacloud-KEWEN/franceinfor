@@ -10,32 +10,38 @@
 export type Loc = 'en' | 'fr' | 'zh';
 type Localized = { en: string[]; zh: string[] };
 
-export interface ChecklistSection {
-  id: 'legalForm' | 'tax' | 'employment' | 'sector' | 'gdpr';
-  items: string[];
-}
-
 export interface ResourceLink {
   label: string;
   url: string;
 }
 
+export interface ChecklistSection {
+  id: 'legalForm' | 'tax' | 'employment' | 'sector' | 'gdpr';
+  items: string[];
+  links: ResourceLink[]; // official links for THIS section
+}
+
 export interface SectorCompliance {
   sector: string; // key
   sections: ChecklistSection[];
-  links: ResourceLink[];
 }
 
-// Official websites — common to every sector.
-const LINKS_BASE: ResourceLink[] = [
-  { label: 'Guichet unique (company registration)', url: 'https://formalites.entreprises.gouv.fr/' },
-  { label: 'INPI', url: 'https://www.inpi.fr/' },
-  { label: 'impots.gouv.fr (tax / VAT)', url: 'https://www.impots.gouv.fr/' },
-  { label: 'URSSAF (social contributions)', url: 'https://www.urssaf.fr/' },
-  { label: 'service-public.fr — entreprises', url: 'https://entreprendre.service-public.fr/' },
-  { label: 'CNIL (GDPR)', url: 'https://www.cnil.fr/' },
-  { label: 'DGCCRF (consumer protection)', url: 'https://www.economie.gouv.fr/dgccrf' },
-];
+// Official websites attached to each base section.
+const SECTION_LINKS: Record<'legalForm' | 'tax' | 'employment' | 'gdpr', ResourceLink[]> = {
+  legalForm: [
+    { label: 'Guichet unique (company registration)', url: 'https://formalites.entreprises.gouv.fr/' },
+    { label: 'INPI', url: 'https://www.inpi.fr/' },
+  ],
+  tax: [{ label: 'impots.gouv.fr (tax / VAT)', url: 'https://www.impots.gouv.fr/' }],
+  employment: [
+    { label: 'URSSAF (social contributions)', url: 'https://www.urssaf.fr/' },
+    { label: 'service-public.fr — entreprises', url: 'https://entreprendre.service-public.fr/' },
+  ],
+  gdpr: [{ label: 'CNIL (GDPR)', url: 'https://www.cnil.fr/' }],
+};
+
+// Generic consumer-protection link, prepended to the sector-regulation section.
+const DGCCRF: ResourceLink = { label: 'DGCCRF (consumer protection)', url: 'https://www.economie.gouv.fr/dgccrf' };
 
 // Sector-specific official websites.
 const LINKS_OVERLAY: Record<string, ResourceLink[]> = {
@@ -272,12 +278,11 @@ export function getCompliance(sectorKey: string, loc: Loc = 'en'): SectorComplia
   return {
     sector: key,
     sections: [
-      { id: 'legalForm', items: pick(BASE.legalForm, loc) },
-      { id: 'tax', items: pick(BASE.tax, loc) },
-      { id: 'employment', items: pick(BASE.employment, loc) },
-      { id: 'sector', items: pick(OVERLAYS[key], loc) },
-      { id: 'gdpr', items: pick(BASE.gdpr, loc) },
+      { id: 'legalForm', items: pick(BASE.legalForm, loc), links: SECTION_LINKS.legalForm },
+      { id: 'tax', items: pick(BASE.tax, loc), links: SECTION_LINKS.tax },
+      { id: 'employment', items: pick(BASE.employment, loc), links: SECTION_LINKS.employment },
+      { id: 'sector', items: pick(OVERLAYS[key], loc), links: [DGCCRF, ...(LINKS_OVERLAY[key] ?? [])] },
+      { id: 'gdpr', items: pick(BASE.gdpr, loc), links: SECTION_LINKS.gdpr },
     ],
-    links: [...LINKS_BASE, ...(LINKS_OVERLAY[key] ?? [])],
   };
 }
