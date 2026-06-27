@@ -481,15 +481,15 @@
       "items": [
         {
           "title": "Intelligence entreprises",
-          "desc": "Cherchez parmi 25M+ d'entreprises françaises : finances, dirigeants, actionnaires et score d'opportunité."
+          "desc": "Cherchez parmi 25M+ d’entreprises françaises : finances, dirigeants, actionnaires et score d’opportunité."
         },
         {
-          "title": "Appels d'offres & acheteurs publics",
-          "desc": "Appels d'offres BOAMP + TED en direct, adaptés à vous, avec échéances et probabilité de gain."
+          "title": "Appels d’offres & acheteurs publics",
+          "desc": "Appels d’offres BOAMP + TED en direct, adaptés à vous, avec échéances et probabilité de gain."
         },
         {
           "title": "Signaux de levées & investissements",
-          "desc": "Repérez les entreprises qui viennent de lever des fonds — budget frais, forte intention d'achat."
+          "desc": "Repérez les entreprises qui viennent de lever des fonds — budget frais, forte intention d’achat."
         },
         {
           "title": "Aides & subventions",
@@ -497,11 +497,19 @@
         },
         {
           "title": "Conformité & implantation",
-          "desc": "Forme juridique, fiscalité, droit du travail, certifications et RGPD par secteur — export PDF."
+          "desc": "Forme juridique, fiscalité, droit du travail, certifications et RGPD — liens officiels, export PDF."
         },
         {
-          "title": "Copilote IA & rapports",
-          "desc": "Posez toutes vos questions sur le marché français et générez des rapports de niveau conseil en quelques secondes."
+          "title": "Playbooks métier",
+          "desc": "Procédures sourcées étape par étape (ex. construire un data center) — un Knowledge OS qui grandit."
+        },
+        {
+          "title": "Copilote IA, sourcé",
+          "desc": "Réponses tirées d’une connaissance française curatée, avec citations officielles — pas un simple LLM."
+        },
+        {
+          "title": "Radar quotidien d’opportunités",
+          "desc": "Un e-mail quotidien des nouveaux appels d’offres, levées et actualités selon vos mots-clés."
         }
       ]
     },

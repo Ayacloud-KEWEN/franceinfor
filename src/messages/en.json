@@ -497,11 +497,19 @@
         },
         {
           "title": "Compliance & landing checklist",
-          "desc": "Sector-by-sector legal form, tax, employment, certification and GDPR — exportable to PDF."
+          "desc": "Sector legal form, tax, employment, certification and GDPR — with official links, export to PDF."
         },
         {
-          "title": "AI copilot & reports",
-          "desc": "Ask anything about the French market and generate consultant-grade reports in seconds."
+          "title": "Business playbooks",
+          "desc": "Step-by-step sourced workflows (e.g. building a data center) — a growing Knowledge OS."
+        },
+        {
+          "title": "AI copilot, grounded",
+          "desc": "Answers retrieved from curated French knowledge with official source citations — not just an LLM."
+        },
+        {
+          "title": "Daily opportunity radar",
+          "desc": "A daily email of new tenders, funding and news matched to your keywords."
         }
       ]
     },

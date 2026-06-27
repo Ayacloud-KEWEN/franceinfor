@@ -9,7 +9,7 @@ import { LandingHeader } from '@/components/landing/landing-header';
 import { CookieConsent } from '@/components/landing/cookie-consent';
 import { Analytics } from '@/components/landing/analytics';
 import {
-  Building2, Gavel, TrendingUp, Landmark, ClipboardCheck, Bot,
+  Building2, Gavel, TrendingUp, Landmark, ClipboardCheck, BookOpen, Bot, Mail,
   Check, ArrowRight, Sparkles,
 } from 'lucide-react';
 
@@ -45,7 +45,7 @@ export async function generateMetadata({
   };
 }
 
-const FEATURE_ICONS = [Building2, Gavel, TrendingUp, Landmark, ClipboardCheck, Bot];
+const FEATURE_ICONS = [Building2, Gavel, TrendingUp, Landmark, ClipboardCheck, BookOpen, Bot, Mail];
 
 export default async function LandingPage({
   params,
