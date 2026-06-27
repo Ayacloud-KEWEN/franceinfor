@@ -128,6 +128,31 @@ model Lead {
   @@index([status, createdAt])
 }
 
+// Knowledge OS L3 — Playbooks persisted with version history. `data` holds the
+// full localized RawPlaybook JSON; every content change snapshots a version.
+model Playbook {
+  id          String            @id @default(cuid())
+  slug        String            @unique
+  version     String
+  contentHash String
+  data        Json
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt @default(now())
+  versions    PlaybookVersion[]
+}
+
+model PlaybookVersion {
+  id         String   @id @default(cuid())
+  playbookId String
+  version    String
+  data       Json
+  note       String?
+  createdAt  DateTime @default(now())
+  playbook   Playbook @relation(fields: [playbookId], references: [id], onDelete: Cascade)
+
+  @@index([playbookId, createdAt])
+}
+
 // Audit/event stream surfaced in the admin console.
 enum EventType {
   USER_REGISTERED

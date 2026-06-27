@@ -51,7 +51,7 @@ export interface Playbook {
 }
 
 // ---- Raw (localized) shapes ----
-interface RawTask {
+export interface RawTask {
   id: string;
   name: LS;
   description: LS;
@@ -64,7 +64,7 @@ interface RawTask {
   risks?: LSA;
   references?: PlaybookRef[];
 }
-interface RawPlaybook {
+export interface RawPlaybook {
   slug: string;
   title: LS;
   sector: string;
@@ -310,9 +310,9 @@ const DATA_CENTER: RawPlaybook = {
   keywords: ['data center', 'datacenter', 'data centre', 'centre de données', 'datacentre', 'hosting', 'cloud', 'serveurs', 'colocation', 'infrastructure', '数据中心', '机房', '托管'],
 };
 
-const RAW: RawPlaybook[] = [DATA_CENTER];
+export const RAW: RawPlaybook[] = [DATA_CENTER];
 
-function localize(p: RawPlaybook, loc: Loc): Playbook {
+export function localize(p: RawPlaybook, loc: Loc): Playbook {
   return {
     slug: p.slug,
     title: s(loc, p.title),

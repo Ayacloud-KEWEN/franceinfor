@@ -6,12 +6,15 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { LeadForm } from '@/components/services/lead-form';
 import { Link } from '@/i18n/routing';
-import { Download, ExternalLink, ArrowLeft, Clock, Euro, AlertTriangle, FileText, Landmark, Sparkles } from 'lucide-react';
+import { Download, ExternalLink, ArrowLeft, Clock, Euro, AlertTriangle, FileText, Landmark, Sparkles, History } from 'lucide-react';
 import type { Playbook } from '@/lib/data/playbooks';
 
-export function PlaybookView({ playbook }: { playbook: Playbook }) {
+type VersionMeta = { version: string; note: string | null; createdAt: string | Date };
+
+export function PlaybookView({ playbook, versions = [] }: { playbook: Playbook; versions?: VersionMeta[] }) {
   const t = useTranslations('playbooks');
   const p = playbook;
+  const fmtDate = (d: string | Date) => new Date(d).toISOString().slice(0, 10);
 
   return (
     <div className="space-y-5">
@@ -104,6 +107,22 @@ export function PlaybookView({ playbook }: { playbook: Playbook }) {
         <CardHeader><CardTitle className="flex items-center gap-2 text-base"><AlertTriangle size={15} className="text-amber-500" /> {t('keyRisks')}</CardTitle></CardHeader>
         <CardContent><ul className="space-y-1.5 text-sm text-muted-foreground">{p.risks.map((r, i) => <li key={i}>• {r}</li>)}</ul></CardContent>
       </Card>
+
+      {versions.length > 0 && (
+        <Card className="print:hidden">
+          <CardHeader><CardTitle className="flex items-center gap-2 text-base"><History size={15} className="text-muted-foreground" /> {t('versionHistory')}</CardTitle></CardHeader>
+          <CardContent>
+            <ul className="space-y-1.5 text-sm">
+              {versions.map((v, i) => (
+                <li key={i} className="flex items-center gap-2">
+                  <Badge tone={i === 0 ? 'primary' : 'muted'}>v{v.version}</Badge>
+                  <span className="text-xs text-muted-foreground">{fmtDate(v.createdAt)}{v.note ? ` · ${v.note}` : ''}</span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
 
       <p className="text-[11px] text-muted-foreground">{t('disclaimer')}</p>
 

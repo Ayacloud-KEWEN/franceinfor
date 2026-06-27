@@ -1,10 +1,9 @@
 import { notFound } from 'next/navigation';
-import { getPlaybook, playbookSlugs, type Loc } from '@/lib/data/playbooks';
+import { dbGetPlaybook, getPlaybookVersions } from '@/lib/playbooks-db';
 import { PlaybookView } from '@/components/playbooks/playbook-view';
+import type { Loc } from '@/lib/data/playbooks';
 
-export function generateStaticParams() {
-  return playbookSlugs().map((slug) => ({ slug }));
-}
+export const dynamic = 'force-dynamic';
 
 export default async function PlaybookDetailPage({
   params,
@@ -12,7 +11,8 @@ export default async function PlaybookDetailPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  const playbook = getPlaybook(slug, locale as Loc);
+  const playbook = await dbGetPlaybook(slug, locale as Loc);
   if (!playbook) notFound();
-  return <PlaybookView playbook={playbook} />;
+  const versions = await getPlaybookVersions(slug);
+  return <PlaybookView playbook={playbook} versions={versions} />;
 }

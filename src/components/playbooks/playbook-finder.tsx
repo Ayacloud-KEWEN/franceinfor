@@ -1,21 +1,33 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Search, BookOpen, ArrowRight, Clock } from 'lucide-react';
-import { listPlaybooks, matchPlaybook, type Loc } from '@/lib/data/playbooks';
+import type { Playbook } from '@/lib/data/playbooks';
 
-export function PlaybookFinder() {
+// Client-side matcher over the provided playbooks (same logic as the server
+// matchPlaybook, but operates on the localized list passed in).
+function match(playbooks: Playbook[], query: string): Playbook | null {
+  const q = query.toLowerCase();
+  let best: { p: Playbook; score: number } | null = null;
+  for (const p of playbooks) {
+    let score = 0;
+    for (const kw of p.keywords) if (q.includes(kw.toLowerCase())) score += 3;
+    for (const w of p.title.toLowerCase().split(/\W+/)) if (w.length > 3 && q.includes(w)) score += 1;
+    if (score > 0 && (!best || score > best.score)) best = { p, score };
+  }
+  return best?.p ?? null;
+}
+
+export function PlaybookFinder({ playbooks }: { playbooks: Playbook[] }) {
   const t = useTranslations('playbooks');
-  const loc = useLocale() as Loc;
   const [q, setQ] = useState('');
-  const match = q.trim() ? matchPlaybook(q, loc) : null;
-  const playbooks = listPlaybooks(loc);
+  const matched = q.trim() ? match(playbooks, q) : null;
 
   return (
     <div className="space-y-5">
@@ -30,13 +42,13 @@ export function PlaybookFinder() {
       </form>
 
       {q.trim() && (
-        match ? (
+        matched ? (
           <Card className="border-primary/40 bg-primary/5 p-4">
             <div className="text-xs text-muted-foreground">{t('bestMatch')}</div>
-            <Link href={`/playbooks/${match.playbook.slug}`} className="mt-1 flex items-center gap-2 text-lg font-semibold hover:text-primary hover:underline">
-              <BookOpen size={18} className="text-primary" /> {match.playbook.title} <ArrowRight size={15} />
+            <Link href={`/playbooks/${matched.slug}`} className="mt-1 flex items-center gap-2 text-lg font-semibold hover:text-primary hover:underline">
+              <BookOpen size={18} className="text-primary" /> {matched.title} <ArrowRight size={15} />
             </Link>
-            <p className="mt-1 text-sm text-muted-foreground">{match.playbook.summary}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{matched.summary}</p>
           </Card>
         ) : (
           <p className="text-sm text-muted-foreground">{t('noMatch')}</p>
