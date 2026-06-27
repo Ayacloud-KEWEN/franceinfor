@@ -346,3 +346,49 @@ function mockConsultantReply(prompt: string): string {
     `_Configure a real model (Ollama / DeepSeek / OpenAI / Qwen / Claude) via AI_PROVIDER._`,
   ].join('\n');
 }
+
+// ---- Embeddings (Knowledge OS L2) ----
+// OpenAI text-embedding-3-small (1536-d) when OPENAI_API_KEY is set; otherwise a
+// deterministic dev fallback so the pipeline runs locally without a key.
+export const EMBED_DIM = 1536;
+const EMBED_MODEL = process.env.EMBED_MODEL || 'text-embedding-3-small';
+
+function devEmbed(text: string): number[] {
+  const v = new Array(EMBED_DIM).fill(0);
+  for (const tok of text.toLowerCase().split(/[^a-z0-9À-ſ]+/)) {
+    if (!tok) continue;
+    let h = 0;
+    for (let i = 0; i < tok.length; i++) h = (h * 31 + tok.charCodeAt(i)) >>> 0;
+    v[h % EMBED_DIM] += 1;
+  }
+  const norm = Math.sqrt(v.reduce((a, b) => a + b * b, 0)) || 1;
+  return v.map((x) => x / norm);
+}
+
+export async function embed(texts: string[]): Promise<number[][]> {
+  if (!texts.length) return [];
+  const key = process.env.OPENAI_API_KEY;
+  const provider = (process.env.EMBED_PROVIDER || 'openai').toLowerCase();
+  if (provider === 'openai' && key) {
+    try {
+      const base = process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1';
+      const res = await fetch(`${base}/embeddings`, {
+        method: 'POST',
+        headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
+        body: JSON.stringify({ model: EMBED_MODEL, input: texts }),
+      });
+      if (res.ok) {
+        const json = await res.json();
+        return (json.data as { embedding: number[] }[]).map((d) => d.embedding);
+      }
+      console.warn('[embed] openai', res.status, await res.text().catch(() => ''));
+    } catch (e) {
+      console.warn('[embed] failed, using dev fallback:', (e as Error).message);
+    }
+  }
+  return texts.map(devEmbed);
+}
+
+export function embeddingsConfigured(): boolean {
+  return (process.env.EMBED_PROVIDER || 'openai').toLowerCase() === 'openai' && Boolean(process.env.OPENAI_API_KEY);
+}

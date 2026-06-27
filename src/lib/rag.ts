@@ -1,6 +1,7 @@
 import 'server-only';
 import { matchPlaybook, type Loc } from './data/playbooks';
 import { experienceStats } from './projects';
+import { semanticSearch } from './knowledge';
 
 export interface RetrievedSource {
   label: string;
@@ -17,11 +18,36 @@ export interface Retrieval {
 // (L3 playbooks + L4 real-project experience). Keeps the Copilot answering from
 // curated, sourced knowledge rather than the bare language model.
 export async function retrieveContext(query: string, loc: Loc = 'en'): Promise<Retrieval> {
+  const lines: string[] = [];
+  const sources: RetrievedSource[] = [];
+  const seen = new Set<string>();
+  const addSource = (s: RetrievedSource) => {
+    if (s.url && !seen.has(s.url)) { seen.add(s.url); sources.push(s); }
+  };
+
   const match = matchPlaybook(query, loc);
-  if (!match) return { grounded: false, context: '', sources: [] };
+
+  // L2 — semantic vector retrieval over indexed official documents.
+  try {
+    const hits = (await semanticSearch(query, 4)).filter((h) => h.score > 0.2);
+    if (hits.length) {
+      lines.push('Relevant official sources (semantic search):');
+      for (const h of hits) {
+        lines.push(`- ${h.text.slice(0, 400)}${h.url ? ` [${h.url}]` : ''}`);
+        if (h.url) addSource({ label: h.source || h.url, url: h.url });
+      }
+      lines.push('');
+    }
+  } catch {
+    /* vector store optional */
+  }
+
+  if (!match) {
+    if (!lines.length) return { grounded: false, context: '', sources: [] };
+    return { grounded: true, context: lines.join('\n'), sources };
+  }
 
   const p = match.playbook;
-  const lines: string[] = [];
   lines.push(`Playbook: ${p.title}`);
   lines.push(p.summary);
   lines.push('Steps:');
@@ -55,14 +81,10 @@ export async function retrieveContext(query: string, loc: Loc = 'en'): Promise<R
     /* stats optional */
   }
 
-  // Sources: each task's references + playbook-level references, de-duplicated.
-  const seen = new Set<string>();
-  const sources: RetrievedSource[] = [];
+  // Sources: each task's references + playbook-level references (deduped with
+  // the semantic-search sources already collected above).
   for (const ref of [...p.tasks.flatMap((t) => t.references ?? []), ...p.references]) {
-    if (!seen.has(ref.url)) {
-      seen.add(ref.url);
-      sources.push(ref);
-    }
+    addSource(ref);
   }
 
   return { grounded: true, context: lines.join('\n'), sources };

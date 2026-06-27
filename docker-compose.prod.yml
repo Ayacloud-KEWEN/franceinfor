@@ -4,7 +4,7 @@
 # DB/Redis hosts are overridden to the compose service names.
 services:
   postgres:
-    image: postgres:16-alpine
+    image: pgvector/pgvector:pg16
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-france}
