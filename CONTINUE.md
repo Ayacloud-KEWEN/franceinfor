@@ -143,7 +143,15 @@ prisma/                        schema + seed
 - **上线要做**：① 服务器 `.env` 设 `CRON_SECRET="<随机串>"` + `pm2 restart`；② 加每日定时：
   `crontab -e` → `0 7 * * * curl -s "https://francego.fr/api/cron/digest?key=<CRON_SECRET>" >/dev/null`（每天 07:00）。依赖邮件已接通（[[email-and-resend]]）。
 
-## 🧠 下一块：L2 知识图谱 + pgvector（最重，待动工）
+## ✅ L2 知识图谱 + pgvector（已落地，embedding=OpenAI）
+- **向量层**：Postgres = `pgvector/pgvector:pg16`；`DocChunk` vector(1536)+HNSW。`ai.ts#embed()` 用 OpenAI `text-embedding-3-small`（无 key 时 dev 兜底向量，仅本地跑通用）。`lib/knowledge.ts`：chunk+embed+`semanticSearch`(raw SQL `<=>` 余弦)。`/api/cron/index` 把 ACTIVE `RawDocument` 分块向量化。
+- **图谱层**：`KnowledgeNode`/`KnowledgeEdge`(confidence/sourceRef/CANDIDATE→APPROVED)。`/api/cron/extract` 用 LLM 抽实体/关系成候选（严格 JSON、不得凭空造、可溯源）；admin `/admin/knowledge` 人工审核(批准/拒绝)。
+- **Copilot RAG**：`lib/rag.ts` 已融合 **L2 语义召回** + L3 playbook + L4 经验，附官方来源。
+- **cron 链**（同 `CRON_SECRET`，每天）：`/api/cron/ingest`→`/api/cron/index`→`/api/cron/extract`。
+- ⚠️ **上线必做**：① 生产 Postgres 装 pgvector（`apt install postgresql-16-pgvector` → `CREATE EXTENSION vector`；prisma db push 会建扩展但需包已装）；② `.env` 设 `OPENAI_API_KEY`、`EMBED_PROVIDER=openai`；③ 配 cron 链。
+- **待办**：把已审核(APPROVED)的图谱事实并入 RAG grounding；对象存储 S3。
+
+## （历史）原 L2 待办笔记
 目标：把 L1 原始文档（`RawDocument`）抽取成知识图谱，用 pgvector 做语义检索，让 Copilot RAG 从"关键词匹配 playbook"升级为"语义检索整个图谱"。详见 `KNOWLEDGE_OS.md` L2 行。
 
 **实现步骤**：
