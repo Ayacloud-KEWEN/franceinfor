@@ -74,7 +74,7 @@
 
 ## 4. 已交付 vs 待建
 
-- ✅ **L3 Playbook 库**（`/playbooks` + 数据中心 playbook + 搜索匹配 + PDF + 留资）。
+- ✅ **L3 Playbook 库**（`/playbooks` + 搜索匹配 + PDF + 留资）。已落地 playbook：①「在法国建数据中心」②「把中国生产的乐器卖到法国」(`china-musical-instruments-to-france`，EORI/税则第92章/CITES濒危木材/CE-GPSR-RED-RoHS-WEEE/法语标签-EPR/ISPM15，三语)。
 - ✅ 知识资产"在 Postgres"的范式验证（`Translation`/`Lead`/`Event`）。
 - ◐ L1 RawDocument 抓取+版本化（已落地基座 + cron 抓取；对象存储 storageKey 待接 S3）。
 - ☑ L2：pgvector 语义检索(已接 Copilot) + 知识图谱抽取(`/api/cron/extract`)+ admin 审核(`/admin/knowledge`)。
