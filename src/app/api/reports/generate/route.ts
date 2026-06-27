@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
   if (!quota.ok)
     return NextResponse.json({ error: 'quota_exceeded', limit: quota.limit }, { status: 429 });
 
-  const markdown = await generateReport(tpl.name, topic);
+  const locale = typeof body?.locale === 'string' ? body.locale : user.locale;
+  const markdown = await generateReport(tpl.name, topic, locale);
   return NextResponse.json({ markdown });
 }

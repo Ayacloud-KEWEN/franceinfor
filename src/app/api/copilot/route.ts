@@ -28,16 +28,17 @@ export async function POST(req: NextRequest) {
 
   // RAG: retrieve grounding knowledge (L3 playbooks + L4 experience) before
   // answering, so the copilot cites curated French knowledge, not just the LLM.
+  const locale = (typeof body?.locale === 'string' ? body.locale : user.locale) as Loc;
   const lastQuestion = messages[messages.length - 1]?.content || '';
-  const retrieval = await retrieveContext(lastQuestion, user.locale as Loc);
+  const retrieval = await retrieveContext(lastQuestion, locale);
 
   let reply = retrieval.grounded
-    ? await complete(messages, RAG_SYSTEM(retrieval.context))
-    : await complete(messages);
+    ? await complete(messages, RAG_SYSTEM(retrieval.context), locale)
+    : await complete(messages, undefined, locale);
 
   // Append the official sources used to ground the answer.
   if (retrieval.grounded && retrieval.sources.length) {
-    const label = user.locale === 'fr' ? 'Sources' : user.locale === 'zh' ? '来源' : 'Sources';
+    const label = locale === 'fr' ? 'Sources' : locale === 'zh' ? '来源' : 'Sources';
     reply += `\n\n— ${label}:\n` + retrieval.sources.slice(0, 6).map((src) => `• ${src.label}: ${src.url}`).join('\n');
   }
 

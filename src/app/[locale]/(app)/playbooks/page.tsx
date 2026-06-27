@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { PageHeader } from '@/components/page-header';
 import { PlaybookFinder } from '@/components/playbooks/playbook-finder';
+import { PlaybookRequest } from '@/components/playbooks/playbook-request';
 import { dbListPlaybooks } from '@/lib/playbooks-db';
 import type { Loc } from '@/lib/data/playbooks';
 
@@ -20,6 +21,9 @@ export default async function PlaybooksPage({
     <div>
       <PageHeader title={t('title')} subtitle={t('subtitle')} />
       <PlaybookFinder playbooks={playbooks} />
+      <div className="mt-6">
+        <PlaybookRequest />
+      </div>
     </div>
   );
 }

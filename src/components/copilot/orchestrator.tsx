@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,6 +13,7 @@ import { Loader2, Check, Workflow, Download } from 'lucide-react';
 export function CopilotOrchestrator() {
   const t = useTranslations('modules');
   const tc = useTranslations('common');
+  const locale = useLocale();
   const [topic, setTopic] = useState('');
   const [running, setRunning] = useState(false);
   const [done, setDone] = useState<number>(0);
@@ -33,7 +34,7 @@ export function CopilotOrchestrator() {
       const res = await fetch('/api/copilot/orchestrate', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ topic }),
+        body: JSON.stringify({ topic, locale }),
       });
       const json = await res.json();
       // Ensure the animation has visibly run.

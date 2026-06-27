@@ -155,6 +155,32 @@ model PlaybookVersion {
   @@index([playbookId, createdAt])
 }
 
+// Customer-submitted requests for new Playbooks ("求建" entry). Collects demand
+// and keeps authoring/quality control with the admin team. Reviewed in
+// /admin/playbook-requests; an admin still authors the actual playbook in code.
+enum PlaybookRequestStatus {
+  NEW
+  PLANNED
+  DONE
+  DECLINED
+}
+
+model PlaybookRequest {
+  id        String                @id @default(cuid())
+  title     String // what the customer wants, e.g. "Sell Chinese instruments in France"
+  sector    String?
+  detail    String? // free-text context / specifics
+  locale    String                @default("en")
+  status    PlaybookRequestStatus @default(NEW)
+  userId    String? // set when submitted by a logged-in user
+  userEmail String? // snapshot of submitter's account email
+  adminNote String?
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt @default(now())
+
+  @@index([status, createdAt])
+}
+
 // Knowledge OS L1 — raw documents, versioned and never overwritten. Same
 // url+content (checksum) is deduped; changed content creates a new version and
 // supersedes the old. Text content is stored inline (migrates with pg_dump);

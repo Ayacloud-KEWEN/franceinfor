@@ -31,6 +31,26 @@ interface ProviderConfig {
 const SYSTEM_PROMPT =
   'You are a senior France market-entry consultant (McKinsey-grade). Be concise, structured, data-driven. Reply in the language of the user.';
 
+// Strong, explicit output-language directive. The model otherwise defaults to
+// English because prompts and source data are often in English. Appended to the
+// system prompt whenever the caller knows the user's UI locale.
+const OUTPUT_LANG: Record<string, string> = {
+  en: 'English',
+  zh: 'Simplified Chinese (简体中文)',
+  fr: 'French (français)',
+};
+
+export function langDirective(locale?: string): string {
+  const lang = locale ? OUTPUT_LANG[locale] : undefined;
+  if (!lang) return '';
+  return (
+    `\n\nIMPORTANT: Write your ENTIRE response in ${lang}, regardless of the language ` +
+    `of the input data, context, or instructions. Translate any source material as needed. ` +
+    `Do not reply in any other language. Keep proper nouns (company, brand, organisation, ` +
+    `person names and official French permit/authority names) in their original script.`
+  );
+}
+
 function buildConfig(): ProviderConfig {
   const provider = (process.env.AI_PROVIDER || 'ollama').toLowerCase() as ProviderId;
 
@@ -167,7 +187,8 @@ async function callAnthropic(
 
 export async function complete(
   messages: AiMessage[],
-  system: string = SYSTEM_PROMPT
+  system: string = SYSTEM_PROMPT,
+  locale?: string
 ): Promise<string> {
   const last = messages[messages.length - 1]?.content ?? '';
   if (FORCE_MOCK) return mockConsultantReply(last);
@@ -178,29 +199,38 @@ export async function complete(
     return mockConsultantReply(last);
   }
 
+  const sys = system + langDirective(locale);
   try {
     return cfg.kind === 'anthropic'
-      ? await callAnthropic(cfg, messages, system)
-      : await callOpenAICompatible(cfg, messages, system);
+      ? await callAnthropic(cfg, messages, sys)
+      : await callOpenAICompatible(cfg, messages, sys);
   } catch (e) {
     console.warn(`[ai] ${cfg.id} failed, falling back to mock:`, (e as Error).message);
     return mockConsultantReply(last);
   }
 }
 
-export async function generateReport(templateName: string, topic: string): Promise<string> {
+export async function generateReport(
+  templateName: string,
+  topic: string,
+  locale?: string
+): Promise<string> {
   if (FORCE_MOCK) return mockReport(templateName, topic);
 
   const cfg = buildConfig();
   if (cfg.needsKey && !cfg.apiKey) return mockReport(templateName, topic);
 
   try {
-    return await complete([
-      {
-        role: 'user',
-        content: `Produce a "${templateName}" about "${topic}" for entering the French market. Use markdown with sections: Executive Summary, Key Data (markdown table), AI Analysis, Risks, Recommendations, Sources.`,
-      },
-    ]);
+    return await complete(
+      [
+        {
+          role: 'user',
+          content: `Produce a "${templateName}" about "${topic}" for entering the French market. Use markdown with sections: Executive Summary, Key Data (markdown table), AI Analysis, Risks, Recommendations, Sources.`,
+        },
+      ],
+      SYSTEM_PROMPT,
+      locale
+    );
   } catch {
     return mockReport(templateName, topic);
   }

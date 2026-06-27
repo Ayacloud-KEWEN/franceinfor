@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Markdown } from '@/components/reports/markdown';
 import { Loader2, Sparkles } from 'lucide-react';
@@ -9,6 +9,7 @@ import { Loader2, Sparkles } from 'lucide-react';
 export function CompanyAiSummary({ context }: { context: string }) {
   const t = useTranslations('companies');
   const tc = useTranslations('common');
+  const locale = useLocale();
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -19,6 +20,7 @@ export function CompanyAiSummary({ context }: { context: string }) {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
+          locale,
           messages: [
             {
               role: 'user',

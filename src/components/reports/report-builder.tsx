@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,6 +13,7 @@ import { Loader2, Download, FileText } from 'lucide-react';
 export function ReportBuilder() {
   const t = useTranslations('reports');
   const tc = useTranslations('common');
+  const locale = useLocale();
   const [template, setTemplate] = useState(REPORT_TEMPLATES[2].slug);
   const [topic, setTopic] = useState('');
   const [markdown, setMarkdown] = useState('');
@@ -25,7 +26,7 @@ export function ReportBuilder() {
       const res = await fetch('/api/reports/generate', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ template, topic }),
+        body: JSON.stringify({ template, topic, locale }),
       });
       const json = await res.json();
       setMarkdown(

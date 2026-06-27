@@ -143,6 +143,11 @@ prisma/                        schema + seed
 - **上线要做**：① 服务器 `.env` 设 `CRON_SECRET="<随机串>"` + `pm2 restart`；② 加每日定时：
   `crontab -e` → `0 7 * * * curl -s "https://francego.fr/api/cron/digest?key=<CRON_SECRET>" >/dev/null`（每天 07:00）。依赖邮件已接通（[[email-and-resend]]）。
 
+## 📒 L3 Playbook 新增「中国乐器卖到法国」+ 求建入口 + AI 输出语言修复（本次新增）
+- **新 playbook**：`src/lib/data/playbooks.ts` 加 `MUSIC_EXPORT`（slug `china-musical-instruments-to-france`），注册进 `RAW`。三语，含 EORI/税则92章/CITES濒危木材/CE-GPSR-RED-RoHS-WEEE/法语标签-EPR/ISPM15。**新增 playbook 后必须以管理员触发 `POST /api/playbooks/sync`**——因为 `dbListPlaybooks` 一旦库非空就只读库、不回退代码（[playbooks-db.ts](src/lib/playbooks-db.ts)）。
+- **求建入口（方案 B）**：新表 `PlaybookRequest`（status NEW/PLANNED/DONE/DECLINED，纯增量，自动部署 `prisma db push` 自动建）。客户在 `/playbooks` 底部「申请新增」表单提交（`components/playbooks/playbook-request.tsx` + `app/actions/playbook-requests.ts`）；admin 在 `/admin/playbook-requests` 三态triage。质量仍由 admin 把控（手写 playbook→sync），不让客户直接产出。
+- **AI 输出语言修复**：`ai.ts` 加 `langDirective(locale)` 强制指令，`complete()`/`generateReport()` 加 `locale` 参；`/api/copilot`、`/api/reports/generate`、`/api/copilot/orchestrate` 优先取 body.locale（客户端组件用 `useLocale()` 传当前界面语言），回退 `user.locale`。解决「AI 摘要/报告恒返回英语」。
+
 ## ✅ L2 知识图谱 + pgvector（已落地，embedding=OpenAI）
 - **向量层**：Postgres = `pgvector/pgvector:pg16`；`DocChunk` vector(1536)+HNSW。`ai.ts#embed()` 用 OpenAI `text-embedding-3-small`（无 key 时 dev 兜底向量，仅本地跑通用）。`lib/knowledge.ts`：chunk+embed+`semanticSearch`(raw SQL `<=>` 余弦)。`/api/cron/index` 把 ACTIVE `RawDocument` 分块向量化。
 - **图谱层**：`KnowledgeNode`/`KnowledgeEdge`(confidence/sourceRef/CANDIDATE→APPROVED)。`/api/cron/extract` 用 LLM 抽实体/关系成候选（严格 JSON、不得凭空造、可溯源）；admin `/admin/knowledge` 人工审核(批准/拒绝)。

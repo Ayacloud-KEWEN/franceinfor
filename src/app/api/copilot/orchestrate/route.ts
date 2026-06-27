@@ -16,6 +16,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'quota_exceeded', limit: quota.limit }, { status: 429 });
 
   // Each agent runs (mock); a real build would fan out to the per-module engines.
-  const markdown = await generateReport('France Market Entry Report', topic);
+  const locale = typeof body?.locale === 'string' ? body.locale : user.locale;
+  const markdown = await generateReport('France Market Entry Report', topic, locale);
   return NextResponse.json({ agents: COPILOT_AGENTS, markdown });
 }

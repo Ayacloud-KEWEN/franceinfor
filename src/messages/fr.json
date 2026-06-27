@@ -631,7 +631,15 @@
     "experience": "D’après {n} projet(s) réel(s)",
     "avgDuration": "Durée moy.",
     "successRate": "Taux de réussite",
-    "avgCost": "Coût moyen"
+    "avgCost": "Coût moyen",
+    "requestTitle": "Vous ne trouvez pas le playbook qu'il vous faut ? Demandez-le",
+    "requestIntro": "Indiquez-nous le processus souhaité ; notre équipe le rédigera à partir des règles réelles françaises/UE.",
+    "requestField": "Sujet du playbook souhaité",
+    "requestPlaceholder": "ex. Vendre en France des instruments de musique fabriqués en Chine",
+    "requestSector": "Secteur (optionnel)",
+    "requestDetail": "Contexte supplémentaire (optionnel)",
+    "requestSubmit": "Envoyer la demande",
+    "requestThanks": "Bien reçu, merci ! Nous étudierons votre demande."
   },
   "help": {
     "title": "Aide & guide d’utilisation",

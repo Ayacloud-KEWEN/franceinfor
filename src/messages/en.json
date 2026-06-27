@@ -631,7 +631,15 @@
     "experience": "Based on {n} real project(s)",
     "avgDuration": "Avg duration",
     "successRate": "Success rate",
-    "avgCost": "Avg cost"
+    "avgCost": "Avg cost",
+    "requestTitle": "Can't find the playbook you need? Request one",
+    "requestIntro": "Tell us the workflow you need; our team will author it from real French/EU rules.",
+    "requestField": "Playbook topic you want",
+    "requestPlaceholder": "e.g. How to sell China-made musical instruments in France",
+    "requestSector": "Sector (optional)",
+    "requestDetail": "More context (optional)",
+    "requestSubmit": "Submit request",
+    "requestThanks": "Received, thank you! We'll review your request."
   },
   "help": {
     "title": "Help & user guide",

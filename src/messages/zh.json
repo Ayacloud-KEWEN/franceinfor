@@ -631,7 +631,15 @@
     "experience": "基于 {n} 个真实项目",
     "avgDuration": "平均工期",
     "successRate": "成功率",
-    "avgCost": "平均成本"
+    "avgCost": "平均成本",
+    "requestTitle": "没有你需要的手册？申请新增",
+    "requestIntro": "告诉我们你想要的落地流程，我们的团队会基于真实法国/欧盟规则编写。",
+    "requestField": "想要的手册主题",
+    "requestPlaceholder": "例如：如何把中国生产的乐器卖到法国",
+    "requestSector": "行业（可选）",
+    "requestDetail": "补充说明（可选）",
+    "requestSubmit": "提交申请",
+    "requestThanks": "已收到，谢谢！我们会评估你的申请。"
   },
   "help": {
     "title": "帮助与使用说明",
