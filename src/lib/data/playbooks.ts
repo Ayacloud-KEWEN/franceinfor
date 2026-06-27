@@ -531,7 +531,237 @@ const MUSIC_EXPORT: RawPlaybook = {
   keywords: ['musical instruments', 'instruments de musique', '乐器', 'guitar', 'guitare', '吉他', 'piano', '钢琴', 'violin', 'violon', 'import', 'importer', '进口', 'export', '出口', 'china', 'chine', '中国', 'CE marking', 'marquage CE', 'CITES', 'rosewood', 'palissandre', '红木', 'EORI', 'douane', '海关', 'customs'],
 };
 
-export const RAW: RawPlaybook[] = [DATA_CENTER, MUSIC_EXPORT];
+const CAVIAR_EXPORT: RawPlaybook = {
+  slug: 'china-caviar-to-france',
+  title: {
+    en: 'Selling China-produced caviar in France',
+    fr: 'Vendre en France du caviar produit en Chine',
+    zh: '把中国生产的鱼子酱卖到法国',
+  },
+  sector: 'food-import',
+  summary: {
+    en: 'End-to-end workflow to import sturgeon caviar produced in China and sell it in France — from customs registration (EORI) and CITES sturgeon permits/labelling, through EU veterinary import controls for products of animal origin (approved establishment, health certificate, Border Control Post via TRACES), tariff classification, French food-safety & INCO labelling, to the cold chain and distribution.',
+    fr: 'Procédure complète pour importer du caviar d’esturgeon produit en Chine et le vendre en France — de l’immatriculation douanière (EORI) et des permis/étiquetage CITES esturgeon, aux contrôles vétérinaires UE à l’import des produits d’origine animale (établissement agréé, certificat sanitaire, poste de contrôle frontalier via TRACES), à la classification tarifaire, à la sécurité sanitaire & l’étiquetage INCO, jusqu’à la chaîne du froid et la distribution.',
+    zh: '把中国生产的鲟鱼鱼子酱进口并在法国销售的端到端流程——从海关注册（EORI）、CITES 鲟鱼许可与标识，到欧盟动物源性食品兽医进口管控（注册场所、卫生证书、经 TRACES 走边境检查站），再到税则归类、法国食品安全与 INCO 标签，直到冷链与分销。',
+  },
+  applicableTo: {
+    en: ['Chinese caviar farms / exporters', 'Food import & distribution companies', 'HoReCa & gourmet retail suppliers'],
+    fr: ['Fermes / exportateurs de caviar chinois', 'Sociétés d’import & distribution alimentaire', 'Fournisseurs CHR & épicerie fine'],
+    zh: ['中国鱼子酱养殖场 / 出口商', '食品进口与分销公司', '餐饮（HoReCa）与高端零售供应商'],
+  },
+  prerequisites: {
+    en: ['Sturgeon species & farm details (CITES source code, aquaculture)', 'Supplier must be an EU-approved establishment listed for China', 'Decide the import model: French entity or established EU importer'],
+    fr: ['Espèce d’esturgeon & informations sur la ferme (code source CITES, aquaculture)', 'Le fournisseur doit être un établissement agréé UE listé pour la Chine', 'Choisir le modèle d’import : entité française ou importateur UE établi'],
+    zh: ['鲟鱼物种与养殖场信息（CITES 来源代码、养殖）', '供应商须为欧盟批准、且对华列名的注册场所', '确定进口模式：法国主体或既有欧盟进口商'],
+  },
+  tasks: [
+    {
+      id: 'entity',
+      name: { en: 'Set up an importing entity (or appoint an EU importer)', fr: 'Créer une entité importatrice (ou désigner un importateur UE)', zh: '设立进口主体（或指定欧盟进口商）' },
+      description: {
+        en: 'The “importer” placing food on the EU market is legally responsible for its safety and compliance (Reg. 178/2002). Either incorporate a French entity (typically SAS/SASU) or contract an established EU food importer who takes that role.',
+        fr: 'L’« importateur » qui met la denrée sur le marché UE est juridiquement responsable de sa sécurité et conformité (Règl. 178/2002). Créer une entité française (généralement SAS/SASU) ou contractualiser un importateur alimentaire UE établi qui assume ce rôle.',
+        zh: '把食品投放欧盟市场的"进口商"对其安全与合规负法律责任（第 178/2002 号条例）。可设立法国主体（通常 SAS/SASU），或签约一家承担该角色的既有欧盟食品进口商。',
+      },
+      authority: 'INPI — Guichet unique',
+      documents: {
+        en: ['Statutes (articles)', 'Proof of registered office', 'Beneficial-owner declaration'],
+        fr: ['Statuts', 'Justificatif de siège social', 'Déclaration des bénéficiaires effectifs'],
+        zh: ['公司章程', '注册地址证明', '受益所有人申报'],
+      },
+      cost: { en: '~€200–2,000 (legal + publication)', fr: '~200–2 000 € (juridique + publication)', zh: '约 €200–2,000（法务 + 公告）' },
+      timeline: { en: '1–3 weeks', fr: '1–3 semaines', zh: '1–3 周' },
+      references: [{ label: 'Guichet unique (INPI)', url: 'https://formalites.entreprises.gouv.fr/' }],
+    },
+    {
+      id: 'eori',
+      name: { en: 'Customs registration (EORI) & VAT', fr: 'Immatriculation douanière (EORI) & TVA', zh: '海关注册（EORI）与增值税' },
+      description: {
+        en: 'Any business importing goods into the EU needs an EORI number (issued in France by the Douanes). Register for French VAT; caviar is generally subject to the reduced food VAT rate, with import VAT accounted via reverse-charge (autoliquidation) on the VAT return.',
+        fr: 'Toute entreprise important des marchandises dans l’UE doit avoir un numéro EORI (délivré en France par la Douane). S’immatriculer à la TVA française ; le caviar relève en principe du taux réduit de TVA alimentaire, la TVA à l’import étant autoliquidée sur la déclaration.',
+        zh: '任何向欧盟进口货物的企业都需 EORI 号（法国由海关 Douanes 签发）。注册法国增值税；鱼子酱一般适用食品类降低税率，进口增值税通过申报表反向征收（autoliquidation）处理。',
+      },
+      authority: 'Douane française (DGDDI) / DGFiP',
+      documents: {
+        en: ['SIREN/SIRET', 'EORI application', 'VAT registration'],
+        fr: ['SIREN/SIRET', 'Demande EORI', 'Immatriculation TVA'],
+        zh: ['SIREN/SIRET', 'EORI 申请', '增值税注册'],
+      },
+      cost: { en: 'Free (registration); broker fees optional', fr: 'Gratuit (immatriculation) ; frais de courtier optionnels', zh: '注册免费；报关行费用可选' },
+      timeline: { en: 'Days–weeks', fr: 'Jours–semaines', zh: '数天至数周' },
+      dependsOn: ['entity'],
+      references: [{ label: 'EORI — Douane', url: 'https://www.douane.gouv.fr/demarche/obtenir-un-numero-eori' }],
+    },
+    {
+      id: 'cites',
+      name: { en: 'CITES sturgeon permits & caviar labelling', fr: 'Permis CITES esturgeon & étiquetage du caviar', zh: 'CITES 鲟鱼许可与鱼子酱标识' },
+      description: {
+        en: 'All sturgeon species are CITES-listed, so caviar trade requires CITES import permits (EU) matched to the export permit (China). Caviar must carry the mandatory CITES universal labelling on every primary container (source, country, year, processing/repackaging code). This is non-negotiable and checked at import.',
+        fr: 'Toutes les espèces d’esturgeon sont inscrites à la CITES ; le commerce de caviar nécessite donc des permis d’import CITES (UE) en regard du permis d’export (Chine). Le caviar doit porter l’étiquetage universel CITES obligatoire sur chaque contenant primaire (source, pays, année, code de transformation/réemballage). Non négociable et contrôlé à l’import.',
+        zh: '所有鲟鱼物种均列入 CITES，因此鱼子酱贸易需 CITES 进口许可（欧盟）并与出口许可（中国）匹配。每个原始容器必须加施强制性 CITES 通用标识（来源、国别、年份、加工/再包装代码）。此项不可商量，进口时必查。',
+      },
+      authority: 'Autorité de gestion CITES (France) / DREAL',
+      permit: 'Permis CITES (import) + étiquetage universel du caviar',
+      documents: {
+        en: ['CITES export permit (China) + import permit (EU)', 'CITES universal caviar labels on each tin', 'Sturgeon species & source-code declaration'],
+        fr: ['Permis d’export CITES (Chine) + permis d’import (UE)', 'Étiquettes CITES universelles sur chaque boîte', 'Déclaration espèce d’esturgeon & code source'],
+        zh: ['CITES 出口许可（中国）+ 进口许可（欧盟）', '每听上的 CITES 通用鱼子酱标识', '鲟鱼物种与来源代码申报'],
+      },
+      cost: { en: 'Permit fees + lead time per shipment', fr: 'Frais de permis + délai par expédition', zh: '每批次许可费用 + 办证周期' },
+      timeline: { en: 'Weeks–months (plan ahead)', fr: 'Semaines–mois (anticiper)', zh: '数周至数月（需提前规划）' },
+      dependsOn: ['eori'],
+      risks: {
+        en: ['Seizure at customs without CITES permit', 'Missing/incorrect universal label code'],
+        fr: ['Saisie en douane sans permis CITES', 'Code d’étiquetage universel manquant/erroné'],
+        zh: ['无 CITES 许可被海关扣押', '通用标识代码缺失/错误'],
+      },
+      references: [{ label: 'CITES — Ministère de la Transition écologique', url: 'https://www.ecologie.gouv.fr/cites-application-france' }],
+    },
+    {
+      id: 'veterinary',
+      name: { en: 'Veterinary import control (product of animal origin)', fr: 'Contrôle vétérinaire à l’import (produit d’origine animale)', zh: '兽医进口管控（动物源性产品）' },
+      description: {
+        en: 'Caviar is a fishery product of animal origin: China must be an authorised third country, the producing farm must be an EU-approved establishment, every consignment needs the official EU health certificate, must be pre-notified in TRACES (CHED-P) and physically enter the EU through a designated Border Control Post (poste de contrôle frontalier) for documentary/identity/physical checks before customs release.',
+        fr: 'Le caviar est un produit de la pêche d’origine animale : la Chine doit être un pays tiers autorisé, la ferme productrice un établissement agréé UE, chaque envoi requiert le certificat sanitaire officiel UE, doit être pré-notifié dans TRACES (DSCE-P/CHED-P) et entrer dans l’UE via un poste de contrôle frontalier désigné pour contrôles documentaire/identité/physique avant dédouanement.',
+        zh: '鱼子酱属动物源性渔业产品：中国须为获准第三国、生产养殖场须为欧盟批准注册场所，每批货需附欧盟官方卫生证书，须在 TRACES 预先申报（CHED-P），并经指定边境检查站（poste de contrôle frontalier）入欧、完成文件/同一性/实物查验后方可清关。',
+      },
+      authority: 'DGAL / DD(ec)PP — poste de contrôle frontalier (PCF)',
+      permit: 'Certificat sanitaire UE + CHED-P (TRACES NT)',
+      documents: {
+        en: ['EU export health certificate (China official vet)', 'CHED-P pre-notification in TRACES NT', 'EU-approval number of the producing establishment'],
+        fr: ['Certificat sanitaire d’export UE (vétérinaire officiel chinois)', 'Pré-notification CHED-P dans TRACES NT', 'Numéro d’agrément UE de l’établissement producteur'],
+        zh: ['欧盟出口卫生证书（中国官方兽医签发）', 'TRACES NT 中的 CHED-P 预申报', '生产场所的欧盟批准编号'],
+      },
+      cost: { en: 'Border control inspection fees per consignment', fr: 'Redevances d’inspection au PCF par envoi', zh: '每批次边境检查站查验费' },
+      timeline: { en: 'Per shipment; clearance hours–days', fr: 'Par envoi ; dédouanement heures–jours', zh: '每批次；清关数小时至数天' },
+      dependsOn: ['eori'],
+      risks: {
+        en: ['Farm not on the EU-approved list → import refused', 'Wrong entry point (must be a designated BCP)', 'Certificate errors → rejection/destruction'],
+        fr: ['Ferme absente de la liste agréée UE → import refusé', 'Mauvais point d’entrée (PCF désigné obligatoire)', 'Erreurs de certificat → refus/destruction'],
+        zh: ['养殖场不在欧盟批准名单 → 拒绝进口', '入境口岸错误（须为指定 PCF）', '证书有误 → 退运/销毁'],
+      },
+      references: [
+        { label: 'Import animaux & produits animaux — Ministère de l’Agriculture', url: 'https://agriculture.gouv.fr/limportation-danimaux-vivants-et-de-produits-animaux-et-dorigine-animale' },
+        { label: 'TRACES NT (Commission européenne)', url: 'https://webgate.ec.europa.eu/tracesnt/' },
+      ],
+    },
+    {
+      id: 'classification',
+      name: { en: 'Tariff classification & duties', fr: 'Classification tarifaire & droits de douane', zh: '税则归类与关税' },
+      description: {
+        en: 'Classify caviar under heading 1604 — 1604.31 (caviar) or 1604.32 (caviar substitutes) — and look up the duty rate and measures in TARIC. Prepare commercial invoice, packing list and origin documentation; verify any quota or specific measures for the origin.',
+        fr: 'Classer le caviar à la position 1604 — 1604.31 (caviar) ou 1604.32 (succédanés de caviar) — et vérifier le taux de droit et les mesures dans TARIC. Préparer facture commerciale, liste de colisage et documents d’origine ; contrôler quotas/mesures spécifiques selon l’origine.',
+        zh: '将鱼子酱按品目 1604 归类——1604.31（鱼子酱）或 1604.32（鱼子酱替代品）——在 TARIC 查询关税率与相关措施。备齐商业发票、装箱单与原产地文件；核查原产地是否有配额或特定措施。',
+      },
+      authority: 'Douane / TARIC (Commission européenne)',
+      documents: {
+        en: ['HS/TARIC code (1604.31 / 1604.32)', 'Commercial invoice & packing list', 'Origin documentation'],
+        fr: ['Code SH/TARIC (1604.31 / 1604.32)', 'Facture commerciale & liste de colisage', 'Documents d’origine'],
+        zh: ['HS/TARIC 编码（1604.31 / 1604.32）', '商业发票与装箱单', '原产地文件'],
+      },
+      cost: { en: 'Duty rate per TARIC + reduced food VAT', fr: 'Droit selon TARIC + TVA alimentaire réduite', zh: '关税按 TARIC + 食品类降低增值税' },
+      timeline: { en: 'Per shipment', fr: 'Par expédition', zh: '每批次' },
+      dependsOn: ['veterinary'],
+      risks: {
+        en: ['Misclassification → duty/penalty reassessment', 'Caviar vs. substitute mislabel'],
+        fr: ['Erreur de classement → redressement droits/pénalités', 'Confusion caviar / succédané'],
+        zh: ['归类错误 → 补税/罚款', '鱼子酱与替代品标注混淆'],
+      },
+      references: [{ label: 'TARIC (Commission européenne)', url: 'https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp' }],
+    },
+    {
+      id: 'food-safety-labelling',
+      name: { en: 'Food safety & French/EU labelling (INCO)', fr: 'Sécurité sanitaire & étiquetage FR/UE (INCO)', zh: '食品安全与法/欧标签（INCO）' },
+      description: {
+        en: 'Comply with EU food hygiene rules and ensure consumer information per Reg. (EU) 1169/2011 (INCO): French-language labelling with product name, species, net weight, ingredients/additives, allergens, date of minimum durability, storage conditions, batch and the importer’s name & address. The importer should declare the activity to the DDPP and keep traceability records.',
+        fr: 'Respecter les règles d’hygiène UE et l’information du consommateur selon le Règl. (UE) 1169/2011 (INCO) : étiquetage en français avec dénomination, espèce, poids net, ingrédients/additifs, allergènes, DDM, conditions de conservation, lot et nom & adresse de l’importateur. L’importateur déclare l’activité à la DDPP et tient la traçabilité.',
+        zh: '遵守欧盟食品卫生规则，并按第 (EU) 1169/2011 号条例（INCO）保障消费者信息：法语标签须含名称、物种、净含量、配料/添加剂、过敏原、最佳食用日期（DDM）、储存条件、批号及进口商名称地址。进口商应向 DDPP 申报经营活动并保存可追溯记录。',
+      },
+      authority: 'DGAL / DGCCRF — déclaration DDPP',
+      documents: {
+        en: ['French INCO-compliant label', 'Activity declaration to the DDPP', 'Traceability & cold-chain records'],
+        fr: ['Étiquette conforme INCO en français', 'Déclaration d’activité à la DDPP', 'Traçabilité & enregistrements chaîne du froid'],
+        zh: ['符合 INCO 的法语标签', '向 DDPP 的经营活动申报', '可追溯与冷链记录'],
+      },
+      cost: { en: 'Label design + compliance', fr: 'Conception étiquette + conformité', zh: '标签设计 + 合规' },
+      timeline: { en: 'Before first sale', fr: 'Avant la première vente', zh: '首次销售前' },
+      dependsOn: ['veterinary', 'classification'],
+      risks: {
+        en: ['Non-French / non-INCO labelling → withdrawal & fines', 'Allergen / additive declaration errors'],
+        fr: ['Étiquetage non français / non INCO → retrait & amendes', 'Erreurs déclaration allergènes / additifs'],
+        zh: ['非法语/非 INCO 标签 → 下架与罚款', '过敏原/添加剂申报错误'],
+      },
+      references: [
+        { label: 'Étiquetage des denrées (INCO) — DGCCRF', url: 'https://www.economie.gouv.fr/dgccrf' },
+        { label: 'Règlement INCO 1169/2011', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX:32011R1169' },
+      ],
+    },
+    {
+      id: 'logistics',
+      name: { en: 'Cold chain, storage & distribution', fr: 'Chaîne du froid, stockage & distribution', zh: '冷链、仓储与分销' },
+      description: {
+        en: 'Caviar is highly perishable: maintain an unbroken refrigerated chain (typically around -2 to +4 °C) from the BCP through storage to delivery. Arrange refrigerated freight, compliant cold storage, then set channels — gourmet retail, HoReCa, own e-commerce or B2B distributors.',
+        fr: 'Le caviar est très périssable : maintenir une chaîne du froid ininterrompue (généralement entre -2 et +4 °C) du PCF au stockage jusqu’à la livraison. Organiser le fret réfrigéré, l’entreposage froid conforme, puis définir les canaux — épicerie fine, CHR, e-commerce propre ou distributeurs B2B.',
+        zh: '鱼子酱极易腐：从边境检查站经仓储到交付，须保持不间断冷链（通常约 -2 至 +4 °C）。安排冷藏运输、合规冷库，再确定渠道——高端零售、餐饮、自营电商或 B2B 分销商。',
+      },
+      authority: 'Transporteur / commissionnaire en douane',
+      documents: {
+        en: ['Refrigerated transport & insurance contracts', 'Cold-storage temperature logs', 'Customs clearance after BCP release'],
+        fr: ['Contrats transport réfrigéré & assurance', 'Relevés de température du stockage froid', 'Dédouanement après mainlevée PCF'],
+        zh: ['冷藏运输与保险合同', '冷库温度记录', '边境检查站放行后清关'],
+      },
+      cost: { en: 'Refrigerated freight + cold storage + clearance', fr: 'Fret réfrigéré + stockage froid + dédouanement', zh: '冷藏运费 + 冷库 + 清关' },
+      timeline: { en: 'Ongoing', fr: 'En continu', zh: '持续' },
+      dependsOn: ['cites', 'veterinary', 'food-safety-labelling'],
+      risks: {
+        en: ['Cold-chain break → spoilage & loss', 'Short shelf life vs. customs delays'],
+        fr: ['Rupture de chaîne du froid → altération & perte', 'DLC courte vs. délais douaniers'],
+        zh: ['冷链断裂 → 变质与损失', '保质期短 vs. 海关延误'],
+      },
+      references: [{ label: 'Import produits animaux — Ministère de l’Agriculture', url: 'https://agriculture.gouv.fr/limportation-danimaux-vivants-et-de-produits-animaux-et-dorigine-animale' }],
+    },
+  ],
+  risks: {
+    en: [
+      'Two parallel gates: CITES sturgeon permits AND veterinary import via an approved establishment + Border Control Post — both are mandatory.',
+      'The producing farm must be on the EU-approved establishment list for China, or the import is refused.',
+      'Cold-chain and short shelf life make customs/veterinary delays a direct commercial risk.',
+    ],
+    fr: [
+      'Deux barrières parallèles : permis CITES esturgeon ET import vétérinaire via établissement agréé + poste de contrôle frontalier — les deux sont obligatoires.',
+      'La ferme productrice doit figurer sur la liste UE des établissements agréés pour la Chine, sinon l’import est refusé.',
+      'Chaîne du froid et DLC courte rendent les délais douaniers/vétérinaires directement risqués commercialement.',
+    ],
+    zh: [
+      '两道并行关卡：CITES 鲟鱼许可 与 经注册场所 + 边境检查站的兽医进口——两者均为强制。',
+      '生产养殖场须在欧盟对华批准注册场所名单内，否则拒绝进口。',
+      '冷链与短保质期使海关/兽医延误成为直接的商业风险。',
+    ],
+  },
+  estCost: {
+    en: 'Mainly compliance (CITES, veterinary certification, labelling) + refrigerated freight/duties/reduced food VAT.',
+    fr: 'Principalement conformité (CITES, certification vétérinaire, étiquetage) + fret réfrigéré/droits/TVA alimentaire réduite.',
+    zh: '主要是合规成本（CITES、兽医认证、标签）+ 冷藏运费/关税/食品类降低增值税。',
+  },
+  estTimeline: {
+    en: '2–5 months to first compliant shipment (establishment approval, CITES & veterinary set-up are the long poles).',
+    fr: '2–5 mois jusqu’à la première expédition conforme (agrément établissement, CITES & circuit vétérinaire sont le chemin critique).',
+    zh: '到首批合规出货约 2–5 个月（场所批准、CITES 与兽医通道为关键路径）。',
+  },
+  references: [
+    { label: 'Guichet unique (INPI)', url: 'https://formalites.entreprises.gouv.fr/' },
+    { label: 'EORI — Douane', url: 'https://www.douane.gouv.fr/demarche/obtenir-un-numero-eori' },
+    { label: 'CITES — France', url: 'https://www.ecologie.gouv.fr/cites-application-france' },
+    { label: 'Import produits d’origine animale — Agriculture', url: 'https://agriculture.gouv.fr/limportation-danimaux-vivants-et-de-produits-animaux-et-dorigine-animale' },
+    { label: 'TARIC (Commission européenne)', url: 'https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp' },
+    { label: 'DGCCRF — étiquetage', url: 'https://www.economie.gouv.fr/dgccrf' },
+  ],
+  version: '1.0',
+  updated: '2026-06-27',
+  keywords: ['caviar', '鱼子酱', '鲟鱼', 'sturgeon', 'esturgeon', 'roe', 'œufs de poisson', 'food import', 'import alimentaire', '食品进口', 'CITES', 'veterinary', 'vétérinaire', '兽医', 'health certificate', 'certificat sanitaire', '卫生证书', 'cold chain', 'chaîne du froid', '冷链', 'china', 'chine', '中国', 'EORI', 'douane', '海关', 'TRACES'],
+};
+
+export const RAW: RawPlaybook[] = [DATA_CENTER, MUSIC_EXPORT, CAVIAR_EXPORT];
 
 export function localize(p: RawPlaybook, loc: Loc): Playbook {
   return {
