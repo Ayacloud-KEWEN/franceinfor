@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { LeadStatusSelect } from '@/components/admin/lead-status-select';
-import { BarChart3, ExternalLink } from 'lucide-react';
+import { Link } from '@/i18n/routing';
+import { BarChart3, ExternalLink, Brain } from 'lucide-react';
 import type { Plan } from '@prisma/client';
 
 // Google Analytics property dashboard (GA4). Opens GA where the admin selects
@@ -57,11 +58,16 @@ export default async function AdminPage() {
         title="Admin"
         subtitle="Users, billing events & service inquiries"
         action={
-          <a href={GA_DASHBOARD_URL} target="_blank" rel="noopener noreferrer">
-            <Button variant="outline" size="sm">
-              <BarChart3 size={15} /> Google Analytics <ExternalLink size={13} />
-            </Button>
-          </a>
+          <div className="flex gap-2">
+            <Link href="/admin/projects">
+              <Button variant="outline" size="sm"><Brain size={15} /> Projects</Button>
+            </Link>
+            <a href={GA_DASHBOARD_URL} target="_blank" rel="noopener noreferrer">
+              <Button variant="outline" size="sm">
+                <BarChart3 size={15} /> Google Analytics <ExternalLink size={13} />
+              </Button>
+            </a>
+          </div>
         }
       />
 

@@ -619,6 +619,10 @@
     "disclaimer": "Indicative, sourced workflow — not legal advice. Verify on each official page and with qualified advisors.",
     "ctaTitle": "Want us to execute this with you?",
     "ctaIntro": "We can run the registration and connect you with vetted legal, real-estate and energy partners. Leave your details.",
-    "versionHistory": "Version history"
+    "versionHistory": "Version history",
+    "experience": "Based on {n} real project(s)",
+    "avgDuration": "Avg duration",
+    "successRate": "Success rate",
+    "avgCost": "Avg cost"
   }
 }

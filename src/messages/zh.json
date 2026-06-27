@@ -619,6 +619,10 @@
     "disclaimer": "指示性、带来源的流程——不构成法律意见，请在各官方页面与持牌顾问处核实。",
     "ctaTitle": "想让我们陪你一起落地执行？",
     "ctaIntro": "我们可代办注册，并对接经筛选的法律、地产与能源合作伙伴。留下您的信息即可。",
-    "versionHistory": "版本历史"
+    "versionHistory": "版本历史",
+    "experience": "基于 {n} 个真实项目",
+    "avgDuration": "平均工期",
+    "successRate": "成功率",
+    "avgCost": "平均成本"
   }
 }

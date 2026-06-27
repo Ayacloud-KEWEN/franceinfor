@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { dbGetPlaybook, getPlaybookVersions } from '@/lib/playbooks-db';
+import { experienceStats } from '@/lib/projects';
 import { PlaybookView } from '@/components/playbooks/playbook-view';
 import type { Loc } from '@/lib/data/playbooks';
 
@@ -13,6 +14,6 @@ export default async function PlaybookDetailPage({
   const { locale, slug } = await params;
   const playbook = await dbGetPlaybook(slug, locale as Loc);
   if (!playbook) notFound();
-  const versions = await getPlaybookVersions(slug);
-  return <PlaybookView playbook={playbook} versions={versions} />;
+  const [versions, stats] = await Promise.all([getPlaybookVersions(slug), experienceStats(slug)]);
+  return <PlaybookView playbook={playbook} versions={versions} stats={stats} />;
 }

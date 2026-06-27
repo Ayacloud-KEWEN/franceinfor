@@ -10,8 +10,17 @@ import { Download, ExternalLink, ArrowLeft, Clock, Euro, AlertTriangle, FileText
 import type { Playbook } from '@/lib/data/playbooks';
 
 type VersionMeta = { version: string; note: string | null; createdAt: string | Date };
+type Stats = { total: number; successRate: number | null; avgDays: number | null; avgCostEur: number | null };
 
-export function PlaybookView({ playbook, versions = [] }: { playbook: Playbook; versions?: VersionMeta[] }) {
+export function PlaybookView({
+  playbook,
+  versions = [],
+  stats,
+}: {
+  playbook: Playbook;
+  versions?: VersionMeta[];
+  stats?: Stats;
+}) {
   const t = useTranslations('playbooks');
   const p = playbook;
   const fmtDate = (d: string | Date) => new Date(d).toISOString().slice(0, 10);
@@ -43,6 +52,17 @@ export function PlaybookView({ playbook, versions = [] }: { playbook: Playbook; 
           <Badge tone="primary">v{p.version} · {p.updated}</Badge>
         </div>
       </div>
+
+      {stats && stats.total > 0 && (
+        <Card className="border-primary/30 bg-primary/5">
+          <CardContent className="flex flex-wrap items-center gap-x-6 gap-y-1 p-4 text-sm">
+            <span className="font-medium">{t('experience', { n: stats.total })}</span>
+            {stats.avgDays != null && <span className="text-muted-foreground">{t('avgDuration')}: <b className="text-foreground">{stats.avgDays} d</b></span>}
+            {stats.successRate != null && <span className="text-muted-foreground">{t('successRate')}: <b className="text-foreground">{stats.successRate}%</b></span>}
+            {stats.avgCostEur != null && <span className="text-muted-foreground">{t('avgCost')}: <b className="text-foreground">€{stats.avgCostEur.toLocaleString()}</b></span>}
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Card className="print:break-inside-avoid">

@@ -619,6 +619,10 @@
     "disclaimer": "Procédure indicative et sourcée — ne constitue pas un conseil juridique. Vérifiez sur chaque page officielle.",
     "ctaTitle": "Vous voulez qu’on l’exécute avec vous ?",
     "ctaIntro": "Nous gérons la création et vous mettons en relation avec des partenaires juridiques, immobiliers et énergie. Laissez vos coordonnées.",
-    "versionHistory": "Historique des versions"
+    "versionHistory": "Historique des versions",
+    "experience": "D’après {n} projet(s) réel(s)",
+    "avgDuration": "Durée moy.",
+    "successRate": "Taux de réussite",
+    "avgCost": "Coût moyen"
   }
 }

@@ -153,6 +153,63 @@ model PlaybookVersion {
   @@index([playbookId, createdAt])
 }
 
+// Knowledge OS L4 — real-project execution knowledge. Each customer project
+// (optionally following a Playbook) accumulates steps with actual durations,
+// costs, problems and lessons. History is never overwritten; aggregate stats
+// feed "Experience Intelligence".
+enum ProjectStatus {
+  PLANNING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum StepStatus {
+  PENDING
+  IN_PROGRESS
+  DONE
+  BLOCKED
+}
+
+model Project {
+  id           String        @id @default(cuid())
+  title        String
+  playbookSlug String? // links to a Playbook
+  sector       String?
+  region       String?
+  status       ProjectStatus @default(PLANNING)
+  startedAt    DateTime?
+  completedAt  DateTime?
+  actualDays   Int?
+  actualCostEur Int?
+  partners     String[]      @default([])
+  notes        String?
+  ownerId      String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt @default(now())
+  steps        ProjectStep[]
+
+  @@index([playbookSlug, status])
+}
+
+model ProjectStep {
+  id          String     @id @default(cuid())
+  projectId   String
+  name        String
+  status      StepStatus @default(PENDING)
+  actualDays  Int?
+  approvalDays Int?
+  authority   String?
+  partner     String?
+  problem     String?
+  solution    String?
+  lessons     String?
+  createdAt   DateTime   @default(now())
+  project     Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
 // Audit/event stream surfaced in the admin console.
 enum EventType {
   USER_REGISTERED
