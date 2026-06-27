@@ -64,7 +64,7 @@
 2. ☑ **限流换 Redis**（已完成：`lib/rate-limit.ts` 配 `REDIS_URL` 时用 Redis 固定窗口，否则内存兜底；Redis 故障放行）。
 3. ☐ **对象存储**接入（开始抓原始文档前定好；存 PDF/原网页）。
 4. ☐ **pgvector** 扩展 + embedding 列（上 RAG/知识图谱时）。
-5. ☐ **Dockerfile + compose**（让迁移=拉镜像；当前是 CloudPanel + pm2，可平滑过渡）。
+5. ☑ **Dockerfile + compose**（已完成并实测：`Dockerfile`(Next standalone)+ `docker-compose.prod.yml`(app+pg+redis+migrate)；镜像 477MB，容器启动/渲染/Prisma 引擎均 OK）。
 6. ☐ **定时 pg_dump 异地备份**。
 7. ◐ L4 `Project`/`ProjectStep` 已建；待建 L1 `RawDocument` / L2 `KnowledgeNode·Edge`（按 L 层推进，纯增量 `prisma db push`）。
 
@@ -80,4 +80,4 @@
 - ☐ L2 知识图谱 + pgvector 抽取管线。
 - ☑ L4 项目经验表 + Experience Intelligence 统计（`/admin/projects`，回灌 playbook 详情）。
 - ◐ Copilot RAG：已接 L3/L4 检索+来源；待接 L2 语义检索(pgvector)。
-- ☐ 容器化 + Redis 限流（扩容前置）。
+- ☑ 容器化（Dockerfile+compose，实测可跑）+ Redis 限流（扩容前置）。
