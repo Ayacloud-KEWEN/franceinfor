@@ -310,7 +310,228 @@ const DATA_CENTER: RawPlaybook = {
   keywords: ['data center', 'datacenter', 'data centre', 'centre de données', 'datacentre', 'hosting', 'cloud', 'serveurs', 'colocation', 'infrastructure', '数据中心', '机房', '托管'],
 };
 
-export const RAW: RawPlaybook[] = [DATA_CENTER];
+const MUSIC_EXPORT: RawPlaybook = {
+  slug: 'china-musical-instruments-to-france',
+  title: {
+    en: 'Selling China-made musical instruments in France',
+    fr: 'Vendre en France des instruments de musique fabriqués en Chine',
+    zh: '把中国生产的乐器卖到法国',
+  },
+  sector: 'import-export',
+  summary: {
+    en: 'End-to-end workflow to import musical instruments manufactured in China and sell them in France — from customs registration (EORI) and tariff classification, through EU product-safety compliance (CE/GPSR/EMC/RoHS), CITES permits for protected woods, French labelling, to logistics and distribution.',
+    fr: 'Procédure complète pour importer des instruments de musique fabriqués en Chine et les vendre en France — de l’immatriculation douanière (EORI) et la classification tarifaire, à la conformité produit UE (CE/RGSP/CEM/RoHS), aux permis CITES pour les bois protégés, à l’étiquetage en français, jusqu’à la logistique et la distribution.',
+    zh: '把中国生产的乐器进口并在法国销售的端到端流程——从海关注册（EORI）、税则归类，到欧盟产品安全合规（CE/GPSR/EMC/RoHS）、濒危木材 CITES 许可、法语标签，直到物流与分销。',
+  },
+  applicableTo: {
+    en: ['Chinese manufacturers / exporters', 'Import & distribution companies', 'E-commerce sellers (B2C/B2B)'],
+    fr: ['Fabricants / exportateurs chinois', 'Sociétés d’import & de distribution', 'Vendeurs e-commerce (B2C/B2B)'],
+    zh: ['中国制造商 / 出口商', '进口与分销公司', '电商卖家（B2C/B2B）'],
+  },
+  prerequisites: {
+    en: ['Product list with HS codes, materials (woods/metals) and whether electronic/wireless', 'Decide the import model: French entity, EU distributor, or marketplace fulfilment', 'Supplier technical documentation (test reports, conformity declarations)'],
+    fr: ['Liste produits avec codes SH, matériaux (bois/métaux) et caractère électronique/sans-fil', 'Choisir le modèle d’import : entité française, distributeur UE, ou marketplace', 'Documentation technique fournisseur (rapports d’essai, déclarations de conformité)'],
+    zh: ['产品清单，含 HS 编码、材质（木材/金属）、是否电子/无线', '确定进口模式：法国主体、欧盟经销商或平台代发', '供应商技术文件（测试报告、合规声明）'],
+  },
+  tasks: [
+    {
+      id: 'entity',
+      name: { en: 'Set up an importing entity (or appoint an EU importer)', fr: 'Créer une entité importatrice (ou désigner un importateur UE)', zh: '设立进口主体（或指定欧盟进口商）' },
+      description: {
+        en: 'Under EU rules the “importer” placing the product on the market carries legal responsibility for compliance. Either incorporate a French entity (typically SAS/SASU) or contract an established EU importer/distributor who takes that role.',
+        fr: 'Selon le droit UE, l’« importateur » qui met le produit sur le marché porte la responsabilité de la conformité. Créer une entité française (généralement SAS/SASU) ou contractualiser un importateur/distributeur UE établi qui assume ce rôle.',
+        zh: '按欧盟规则，把产品投放市场的"进口商"承担合规法律责任。可设立法国主体（通常 SAS/SASU），或签约一家承担该角色的欧盟进口商/经销商。',
+      },
+      authority: 'INPI — Guichet unique',
+      documents: {
+        en: ['Statutes (articles)', 'Proof of registered office', 'Beneficial-owner declaration'],
+        fr: ['Statuts', 'Justificatif de siège social', 'Déclaration des bénéficiaires effectifs'],
+        zh: ['公司章程', '注册地址证明', '受益所有人申报'],
+      },
+      cost: { en: '~€200–2,000 (legal + publication)', fr: '~200–2 000 € (juridique + publication)', zh: '约 €200–2,000（法务 + 公告）' },
+      timeline: { en: '1–3 weeks', fr: '1–3 semaines', zh: '1–3 周' },
+      references: [{ label: 'Guichet unique (INPI)', url: 'https://formalites.entreprises.gouv.fr/' }],
+    },
+    {
+      id: 'eori',
+      name: { en: 'Customs registration (EORI) & VAT', fr: 'Immatriculation douanière (EORI) & TVA', zh: '海关注册（EORI）与增值税' },
+      description: {
+        en: 'Any business importing goods into the EU needs an EORI number (issued in France by the Douanes). Register for French VAT; import VAT (20% standard rate) is generally accounted for via the reverse-charge on the VAT return (autoliquidation).',
+        fr: 'Toute entreprise important des marchandises dans l’UE doit avoir un numéro EORI (délivré en France par la Douane). S’immatriculer à la TVA française ; la TVA à l’import (taux normal 20 %) est en principe autoliquidée sur la déclaration de TVA.',
+        zh: '任何向欧盟进口货物的企业都需 EORI 号（法国由海关 Douanes 签发）。注册法国增值税；进口增值税（标准税率 20%）一般通过申报表反向征收（autoliquidation）处理。',
+      },
+      authority: 'Douane française (DGDDI) / DGFiP',
+      documents: {
+        en: ['SIREN/SIRET', 'EORI application', 'VAT registration'],
+        fr: ['SIREN/SIRET', 'Demande EORI', 'Immatriculation TVA'],
+        zh: ['SIREN/SIRET', 'EORI 申请', '增值税注册'],
+      },
+      cost: { en: 'Free (registration); broker fees optional', fr: 'Gratuit (immatriculation) ; frais de courtier optionnels', zh: '注册免费；报关行费用可选' },
+      timeline: { en: 'Days–weeks', fr: 'Jours–semaines', zh: '数天至数周' },
+      dependsOn: ['entity'],
+      references: [{ label: 'EORI — Douane', url: 'https://www.douane.gouv.fr/demarche/obtenir-un-numero-eori' }],
+    },
+    {
+      id: 'classification',
+      name: { en: 'Tariff classification & duties', fr: 'Classification tarifaire & droits de douane', zh: '税则归类与关税' },
+      description: {
+        en: 'Classify each instrument under Chapter 92 of the customs tariff (musical instruments) and look up the duty rate and any measures in TARIC. Origin is China, so check anti-dumping/safeguard measures where applicable and prepare commercial invoice, packing list and origin documentation.',
+        fr: 'Classer chaque instrument au chapitre 92 du tarif douanier (instruments de musique) et vérifier le taux de droit et les mesures dans TARIC. L’origine étant la Chine, contrôler d’éventuelles mesures antidumping/de sauvegarde et préparer facture commerciale, liste de colisage et documents d’origine.',
+        zh: '将每件乐器按海关税则第 92 章（乐器）归类，在 TARIC 查询关税率及相关措施。原产地为中国，需核查是否适用反倾销/保障措施，并备齐商业发票、装箱单与原产地文件。',
+      },
+      authority: 'Douane / TARIC (Commission européenne)',
+      documents: {
+        en: ['HS/TARIC code per product', 'Commercial invoice & packing list', 'Origin documentation'],
+        fr: ['Code SH/TARIC par produit', 'Facture commerciale & liste de colisage', 'Documents d’origine'],
+        zh: ['每个产品的 HS/TARIC 编码', '商业发票与装箱单', '原产地文件'],
+      },
+      cost: { en: 'Duty rate varies by code (often low for Ch.92) + 20% import VAT', fr: 'Droit selon le code (souvent faible au ch.92) + 20 % de TVA à l’import', zh: '关税随编码而定（第 92 章通常较低）+ 20% 进口增值税' },
+      timeline: { en: 'Per shipment', fr: 'Par expédition', zh: '每批次' },
+      dependsOn: ['eori'],
+      risks: {
+        en: ['Misclassification → duty/penalty reassessment', 'Anti-dumping measures on specific goods'],
+        fr: ['Erreur de classement → redressement droits/pénalités', 'Mesures antidumping sur certains produits'],
+        zh: ['归类错误 → 补税/罚款', '特定商品的反倾销措施'],
+      },
+      references: [{ label: 'TARIC (Commission européenne)', url: 'https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp' }],
+    },
+    {
+      id: 'cites',
+      name: { en: 'CITES permits for protected woods/materials', fr: 'Permis CITES pour bois/matériaux protégés', zh: '濒危木材/材料 CITES 许可' },
+      description: {
+        en: 'Many instruments (guitars, violins, bows, pianos, woodwinds) contain CITES-listed species — rosewood (Dalbergia), some ebonies, ivory, tortoiseshell, certain bones. Import requires CITES import/export permits; the responsible authority in France is the DREAL (on behalf of the CITES management authority). This is the most common compliance trap for instruments.',
+        fr: 'De nombreux instruments (guitares, violons, archets, pianos, bois) contiennent des espèces inscrites à la CITES — palissandre (Dalbergia), certains ébènes, ivoire, écaille, certains os. L’import nécessite des permis CITES import/export ; l’autorité compétente en France est la DREAL (pour l’organe de gestion CITES). C’est le piège de conformité le plus fréquent pour les instruments.',
+        zh: '许多乐器（吉他、小提琴、琴弓、钢琴、木管）含 CITES 列名物种——红木（黄檀属 Dalbergia）、部分乌木、象牙、玳瑁、某些骨料。进口需 CITES 进出口许可；法国主管机构为 DREAL（代表 CITES 管理机构）。这是乐器最常见的合规陷阱。',
+      },
+      authority: 'DREAL / Autorité de gestion CITES (France)',
+      permit: 'Permis CITES (import / (ré)export)',
+      documents: {
+        en: ['Species & material declaration per model', 'CITES export permit (China) + import permit (EU)', 'Pre-Convention / source proof if relevant'],
+        fr: ['Déclaration espèces & matériaux par modèle', 'Permis d’export CITES (Chine) + permis d’import (UE)', 'Preuve pré-Convention / d’origine le cas échéant'],
+        zh: ['每型号物种与材质申报', 'CITES 出口许可（中国）+ 进口许可（欧盟）', '相关时的"公约前"/来源证明'],
+      },
+      cost: { en: 'Permit fees + lead time per shipment', fr: 'Frais de permis + délai par expédition', zh: '每批次许可费用 + 办证周期' },
+      timeline: { en: 'Weeks–months (plan ahead)', fr: 'Semaines–mois (anticiper)', zh: '数周至数月（需提前规划）' },
+      dependsOn: ['classification'],
+      risks: {
+        en: ['Seizure at customs if no CITES permit', 'Rosewood components overlooked'],
+        fr: ['Saisie en douane sans permis CITES', 'Composants en palissandre oubliés'],
+        zh: ['无 CITES 许可被海关扣押', '红木部件被忽略'],
+      },
+      references: [{ label: 'CITES — Ministère de la Transition écologique', url: 'https://www.ecologie.gouv.fr/cites-application-france' }],
+    },
+    {
+      id: 'product-safety',
+      name: { en: 'Product safety & CE marking', fr: 'Sécurité produit & marquage CE', zh: '产品安全与 CE 标识' },
+      description: {
+        en: 'All consumer products must meet the EU General Product Safety Regulation (GPSR). Electronic/electric instruments (keyboards, amps, digital pianos) additionally need CE marking under EMC and Low Voltage directives, plus RoHS (hazardous substances) and WEEE registration; wireless devices (Bluetooth/RF) fall under the RED. Build a technical file and EU Declaration of Conformity.',
+        fr: 'Tout produit de consommation doit respecter le Règlement UE sur la sécurité générale des produits (RGSP). Les instruments électroniques/électriques (claviers, amplis, pianos numériques) nécessitent en plus le marquage CE au titre des directives CEM et Basse Tension, RoHS (substances dangereuses) et l’enregistrement DEEE ; les appareils sans fil (Bluetooth/RF) relèvent de la directive RED. Constituer un dossier technique et une Déclaration UE de conformité.',
+        zh: '所有消费品须符合欧盟《通用产品安全条例》（GPSR）。电子/电气乐器（电子琴、音箱、数码钢琴）还需依 EMC 与低电压指令加贴 CE 标识，并满足 RoHS（有害物质）与 WEEE 注册；无线设备（蓝牙/射频）适用 RED 指令。需建立技术文件与欧盟符合性声明（DoC）。',
+      },
+      authority: 'DGCCRF (surveillance du marché)',
+      permit: 'Marquage CE (CEM / Basse Tension / RED selon le cas)',
+      documents: {
+        en: ['EU Declaration of Conformity', 'Technical file & test reports (EMC/LVD/RED)', 'RoHS compliance; WEEE producer registration'],
+        fr: ['Déclaration UE de conformité', 'Dossier technique & rapports d’essai (CEM/BT/RED)', 'Conformité RoHS ; enregistrement producteur DEEE'],
+        zh: ['欧盟符合性声明', '技术文件与测试报告（EMC/LVD/RED）', 'RoHS 合规；WEEE 生产者注册'],
+      },
+      cost: { en: 'Testing €k-scale per product family', fr: 'Essais : échelle de k€ par famille de produits', zh: '每类产品测试费用千欧元级' },
+      timeline: { en: 'Weeks–months', fr: 'Semaines–mois', zh: '数周至数月' },
+      dependsOn: ['classification'],
+      risks: {
+        en: ['No CE/DoC → market withdrawal & fines', 'Missing WEEE/RoHS registration for electronics'],
+        fr: ['Absence de CE/DoC → retrait du marché & amendes', 'Enregistrement DEEE/RoHS manquant pour l’électronique'],
+        zh: ['无 CE/DoC → 下架与罚款', '电子产品缺 WEEE/RoHS 注册'],
+      },
+      references: [
+        { label: 'GPSR — sécurité des produits', url: 'https://www.economie.gouv.fr/dgccrf' },
+        { label: 'Marquage CE — Your Europe', url: 'https://europa.eu/youreurope/business/product-requirements/labels-markings/ce-marking/index_fr.htm' },
+      ],
+    },
+    {
+      id: 'labelling',
+      name: { en: 'Labelling & French consumer information', fr: 'Étiquetage & information du consommateur', zh: '标签与法语消费者信息' },
+      description: {
+        en: 'Provide French-language product information, instructions and safety warnings (Toubon law). Show the importer’s name and address, model, and required pictograms; for packaging, comply with EPR (extended producer responsibility) for packaging (e.g. join an eco-organism such as CITEO).',
+        fr: 'Fournir l’information produit, les notices et avertissements de sécurité en français (loi Toubon). Indiquer le nom et l’adresse de l’importateur, le modèle et les pictogrammes requis ; pour les emballages, respecter la REP emballages (adhésion à un éco-organisme tel que CITEO).',
+        zh: '提供法语的产品信息、说明书与安全警示（Toubon 法）。标注进口商名称地址、型号及所需图示；包装方面需履行包装 EPR（生产者延伸责任，如加入 CITEO 等环保机构）。',
+      },
+      authority: 'DGCCRF / éco-organisme (CITEO)',
+      documents: {
+        en: ['French manual & labels', 'Importer identification on product/packaging', 'EPR packaging registration'],
+        fr: ['Notice & étiquettes en français', 'Identification importateur sur produit/emballage', 'Adhésion REP emballages'],
+        zh: ['法语说明书与标签', '产品/包装上的进口商标识', '包装 EPR 注册'],
+      },
+      cost: { en: 'EPR eco-contribution by volume', fr: 'Éco-contribution REP selon volume', zh: 'EPR 环保贡献费按量计' },
+      timeline: { en: 'Before first sale', fr: 'Avant la première vente', zh: '首次销售前' },
+      dependsOn: ['product-safety'],
+      references: [{ label: 'CITEO — REP emballages', url: 'https://www.citeo.com/' }],
+    },
+    {
+      id: 'logistics',
+      name: { en: 'Logistics, wood packaging & distribution', fr: 'Logistique, emballage bois & distribution', zh: '物流、木质包装与分销' },
+      description: {
+        en: 'Arrange freight, customs clearance and warehousing. Wood packaging from China must be ISPM15-treated and marked. Then set distribution channels — own e-commerce, marketplaces (note marketplace compliance duties), retail or B2B to French music stores.',
+        fr: 'Organiser le fret, le dédouanement et l’entreposage. L’emballage bois en provenance de Chine doit être traité et marqué ISPM15. Définir ensuite les canaux de distribution — e-commerce propre, marketplaces (obligations de conformité), retail ou B2B vers les magasins de musique français.',
+        zh: '安排运输、清关与仓储。来自中国的木质包装须经 ISPM15 处理并加施标记。再确定分销渠道——自营电商、平台（注意平台合规义务）、零售或对法国琴行的 B2B。',
+      },
+      authority: 'Transporteur / commissionnaire en douane',
+      documents: {
+        en: ['Transport & insurance contracts', 'ISPM15-marked wood packaging', 'Customs clearance (DAU/import declaration)'],
+        fr: ['Contrats transport & assurance', 'Emballage bois marqué ISPM15', 'Dédouanement (DAU/déclaration d’import)'],
+        zh: ['运输与保险合同', '带 ISPM15 标记的木质包装', '清关（DAU/进口申报）'],
+      },
+      cost: { en: 'Freight + clearance + storage', fr: 'Fret + dédouanement + stockage', zh: '运费 + 清关 + 仓储' },
+      timeline: { en: 'Ongoing', fr: 'En continu', zh: '持续' },
+      dependsOn: ['cites', 'product-safety', 'labelling'],
+      risks: {
+        en: ['Non-ISPM15 packaging refused at border', 'Marketplace compliance obligations'],
+        fr: ['Emballage non ISPM15 refusé à la frontière', 'Obligations de conformité marketplace'],
+        zh: ['非 ISPM15 包装在口岸被拒', '平台合规义务'],
+      },
+      references: [{ label: 'ISPM15 / NIMP15 — emballages bois', url: 'https://agriculture.gouv.fr/exporter-des-vegetaux-et-produits-vegetaux' }],
+    },
+  ],
+  risks: {
+    en: [
+      'CITES protected woods (rosewood/ebony) are the most common seizure cause — audit the bill of materials early.',
+      'Electronic instruments add a full CE/EMC/RED/RoHS/WEEE compliance layer.',
+      'The importer (not the Chinese factory) is legally liable for EU conformity.',
+    ],
+    fr: [
+      'Les bois protégés CITES (palissandre/ébène) sont la première cause de saisie — auditer la nomenclature tôt.',
+      'Les instruments électroniques ajoutent toute une couche de conformité CE/CEM/RED/RoHS/DEEE.',
+      'L’importateur (et non l’usine chinoise) est juridiquement responsable de la conformité UE.',
+    ],
+    zh: [
+      'CITES 濒危木材（红木/乌木）是最常见的扣押原因——应尽早审查物料清单。',
+      '电子乐器会叠加整套 CE/EMC/RED/RoHS/WEEE 合规要求。',
+      '欧盟合规的法律责任在进口商（而非中国工厂）。',
+    ],
+  },
+  estCost: {
+    en: 'Mainly compliance (testing, CITES, EPR) + freight/duties/20% import VAT; modest vs. infrastructure projects.',
+    fr: 'Principalement conformité (essais, CITES, REP) + fret/droits/TVA import 20 % ; modéré face aux projets d’infrastructure.',
+    zh: '主要是合规成本（测试、CITES、EPR）+ 运费/关税/20% 进口增值税；相比基建项目较低。',
+  },
+  estTimeline: {
+    en: '2–6 months to first compliant shipment (CITES & CE testing are the long poles).',
+    fr: '2–6 mois jusqu’à la première expédition conforme (CITES & essais CE sont le chemin critique).',
+    zh: '到首批合规出货约 2–6 个月（CITES 与 CE 测试为关键路径）。',
+  },
+  references: [
+    { label: 'Guichet unique (INPI)', url: 'https://formalites.entreprises.gouv.fr/' },
+    { label: 'EORI — Douane', url: 'https://www.douane.gouv.fr/demarche/obtenir-un-numero-eori' },
+    { label: 'TARIC (Commission européenne)', url: 'https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp' },
+    { label: 'CITES — France', url: 'https://www.ecologie.gouv.fr/cites-application-france' },
+    { label: 'DGCCRF', url: 'https://www.economie.gouv.fr/dgccrf' },
+  ],
+  version: '1.0',
+  updated: '2026-06-27',
+  keywords: ['musical instruments', 'instruments de musique', '乐器', 'guitar', 'guitare', '吉他', 'piano', '钢琴', 'violin', 'violon', 'import', 'importer', '进口', 'export', '出口', 'china', 'chine', '中国', 'CE marking', 'marquage CE', 'CITES', 'rosewood', 'palissandre', '红木', 'EORI', 'douane', '海关', 'customs'],
+};
+
+export const RAW: RawPlaybook[] = [DATA_CENTER, MUSIC_EXPORT];
 
 export function localize(p: RawPlaybook, loc: Loc): Playbook {
   return {
