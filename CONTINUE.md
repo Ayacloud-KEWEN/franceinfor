@@ -148,6 +148,13 @@ prisma/                        schema + seed
 - **求建入口（方案 B）**：新表 `PlaybookRequest`（status NEW/PLANNED/DONE/DECLINED，纯增量，自动部署 `prisma db push` 自动建）。客户在 `/playbooks` 底部「申请新增」表单提交（`components/playbooks/playbook-request.tsx` + `app/actions/playbook-requests.ts`）；admin 在 `/admin/playbook-requests` 三态triage。质量仍由 admin 把控（手写 playbook→sync），不让客户直接产出。
 - **AI 输出语言修复**：`ai.ts` 加 `langDirective(locale)` 强制指令，`complete()`/`generateReport()` 加 `locale` 参；`/api/copilot`、`/api/reports/generate`、`/api/copilot/orchestrate` 优先取 body.locale（客户端组件用 `useLocale()` 传当前界面语言），回退 `user.locale`。解决「AI 摘要/报告恒返回英语」。
 
+## 🤖 L3 AI 起草 playbook + 后台审核发布（本次新增，最小闭环）
+- **流程**：admin 在 `/admin/playbooks` 输入主题 → AI 起草（`lib/playbook-draft.ts#generatePlaybookDraft`，**先 `retrieveContext` RAG grounding 再让模型出严格 JSON**，复用 `ai.ts#complete` 带语言指令）→ 存为 **DRAFT** → 在 `/admin/playbooks/[id]` JSON 编辑器逐字段核对（机构名/链接必须人工验证）→ "Publish" 翻 PUBLISHED 并存 `PlaybookVersion` 快照。
+- **Schema**：`Playbook` 加 `status PlaybookStatus(DRAFT/PUBLISHED, default PUBLISHED)` + `source(code/ai/manual, default code)` + `@@index([status])`。纯增量，自动部署 `prisma db push` 自动建；旧行默认 PUBLISHED 不受影响。
+- **可见性**：`dbListPlaybooks` 只返回 PUBLISHED；`dbGetPlaybook(slug, loc, {includeDraft})` 仅 admin 预览草稿（详情页按 `getAdminUser()` 放行）。
+- **安全护栏**：`saveDraft` 不覆盖已 PUBLISHED 行（slug 撞了自动加 `-2/-3` 后缀）；`updateDraftData` 同步 slug 列但避让唯一冲突。AI 产出永远是 DRAFT，绝不自动发布。
+- **红线**：LLM 最易编 `authority`/`references.url`，发布前务必人工核验。代码 `app/actions/playbooks-admin.ts`、`components/admin/playbook-{generator,editor}.tsx`。
+
 ## ✅ L2 知识图谱 + pgvector（已落地，embedding=OpenAI）
 - **向量层**：Postgres = `pgvector/pgvector:pg16`；`DocChunk` vector(1536)+HNSW。`ai.ts#embed()` 用 OpenAI `text-embedding-3-small`（无 key 时 dev 兜底向量，仅本地跑通用）。`lib/knowledge.ts`：chunk+embed+`semanticSearch`(raw SQL `<=>` 余弦)。`/api/cron/index` 把 ACTIVE `RawDocument` 分块向量化。
 - **图谱层**：`KnowledgeNode`/`KnowledgeEdge`(confidence/sourceRef/CANDIDATE→APPROVED)。`/api/cron/extract` 用 LLM 抽实体/关系成候选（严格 JSON、不得凭空造、可溯源）；admin `/admin/knowledge` 人工审核(批准/拒绝)。

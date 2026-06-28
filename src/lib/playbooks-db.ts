@@ -53,9 +53,13 @@ export async function syncPlaybooksFromCode(): Promise<{ created: number; update
 }
 
 // DB-backed reads, falling back to the in-code data if the DB isn't synced yet.
+// Public reads only ever return PUBLISHED playbooks; drafts stay admin-only.
 export async function dbListPlaybooks(loc: Loc): Promise<Playbook[]> {
   try {
-    const rows = await prisma.playbook.findMany({ orderBy: { slug: 'asc' } });
+    const rows = await prisma.playbook.findMany({
+      where: { status: 'PUBLISHED' },
+      orderBy: { slug: 'asc' },
+    });
     if (rows.length) return rows.map((r) => localize(r.data as unknown as RawPlaybook, loc));
   } catch {
     /* fall through */
@@ -63,14 +67,119 @@ export async function dbListPlaybooks(loc: Loc): Promise<Playbook[]> {
   return codeList(loc);
 }
 
-export async function dbGetPlaybook(slug: string, loc: Loc): Promise<Playbook | undefined> {
+export async function dbGetPlaybook(
+  slug: string,
+  loc: Loc,
+  opts: { includeDraft?: boolean } = {}
+): Promise<Playbook | undefined> {
   try {
     const row = await prisma.playbook.findUnique({ where: { slug } });
-    if (row) return localize(row.data as unknown as RawPlaybook, loc);
+    if (row && (opts.includeDraft || row.status === 'PUBLISHED')) {
+      return localize(row.data as unknown as RawPlaybook, loc);
+    }
+    if (row) return undefined; // exists but is a draft and caller isn't admin
   } catch {
     /* fall through */
   }
   return codeGet(slug, loc);
+}
+
+// ---- Admin authoring (drafts → publish) ----
+
+export interface AdminPlaybookRow {
+  id: string;
+  slug: string;
+  title: string;
+  status: 'DRAFT' | 'PUBLISHED';
+  source: string;
+  version: string;
+  updatedAt: Date;
+}
+
+// List every playbook (drafts + published) for the admin console.
+export async function adminListPlaybooks(loc: Loc = 'en'): Promise<AdminPlaybookRow[]> {
+  const rows = await prisma.playbook.findMany({ orderBy: { updatedAt: 'desc' } });
+  return rows.map((r) => {
+    const raw = r.data as unknown as RawPlaybook;
+    return {
+      id: r.id,
+      slug: r.slug,
+      title: localize(raw, loc).title,
+      status: r.status,
+      source: r.source,
+      version: r.version,
+      updatedAt: r.updatedAt,
+    };
+  });
+}
+
+// Persist an AI/manually drafted RawPlaybook as a DRAFT. Never clobbers an
+// existing PUBLISHED playbook: collisions get a unique slug suffix instead.
+export async function saveDraft(raw: RawPlaybook, source = 'ai'): Promise<string> {
+  const existing = await prisma.playbook.findUnique({ where: { slug: raw.slug } });
+
+  // Reuse the row only if it's already a draft (overwriting a prior draft is fine).
+  if (existing && existing.status === 'DRAFT') {
+    await prisma.playbook.update({
+      where: { id: existing.id },
+      data: { status: 'DRAFT', source, contentHash: hash(raw), data: raw as object, version: raw.version },
+    });
+    return existing.id;
+  }
+
+  // Slug taken by a published playbook → give the draft a fresh unique slug.
+  if (existing) {
+    let n = 2;
+    let candidate = `${raw.slug}-${n}`;
+    while (await prisma.playbook.findUnique({ where: { slug: candidate } })) {
+      n += 1;
+      candidate = `${raw.slug}-${n}`;
+    }
+    raw = { ...raw, slug: candidate };
+  }
+
+  const pb = await prisma.playbook.create({
+    data: { slug: raw.slug, version: raw.version, status: 'DRAFT', source, contentHash: hash(raw), data: raw as object },
+  });
+  return pb.id;
+}
+
+// Read one playbook's raw JSON for the admin editor.
+export async function getRawPlaybook(id: string): Promise<RawPlaybook | null> {
+  const row = await prisma.playbook.findUnique({ where: { id } });
+  return row ? (row.data as unknown as RawPlaybook) : null;
+}
+
+// Update a draft's full JSON content (admin edits before publishing). Keeps the
+// slug column in sync with the edited JSON, unless that slug is taken by another row.
+export async function updateDraftData(id: string, raw: RawPlaybook): Promise<void> {
+  const clash = raw.slug
+    ? await prisma.playbook.findFirst({ where: { slug: raw.slug, NOT: { id } }, select: { id: true } })
+    : null;
+  await prisma.playbook.update({
+    where: { id },
+    data: {
+      contentHash: hash(raw),
+      data: raw as object,
+      version: raw.version,
+      ...(raw.slug && !clash ? { slug: raw.slug } : {}),
+    },
+  });
+}
+
+// Publish a draft: flip status and snapshot a version.
+export async function publishPlaybook(id: string): Promise<void> {
+  const row = await prisma.playbook.findUnique({ where: { id } });
+  if (!row) return;
+  const raw = row.data as unknown as RawPlaybook;
+  await prisma.playbook.update({ where: { id }, data: { status: 'PUBLISHED' } });
+  await prisma.playbookVersion.create({
+    data: { playbookId: id, version: raw.version, data: raw as object, note: 'published' },
+  });
+}
+
+export async function deletePlaybook(id: string): Promise<void> {
+  await prisma.playbook.delete({ where: { id } });
 }
 
 export interface VersionMeta {

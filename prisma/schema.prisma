@@ -132,15 +132,26 @@ model Lead {
 
 // Knowledge OS L3 — Playbooks persisted with version history. `data` holds the
 // full localized RawPlaybook JSON; every content change snapshots a version.
+// `status` gates visibility: AI-drafted playbooks start DRAFT and only appear on
+// the public site once an admin reviews and PUBLISHES them.
+enum PlaybookStatus {
+  DRAFT
+  PUBLISHED
+}
+
 model Playbook {
   id          String            @id @default(cuid())
   slug        String            @unique
   version     String
   contentHash String
+  status      PlaybookStatus    @default(PUBLISHED)
+  source      String            @default("code") // "code" (synced) | "ai" | "manual"
   data        Json
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt @default(now())
   versions    PlaybookVersion[]
+
+  @@index([status])
 }
 
 model PlaybookVersion {
