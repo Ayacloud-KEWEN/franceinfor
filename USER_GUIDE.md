@@ -162,6 +162,37 @@
 
 ---
 
+## 3.6 管理员：项目经验（L4）与知识图谱（L2）
+
+后台还有两块"知识资产"功能，喂给 Copilot / 手册的都是**真实、可溯源**的知识，而非模型空口生成。
+
+### 📊 Project experience（项目经验，L4） — `/admin/projects`
+把你**真实做过的落地项目**的执行数据沉淀下来，系统自动聚合成统计并**回灌到对应 playbook 详情页**，让手册带上"实际要多久、常踩什么坑"。
+
+- **Experience Intelligence（顶部）**：自动算出项目数、完成数、成功率、平均工期、平均成本、最常见问题——全来自你录入的项目，无需手填。
+- **New project（新建）**：`Title*` 项目名；`Playbook slug` 关联手册标识（如 `france-data-center`、`china-caviar-to-france`——**填了它，统计就会显示在该手册页**，是 L4→L3 闭环关键）；`Sector` / `Region`。
+- **项目卡片**：改状态（PLANNING→IN_PROGRESS→COMPLETED/CANCELLED）+ 实际天数 + 实际花费；**+ Add step** 逐步记录：步骤名、主管机构、实际天数、审批天数、合作方、**问题→解决方案→经验教训**（"问题"会聚合进"最常见问题"）。
+- **用法**：每做完一个客户项目就建一条、关联手册 slug、把各环节真实工期与踩坑记进 steps。积累几个后，手册页与 Copilot 回答就会显示"基于 N 个真实项目：平均 X 天、成功率 Y%"。
+
+### 🕸️ Knowledge graph（知识图谱，L2） — `/admin/knowledge`
+**AI 自动抽取 + 人工审核**的知识图谱。系统把抓取的官方文档抽成"实体"（机构 / 许可 / 法规 / 地区 / 行业…）与"关系"（requires / issued_by / depends_on…），你审核批准后才进入正式图谱，供 Copilot 的 RAG 检索引用。
+
+- **顶部统计**：Nodes / Edges / Approved / 待审候选数。
+- **Candidate entities（候选实体）** 与 **Candidate relationships（候选关系）**：每行 **✓ 批准**（进入图谱）/ **✗ 拒绝**。只有 APPROVED 的才会被信任引用。
+- **候选从哪来**：后台抽取管线（每天，同一 `CRON_SECRET`）：`/api/cron/ingest`（抓官方文档）→ `/api/cron/index`（向量化）→ `/api/cron/extract`（LLM 抽候选）。页面为空（"No candidates"）说明抽取还没跑过。
+- **手动触发一次**（在服务器项目目录）：
+  ```bash
+  KEY=$(grep -E '^CRON_SECRET=' .env | cut -d= -f2- | tr -d '"')
+  curl "https://francego.fr/api/cron/ingest?key=$KEY"
+  curl "https://francego.fr/api/cron/index?key=$KEY"
+  curl "https://francego.fr/api/cron/extract?key=$KEY"
+  ```
+  需 `.env` 配好真实 `AI_PROVIDER` + key。跑完到 `/admin/knowledge` 审核候选即可。
+
+> **两者区别**：Project experience 是你**手动录入**真实项目 → 产出工期/成功率 → 回灌手册页；Knowledge graph 是 AI **自动抽取**官方文档 → 你审核 → 供 Copilot 检索。
+
+---
+
 ## 4. 多语言与 AI 翻译
 - 界面三语：英语 / 法语 / 中文（next-intl）。
 - 数据里的法语内容（新闻标题、招标标题、行业/信号标签）在中/英界面**自动翻译**，专有名词（公司/品牌名）保留原文。
