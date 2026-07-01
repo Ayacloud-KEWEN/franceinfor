@@ -154,6 +154,7 @@ prisma/                        schema + seed
 - **可见性**：`dbListPlaybooks` 只返回 PUBLISHED；`dbGetPlaybook(slug, loc, {includeDraft})` 仅 admin 预览草稿（详情页按 `getAdminUser()` 放行）。
 - **安全护栏**：`saveDraft` 不覆盖已 PUBLISHED 行（slug 撞了自动加 `-2/-3` 后缀）；`updateDraftData` 同步 slug 列但避让唯一冲突。AI 产出永远是 DRAFT，绝不自动发布。
 - **红线**：LLM 最易编 `authority`/`references.url`，发布前务必人工核验。代码 `app/actions/playbooks-admin.ts`、`components/admin/playbook-{generator,editor}.tsx`。
+- **增强（本次全做）**：① **富表单编辑器**：`playbook-editor.tsx` 三标签 Form/JSON/Verify，三语字段+任务增删+引用编辑，Form/JSON 双向同步。② **链接联网校验**：`lib/link-check.ts`（HEAD→GET 兜底、8s 超时）+ `POST /api/admin/check-links`（admin），Verify 标签一键 Check links 显示每条 ✓/✗。③ **发布门禁**：`publishCheckedAction` 服务端复核所有 URL，坏链拒绝；前端需逐条勾选"机构+链接已核验"且无坏链才解锁 Publish；编辑页/列表页的裸 Publish 已移除，统一走 Verify 标签。④ **求建一键起草**：`draftFromRequestAction` + `draft-from-request-button.tsx`，`/admin/playbook-requests` 每条「AI draft」→ 用需求 topic 起草→存 DRAFT→需求转 PLANNED→跳编辑器。
 
 ## ✅ L2 知识图谱 + pgvector（已落地，embedding=OpenAI）
 - **向量层**：Postgres = `pgvector/pgvector:pg16`；`DocChunk` vector(1536)+HNSW。`ai.ts#embed()` 用 OpenAI `text-embedding-3-small`（无 key 时 dev 兜底向量，仅本地跑通用）。`lib/knowledge.ts`：chunk+embed+`semanticSearch`(raw SQL `<=>` 余弦)。`/api/cron/index` 把 ACTIVE `RawDocument` 分块向量化。

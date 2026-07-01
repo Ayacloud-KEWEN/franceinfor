@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getAdminUser } from '@/lib/admin';
 import { adminListPlaybooks } from '@/lib/playbooks-db';
-import { publishPlaybookAction, deletePlaybookAction } from '@/app/actions/playbooks-admin';
+import { deletePlaybookAction } from '@/app/actions/playbooks-admin';
 import { PlaybookGenerator } from '@/components/admin/playbook-generator';
 import { PageHeader } from '@/components/page-header';
 import { Card, CardContent } from '@/components/ui/card';
@@ -61,14 +61,10 @@ export default async function AdminPlaybooksPage({
                 </div>
                 <div className="flex items-center gap-2">
                   <Link href={`/admin/playbooks/${r.id}`}>
-                    <Button size="sm" variant="outline"><Pencil size={13} /> Edit</Button>
+                    <Button size="sm" variant={r.status === 'DRAFT' ? 'default' : 'outline'}>
+                      {r.status === 'DRAFT' ? <><Rocket size={13} /> Review &amp; publish</> : <><Pencil size={13} /> Edit</>}
+                    </Button>
                   </Link>
-                  {r.status === 'DRAFT' && (
-                    <form action={publishPlaybookAction}>
-                      <input type="hidden" name="id" value={r.id} />
-                      <Button size="sm" type="submit"><Rocket size={13} /> Publish</Button>
-                    </form>
-                  )}
                   <form action={deletePlaybookAction}>
                     <input type="hidden" name="id" value={r.id} />
                     <Button size="sm" variant="ghost" type="submit"><Trash2 size={13} /></Button>

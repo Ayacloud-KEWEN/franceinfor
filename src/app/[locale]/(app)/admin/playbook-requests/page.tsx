@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getAdminUser } from '@/lib/admin';
 import { prisma } from '@/lib/prisma';
 import { updatePlaybookRequestAction } from '@/app/actions/playbook-requests';
+import { DraftFromRequestButton } from '@/components/admin/draft-from-request-button';
 import { PageHeader } from '@/components/page-header';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -69,6 +70,7 @@ export default async function AdminPlaybookRequestsPage() {
                     className="max-w-xs"
                   />
                   <Button type="submit" size="sm" variant="outline">Save</Button>
+                  <DraftFromRequestButton requestId={r.id} />
                 </form>
               </CardContent>
             </Card>
