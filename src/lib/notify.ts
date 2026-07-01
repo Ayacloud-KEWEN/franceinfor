@@ -12,7 +12,7 @@ export const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'fdcaptain@gmail.com';
 // Sends via Resend when RESEND_API_KEY is set; otherwise returns false so
 // callers fall back to logging. From address must be on a Resend-verified
 // domain in production (onboarding@resend.dev works for testing).
-async function sendEmail(to: string, subject: string, body: string): Promise<boolean> {
+async function sendEmail(to: string, subject: string, body: string, html?: string): Promise<boolean> {
   const key = process.env.RESEND_API_KEY;
   if (!key) return false;
   const from = process.env.RESEND_FROM || 'FranceGo <onboarding@resend.dev>';
@@ -20,7 +20,7 @@ async function sendEmail(to: string, subject: string, body: string): Promise<boo
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
-      body: JSON.stringify({ from, to, subject, text: body }),
+      body: JSON.stringify({ from, to, subject, text: body, ...(html ? { html } : {}) }),
     });
     if (!res.ok) {
       console.error('[resend]', res.status, await res.text().catch(() => ''));
@@ -48,9 +48,9 @@ export async function notifyAdmin(subject: string, body: string): Promise<void> 
 
 // Email a specific user (e.g. password-reset link). Until sendEmail is wired,
 // the message is logged server-side. Returns whether it was actually emailed.
-export async function notifyEmail(to: string, subject: string, body: string): Promise<boolean> {
+export async function notifyEmail(to: string, subject: string, body: string, html?: string): Promise<boolean> {
   try {
-    const sent = await sendEmail(to, subject, body);
+    const sent = await sendEmail(to, subject, body, html);
     if (!sent) console.log(`[notify:email] to=${to} ${subject}\n${body}`);
     return sent;
   } catch (e) {
