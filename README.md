@@ -5,7 +5,7 @@
 
 📚 **文档导航**
 - [USER_GUIDE.md](USER_GUIDE.md) — 详细功能与使用手册（各模块怎么用）
-- [DEPLOYMENT.md](DEPLOYMENT.md) — CloudPanel/VPS 部署 + 自动部署 + 踩坑记录
+- [DEPLOYMENT.md](DEPLOYMENT.md) — CloudPanel/VPS 部署（手动 `npm run deploy`）+ pgvector/端口/安全加固 + 踩坑记录
 - [DATA_SOURCES.md](DATA_SOURCES.md) — 数据接口清单、免费/密钥、许可证与商用限制
 
 ## 技术栈
@@ -42,9 +42,12 @@
 | **融资动向** — `/signals`，Google News 解析+注册库校验出刚融资公司（强购买信号），并入买家意向 | ✅ |
 | **落地合规清单** — `/compliance`，按行业法律形式/税务/雇佣/认证/GDPR + 官方链接，中英双语，一键导出 PDF | ✅ |
 | **关注列表 / 轻量 CRM** — `/watchlist`，收藏企业/招标/机会，看板按阶段(潜在→赢单)管理 | ✅ |
-| **管理后台** — `/[locale]/admin`(ADMIN)，用户/事件流/留资 + GA 入口 | ✅ |
+| **管理后台** — `/[locale]/admin`(ADMIN)，用户/事件流/留资 + GA 入口，**全三语** | ✅ |
+| **Knowledge OS L1–L4** — 原始文档抓取+版本化(L1)、pgvector 语义检索+知识图谱审核(L2,`/admin/knowledge`)、Playbook 库(L3)、项目经验+Experience Intelligence(L4,`/admin/projects`) | ✅ |
+| **操作手册 Playbooks(L3)** — `/playbooks` 分步落地手册(数据中心/中国乐器→法国/鱼子酱→法国)，搜索匹配+PDF；客户「求建」入口 | ✅ |
+| **AI 起草 Playbook** — `/admin/playbooks` RAG 起草→富表单/JSON 编辑→链接校验+逐条核验门禁→发布(草稿默认不公开) | ✅ |
 | **留资闭环** — 增值服务内嵌留资表单 → `Lead` 表 + 后台 + 邮件通知（蜜罐+限流防刷） | ✅ |
-| **每日机会邮件** — 订阅关键词 → 每日「法国机会雷达」邮件（cron 触发） | ✅ |
+| **每日机会邮件** — 订阅关键词 → 每日「法国机会雷达」邮件，**按用户语言发送(标题+内容翻译)、HTML 版式**（`scripts/daily-cron.sh` 触发） | ✅ |
 | **Stripe 真实订阅** — Professional €99 / Business €299，结账/门户/Webhook，**Live 已激活** | ✅ |
 | **找回密码** — 自助重置（令牌单次/1h 过期）+ 邮件 | ✅ |
 | **事务邮件（Resend）** — 发信域名 `send.francego.fr`（迁移后需在 Resend 重新验证；`send.ayacloud.fr` 仍可用作过渡） | ✅ |

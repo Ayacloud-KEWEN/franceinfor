@@ -2,18 +2,25 @@
 
 **线上地址：https://francego.fr**
 本指南记录本项目在 **CloudPanel VPS（与其他站点共存）** 的完整部署流程，以及实战中踩过的坑。
-方案：复用现有 PostgreSQL（独立库）· 在线大模型 + API Key · Git 拉取 + GitHub Actions 自动部署。
+方案：复用现有 PostgreSQL（独立库，带 pgvector）· 在线大模型 + API Key · Git 拉取 + **手动部署**（`npm run deploy`）。
 
 > 当前生产环境概况：
-> - 站点目录 `/home/france-infor/htdocs/infr.europeanaialliance.org`，以 **root** 运行
-> - PM2 进程 `france-os`，监听 **3011**（CloudPanel 反代 443 → 3011）
-> - PostgreSQL 独立库 `france_os`，独立用户 `france_os`
-> - 推送到 `main` 自动部署
+> - 站点目录 `/home/france-infor/htdocs/infr.europeanaialliance.org`，以 **root** 运行（PM2）
+> - PM2 进程 `france-os`（id 因重建会变），监听 **3011**（CloudPanel 反代 443 → 3011）
+> - PostgreSQL 独立库 `france_os`，独立用户 `france_os`，**已装 pgvector 扩展**
+> - **部署方式：手动 `npm run deploy`**（GitHub Actions 自动部署已于 2026-07 移除，见 §10）
+> - ⚠️ 这是一台多站点共享机，2026-07 曾遭挖矿木马入侵（SSH root 爆破入口），已加固；安全基线见 §13。
 
 ---
 
 ## 0. 前提
-- VPS 已装 **Node.js 20+**（本项目用 22）、**PM2**（`npm i -g pm2`）、**PostgreSQL**、**Git**。
+- VPS 已装 **Node.js 20+**（本项目用 22）、**PM2**（`npm i -g pm2`）、**PostgreSQL 16**、**Git**。
+- **pgvector 扩展**（L2 语义检索用；不装会导致 `prisma db push` 全部失败）：
+  ```bash
+  sudo apt install -y postgresql-16-pgvector          # 版本号对应你的 pg
+  sudo -u postgres psql -d france_os -c "CREATE EXTENSION IF NOT EXISTS vector;"
+  ```
+  > ⚠️ **坑（实战）**：漏装 pgvector 时，`prisma db push` 会在 `CREATE EXTENSION vector` 处直接报 `extension "vector" is not available` 并**中止整个 push** → 之后所有 schema 变更（新表/新列）都没建，页面查这些表就 500。
 - 代码仓库：`https://github.com/Ayacloud-KEWEN/franceinfor`（可私有）。
 - 确认仓库不含真实 `.env`（已在 `.gitignore`）。
 
@@ -80,11 +87,15 @@ NEWS_REVALIDATE_SECONDS="43200"
 ```
 > ⚠️ **构建时注入**（改了必须重新 `npm run build`，不是只 restart）：`NEXT_PUBLIC_APP_URL`、`NEXT_PUBLIC_GA_ID`（GA4，默认已内置 `G-DR6YV2QTQN`，要换才需设）。自动部署会重新 build，所以改这些 push 一次即可。
 
-### 每日机会邮件定时（设完 `CRON_SECRET` 后）
-`crontab -e` 加一行（每天 07:00 触发摘要）：
+### 每日知识刷新 + 机会邮件定时（设完 `CRON_SECRET` 后）
+仓库已带脚本 `scripts/daily-cron.sh`，按顺序打 `ingest → index → extract → digest` 四个 cron 端点（用 Node 的全局 fetch，不依赖 curl/wget，自动从 `.env` 读 `CRON_SECRET`）。
+`sudo crontab -e` 加一行（每天 06:00）：
 ```cron
-0 7 * * * curl -s "https://francego.fr/api/cron/digest?key=<CRON_SECRET>" >/dev/null
+0 6 * * * /home/france-infor/htdocs/infr.europeanaialliance.org/scripts/daily-cron.sh >> /var/log/francego-cron.log 2>&1
 ```
+> - 每日摘要邮件按用户界面语言发送（标题+章节标签本地化、新闻/招标标题翻译），HTML 版式；需 `RESEND_API_KEY` + 已验证发信域。
+> - 手动触发单个端点：`node -e "fetch('https://francego.fr/api/cron/digest?key='+process.env.KEY).then(r=>r.text()).then(console.log)"`（先 `export KEY=$(grep -E '^CRON_SECRET=' .env | cut -d= -f2-)`）。
+> - 知识图谱抽取只需配置了对话模型（如 DeepSeek）即可跑；`index` 的高质量向量需 `OPENAI_API_KEY` + `EMBED_PROVIDER=openai`，否则用本地兜底向量。
 
 ## 6. 安装 / 建表 / 构建
 ```bash
@@ -131,62 +142,42 @@ CloudPanel 站点 → SSL/TLS → Let's Encrypt → 签发对应域名。
 
 ---
 
-## 10. 自动部署（GitHub Actions，已配好）
+## 10. 部署方式：手动 `npm run deploy`（当前）
 
-推送到 `main` → GitHub 自动 SSH 到 VPS → `git pull` + 构建 + `pm2 reload`（零停机）。
-工作流：`.github/workflows/deploy.yml`。
+> **变更（2026-07）**：原 GitHub Actions 自动部署（`.github/workflows/deploy.yml`）**已删除**。原因：服务器 pgvector 缺失导致 workflow 里的 `prisma db push` 每次失败（`set -e` 中止），且服务器发生过安全事件——改为手动部署更可控。
 
-> ⚠️ **坑 3：不要用 `appleboy/ssh-action`。** 它内部的 drone-ssh 在本项目环境会**静默失败**（2 秒退出、无任何日志）。
-> 改用**原生 ssh**（workflow 里直接 `ssh ... bash -s <<'REMOTE' ... REMOTE`），稳定可靠。
-
-### 需要的两把 SSH 钥匙（别搞混）
-| 用途 | 钥匙 | 公钥放哪 | 私钥放哪 |
-|------|------|----------|----------|
-| **GitHub → VPS**（Action 登录服务器） | `~/.ssh/gh_actions` | VPS 的 `~/.ssh/authorized_keys` | GitHub secret `SSH_PRIVATE_KEY` |
-| **VPS → GitHub**（服务器拉私有仓库） | `~/.ssh/github_deploy` | 仓库 Settings → Deploy keys（只读） | VPS，`~/.ssh/config` 指定 |
-
-### GitHub Secrets（仓库 Settings → Secrets and variables → Actions）
-| Secret | 值 |
-|--------|-----|
-| `SSH_HOST` | VPS 公网 **IPv4**（⚠️ **坑 4**：GitHub 跑机走 IPv4，填 IPv6 连不上） |
-| `SSH_USER` | `root` |
-| `SSH_PRIVATE_KEY` | `cat ~/.ssh/gh_actions` 私钥**全文**（含 BEGIN/END 行、保留换行；别填成 `.pub` 或 `github_deploy`） |
-| `SSH_PORT` | 非 22 端口才填 |
-
-### 一次性配置命令（在 VPS 上，root）
+服务器上更新上线：
 ```bash
-# 1) GitHub→VPS 钥匙
-ssh-keygen -t ed25519 -f ~/.ssh/gh_actions -N "" -C "github-actions"
-cat ~/.ssh/gh_actions.pub >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys
-cat ~/.ssh/gh_actions        # 私钥 → 填到 GitHub secret SSH_PRIVATE_KEY
-
-# 2) VPS→GitHub deploy key（仓库私有时需要）
-ssh-keygen -t ed25519 -f ~/.ssh/github_deploy -N "" -C "vps-deploy"
-cat >> ~/.ssh/config <<'EOF'
-
-Host github.com
-  HostName github.com
-  User git
-  IdentityFile ~/.ssh/github_deploy
-  IdentitiesOnly yes
-EOF
-chmod 600 ~/.ssh/config
-cat ~/.ssh/github_deploy.pub  # 公钥 → 仓库 Settings → Deploy keys（只读）
-
-# 3) 远端切 SSH 并测试
 cd /home/france-infor/htdocs/infr.europeanaialliance.org
-git remote set-url origin git@github.com:Ayacloud-KEWEN/franceinfor.git
-ssh -T git@github.com         # 输 yes；看到 "successfully authenticated" 即可
-git pull
+npm run deploy      # = git pull && npm ci && prisma db push && npm run build && pm2 reload ecosystem.config.cjs
 ```
+分步（排错时）：
+```bash
+git pull
+npm ci
+npx prisma db push          # 需 pgvector 已装（见 §0）
+npm run build               # 要看到 ✓ Compiled successfully
+pm2 restart france-os --update-env
+pm2 save
+```
+> - 改了 `.env` 的**运行时**变量（`AI_PROVIDER`/key、`RESEND_*`、`CRON_SECRET` 等）：`pm2 restart france-os --update-env` 即可，无需 build。
+> - 改了 `NEXT_PUBLIC_*`（构建时注入）或 `src/messages/*.json`（三语文案）：**必须重新 `npm run build`** 才生效。
 
-### 排查 SSH 连接（如 Action 连不上）
-临时加一个手动工作流用 `ssh -vvv` 看真实原因（`KEY_INVALID`/`Permission denied`/`timed out`/`Could not resolve`），排查完删掉。本项目当时就是这样定位到「appleboy 有问题、原生 ssh 正常」的。
+### ⚠️ 坑：端口 3011 被占用导致崩溃循环（EADDRINUSE，多次踩到）
+`pm2 restart` 时若旧进程没干净退出、僵尸进程仍占着 3011，新实例会 `Error: listen EADDRINUSE :::3011` → 反复重启（`pm2 ls` 显示 `errored`、`↺` 飙升），而站点仍被旧僵尸进程（旧构建）顶着 → 表现为"改了代码/文案不生效"。**干净重启**：
+```bash
+pm2 delete france-os
+sudo fuser -k 3011/tcp 2>/dev/null; sleep 2
+sudo fuser 3011/tcp 2>/dev/null && echo "还占用" || echo "端口已空"
+rm -rf .next && npm run build            # 确保新构建
+pm2 start ecosystem.config.cjs --only france-os
+pm2 save
+pm2 ls                                   # france-os 应为 online、↺ 不再涨
+```
+> 判断是不是踩了这个坑：`pm2 ls` 看 france-os 是否 `errored`；`pm2 logs france-os --lines 30 --nostream` 有没有 `EADDRINUSE`。
 
-### 手动触发 / 更新
-- 自动：`git push` 到 main。
-- 手动：仓库 Actions → Deploy to VPS → Run workflow。
-- 服务器手动：`npm run deploy`（= git pull && npm ci && prisma db push && build && pm2 reload）。
+### 被入侵后已撤销的旧部署密钥（历史）
+原自动部署用过两把 key：`~/.ssh/gh_actions`（GitHub→VPS）、`~/.ssh/github_deploy`（VPS→GitHub deploy key）。2026-07 服务器遭 root 级入侵后，**这两把及 `~/.ssh/id_ed25519` 均视为泄露、已在 GitHub 撤销**。若将来恢复自动部署，需重新生成并只授只读 deploy key。
 
 ---
 
@@ -203,3 +194,23 @@ git pull
 ## 12. 监控（可选，规格书要求）
 - **GlitchTip**（Sentry 兼容）：加 `@sentry/nextjs`，DSN 指向自托管实例。
 - **Umami**：自托管后把统计脚本加进 `src/app/[locale]/layout.tsx`。
+
+---
+
+## 13. 安全加固与事件记录（2026-07）
+
+### 发生了什么
+这台多站点共享机遭 **XMRig 挖矿木马**入侵：入口是 **SSH `root` 密码爆破**（`PermitRootLogin yes` + `PasswordAuthentication yes`），攻击者植入 root 授权公钥做持久化，并用伪装成 `kworker/R-slub_` 的 `/tmp/sh` 看门狗反复重投矿机（`/6mW0g`、`/hKCysr`，矿池 `91.208.184.203` 等）。已清除矿机+看门狗、删除攻击者公钥。
+
+### 已做的加固
+- **SSH**：`/etc/ssh/sshd_config.d/99-lockdown.conf` 设 `PermitRootLogin no` + `AllowUsers ubuntu`（+ 目标 `PasswordAuthentication no`，改密钥登录后启用）。日常用 `ubuntu`（有 `NOPASSWD:ALL` sudo）登录再提权，**不再直接 root SSH**。
+- **矿机看门狗**：`/usr/local/sbin/miner-watch.sh` + root cron 每 3 分钟——杀掉从 `/tmp`、`/dev/shm`、根目录随机名运行的进程并封矿池 IP，日志 `/var/log/miner-watch.log`。
+- **fail2ban**：sshd jail 生效（已封数万次）。
+
+### 新机/加固基线（务必遵守）
+1. SSH **仅密钥登录**（`PasswordAuthentication no`）、`PermitRootLogin no`、`AllowUsers` 白名单、fail2ban。
+2. 数据库/缓存只 `bind 127.0.0.1`（Redis 已是；核对 MySQL/PG/memcached 别暴露公网——挖矿常见入口）。
+3. **应用别用 root 跑**（当前 pm2 以 root 运行，属技术债；新机用专用非特权用户）。
+4. CloudPanel 自管防火墙——**别盲目 `ufw enable`**，会打挂其它站点。
+5. 一旦怀疑入侵：`.env` 里所有密钥（Stripe/Resend/DeepSeek/DB/`CRON_SECRET`）与 SSH/部署 key **全部视为泄露，逐一轮换**。
+6. root 被控过的机器无法保证清干净——**长期正解是迁到干净机器 + 全量换密钥**（本机因托管多站点暂缓，处于加固后"带病运行"状态）。

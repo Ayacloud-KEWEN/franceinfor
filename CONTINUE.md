@@ -40,10 +40,13 @@ src/messages/                  en/fr/zh
 prisma/                        schema + seed
 ```
 
-## 自动部署
-`git push origin main` → GitHub Actions(`.github/workflows/deploy.yml`，原生 ssh) → 服务器 `git pull && npm ci && prisma db push && npm run build && pm2 reload`。
-- 服务器：root，目录 `/home/france-infor/htdocs/infr.europeanaialliance.org`，PM2 进程 `france-os`，端口 **3011**。
-- 改完代码本地 `git push` 即可；想手动：仓库 Actions → Run workflow。
+## 部署（手动，2026-07 起）
+GitHub Actions 自动部署**已移除**。现在流程：本地 `git push` → 服务器上 `npm run deploy`（= `git pull && npm ci && prisma db push && npm run build && pm2 reload`）。
+- 服务器：root（PM2），目录 `/home/france-infor/htdocs/infr.europeanaialliance.org`，PM2 进程 `france-os`，端口 **3011**。
+- 改 `.env` 运行时变量 → `pm2 restart france-os --update-env`；改 `NEXT_PUBLIC_*` 或 `messages/*.json` → 必须重新 `npm run build`。
+- ⚠️ **pgvector 前提**：`prisma db push` 需 pg 装 pgvector，否则整条 push 失败、新表/列不建（页面 500）。装：`apt install postgresql-16-pgvector` + `CREATE EXTENSION vector`。
+- ⚠️ **EADDRINUSE 3011 崩溃循环**：`pm2 ls` 见 france-os `errored`、↺ 飙升 = 僵尸进程占端口、旧构建仍在顶。干净重启：`pm2 delete france-os && sudo fuser -k 3011/tcp && rm -rf .next && npm run build && pm2 start ecosystem.config.cjs --only france-os && pm2 save`。
+- ⚠️ **安全**：本机 2026-07 遭挖矿木马入侵（SSH root 爆破），已加固（禁 root 登录、看门狗 cron）。详见 `DEPLOYMENT.md` §13。凭据疑似泄露需全量轮换。
 
 ## ✅ 已上线：Stripe 真实订阅（Live 已激活并验证）
 全链路跑通：结账→支付→Webhook 入账→升级 `User.plan`→退订回落 FREE。本地 Test 模式 + 线上 Live 均已验证。**未配密钥时优雅降级**（设置页显示「未开通在线支付」）。
@@ -188,11 +191,17 @@ prisma/                        schema + seed
 ## 当前状态小结（截至本次会话）
 - 15 个模块均已上线，多数接真实数据（企业/招标 BOAMP+TED/市场 Eurostat/新闻 Google News/信用财务+法律 BODACC/机会发现/买家意向/网络/事件）。
 - 翻译：新闻/Dashboard/意向标题按界面语言用 LLM 翻译（JSON 数组解析，已修复对 DeepSeek 的兼容）。
+- **AI 输出语言修复**：Copilot 回答、AI 摘要、报告生成均按**当前界面语言**输出（`ai.ts#langDirective` + 路由/组件传 `locale`），不再恒英文。
 - 增值服务：企业/品牌页有「在法国注册公司/商标」指引 + 合作伙伴 CTA（`NEXT_PUBLIC_PARTNER_*` 可配）。
-- 信用页有「评分含义与标准」说明。
-- Dashboard 移动端已优化。
+- Dashboard：顶部**智能助手提问框**（跳 `/copilot?q=` 自动作答）+ **操作手册卡片**（替代原高意向买家卡）。
+- **L3 Playbook 体系**：内置 playbook（数据中心 / 中国乐器→法国 / 中国鱼子酱→法国）；**AI 起草→后台审核→发布**闭环（`/admin/playbooks`，含富表单/JSON 双模式编辑器、链接联网校验、发布前逐条核验门禁）；客户「求建」入口（`/playbooks` + `/admin/playbook-requests`，可一键 AI 起草）。
+- **每日摘要邮件**：按用户语言发送（标题+标签本地化、内容翻译）、HTML 精美版式（`lib/digest.ts`）。
+- **管理后台全三语**（`admin` 命名空间；状态枚举保留英文）。
+- **知识刷新链**：`scripts/daily-cron.sh`（ingest→index→extract→digest，Node fetch 不依赖 curl）；ingest 源已扩充。
+- L4 示例项目种子脚本 `scripts/seed-example-project.ts`。
 - 演示账号已删；登录页无 demo 信息。
+- ⚠️ **运维/安全**：手动部署（Actions 已删）；pgvector 前提；EADDRINUSE 3011 干净重启；2026-07 挖矿木马入侵已加固（见 `DEPLOYMENT.md` §13）。
 
-## 下一步建议（来自 ROADMAP 第一波；Stripe 已上线）
-增值服务**留资闭环**（最快变现点）→ **关注列表/轻量 CRM** → **订阅提醒+每日邮件**。
-差异化大招：**补贴/扶持资金匹配**（les-aides.fr / Bpifrance / France 2030）。
+## 下一步建议
+- **安全**：等有空把生产迁到干净机器 + 全量轮换密钥（当前为加固后带病运行）；应用改用非 root 用户跑。
+- **产品**：L2 已审核图谱事实并入 RAG grounding；playbook 编辑器富化（机构/URL 单独标红确认）；更多真实 playbook。
