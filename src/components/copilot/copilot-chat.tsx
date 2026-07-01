@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -16,10 +17,22 @@ export function CopilotChat() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+  const searchParams = useSearchParams();
+  const autoSent = useRef(false);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
+
+  // Auto-send a question passed from elsewhere (e.g. the Dashboard ask box: /copilot?q=...).
+  useEffect(() => {
+    const q = searchParams.get('q');
+    if (q && !autoSent.current) {
+      autoSent.current = true;
+      send(q);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   async function send(text: string) {
     if (!text.trim() || loading) return;

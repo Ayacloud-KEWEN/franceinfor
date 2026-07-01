@@ -4,20 +4,28 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { KpiGrid, type KpiItem } from '@/components/dashboard/kpi-grid';
 import { DashboardFeed } from '@/components/dashboard/dashboard-feed';
-import { DashboardIntent } from '@/components/dashboard/dashboard-intent';
+import { DashboardAsk } from '@/components/dashboard/dashboard-ask';
+import { DashboardPlaybooks } from '@/components/dashboard/dashboard-playbooks';
 import { Link } from '@/i18n/routing';
 import { fetchFranceNews, type LiveNewsItem } from '@/lib/sources/news';
 import { searchTenders, type TenderResult } from '@/lib/sources/boamp';
 import { buyingIntentReal } from '@/lib/sources/intent';
+import { dbListPlaybooks } from '@/lib/playbooks-db';
+import type { Loc } from '@/lib/data/playbooks';
 import {
   opportunityScore,
   marketActivity,
   signalCounts,
   soonestTenderDeadline,
 } from '@/lib/dashboard-metrics';
-import { Users, Truck, Gavel, FileText, Bot, Zap } from 'lucide-react';
+import { Users, Truck, Gavel, FileText, Bot, Zap, BookOpen } from 'lucide-react';
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
   const [t, tc, user] = await Promise.all([
     getTranslations('dashboard'),
     getTranslations('common'),
@@ -25,11 +33,12 @@ export default async function DashboardPage() {
   ]);
   const name = user?.name || user?.email?.split('@')[0] || 'there';
 
-  // Live data: France business news + open public tenders + active buyers.
-  const [news, tenders, intent] = await Promise.all([
+  // Live data: France business news + open public tenders + active buyers + playbooks.
+  const [news, tenders, intent, playbooks] = await Promise.all([
     fetchFranceNews().catch(() => [] as LiveNewsItem[]),
     searchTenders('', 40).catch(() => ({ results: [] as TenderResult[], total: 0 })),
     buyingIntentReal().catch(() => []),
+    dbListPlaybooks(locale as Loc).catch(() => []),
   ]);
 
   const inputs = { news, tenders, intent };
@@ -55,7 +64,7 @@ export default async function DashboardPage() {
   ];
 
   const feed = news.slice(0, 6);
-  const topBuyers = intent.slice(0, 4);
+  const topPlaybooks = playbooks.slice(0, 5);
 
   const quickActions = [
     { key: 'findCustomers', href: '/companies', Icon: Users },
@@ -73,6 +82,9 @@ export default async function DashboardPage() {
           {t('goodMorning')}, {name} 👋
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">{t('subtitle')}</p>
+
+        {/* Prominent natural-language ask box */}
+        <DashboardAsk />
 
         <div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3">
           <Card className="p-3 sm:p-4" title={t('opportunityScoreHelp')}>
@@ -131,17 +143,18 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        {/* HIGH INTENT — live tender buyers */}
+        {/* PLAYBOOKS — actionable how-to guides */}
         <Card>
-          <CardHeader>
-            <CardTitle className="text-base text-foreground">{t('highIntent')}</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="flex items-center gap-2 text-base text-foreground">
+              <BookOpen size={16} className="text-primary" /> {t('playbooks')}
+            </CardTitle>
+            <Link href="/playbooks" className="text-xs text-primary hover:underline">
+              {t('playbooksAll')}
+            </Link>
           </CardHeader>
           <CardContent>
-            {topBuyers.length === 0 ? (
-              <p className="text-sm text-muted-foreground">—</p>
-            ) : (
-              <DashboardIntent items={topBuyers} />
-            )}
+            <DashboardPlaybooks items={topPlaybooks} />
           </CardContent>
         </Card>
       </div>
