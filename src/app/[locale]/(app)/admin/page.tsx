@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { getAdminUser } from '@/lib/admin';
 import { prisma } from '@/lib/prisma';
 import { PageHeader } from '@/components/page-header';
@@ -31,6 +32,7 @@ const PLAN_TONE: Record<Plan, 'muted' | 'primary' | 'accent'> = {
 export default async function AdminPage() {
   const admin = await getAdminUser();
   if (!admin) notFound();
+  const t = await getTranslations('admin');
 
   const [users, events, leads, totalUsers, paidUsers, newLeads, planGroups] = await Promise.all([
     prisma.user.findMany({ orderBy: { createdAt: 'desc' }, take: 50 }),
@@ -45,35 +47,35 @@ export default async function AdminPage() {
   const planCount = (p: Plan) => planGroups.find((g) => g.plan === p)?._count ?? 0;
 
   const stats = [
-    { label: 'Users', value: totalUsers },
-    { label: 'Paid', value: paidUsers },
-    { label: 'Professional', value: planCount('PROFESSIONAL') },
-    { label: 'Business', value: planCount('BUSINESS') },
-    { label: 'New leads', value: newLeads },
+    { label: t('stats.users'), value: totalUsers },
+    { label: t('stats.paid'), value: paidUsers },
+    { label: t('stats.professional'), value: planCount('PROFESSIONAL') },
+    { label: t('stats.business'), value: planCount('BUSINESS') },
+    { label: t('stats.newLeads'), value: newLeads },
   ];
 
   return (
     <div className="max-w-6xl space-y-6">
       <PageHeader
-        title="Admin"
-        subtitle="Users, billing events & service inquiries"
+        title={t('title')}
+        subtitle={t('subtitle')}
         action={
           <div className="flex gap-2">
             <Link href="/admin/projects">
-              <Button variant="outline" size="sm"><Brain size={15} /> Projects</Button>
+              <Button variant="outline" size="sm"><Brain size={15} /> {t('nav.projects')}</Button>
             </Link>
             <Link href="/admin/knowledge">
-              <Button variant="outline" size="sm"><Network size={15} /> Knowledge</Button>
+              <Button variant="outline" size="sm"><Network size={15} /> {t('nav.knowledge')}</Button>
             </Link>
             <Link href="/admin/playbooks">
-              <Button variant="outline" size="sm"><BookOpen size={15} /> Playbooks</Button>
+              <Button variant="outline" size="sm"><BookOpen size={15} /> {t('nav.playbooks')}</Button>
             </Link>
             <Link href="/admin/playbook-requests">
-              <Button variant="outline" size="sm"><Lightbulb size={15} /> Playbook requests</Button>
+              <Button variant="outline" size="sm"><Lightbulb size={15} /> {t('nav.requests')}</Button>
             </Link>
             <a href={GA_DASHBOARD_URL} target="_blank" rel="noopener noreferrer">
               <Button variant="outline" size="sm">
-                <BarChart3 size={15} /> Google Analytics <ExternalLink size={13} />
+                <BarChart3 size={15} /> {t('nav.analytics')} <ExternalLink size={13} />
               </Button>
             </a>
           </div>
@@ -94,22 +96,22 @@ export default async function AdminPage() {
       {/* Leads */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base text-foreground">Leads ({leads.length})</CardTitle>
+          <CardTitle className="text-base text-foreground">{t('leads.title')} ({leads.length})</CardTitle>
         </CardHeader>
         <CardContent className="overflow-x-auto">
           {leads.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No leads yet.</p>
+            <p className="text-sm text-muted-foreground">{t('leads.empty')}</p>
           ) : (
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-xs text-muted-foreground">
-                  <th className="py-2 pr-3">When</th>
-                  <th className="py-2 pr-3">Kind</th>
-                  <th className="py-2 pr-3">Name</th>
-                  <th className="py-2 pr-3">Email</th>
-                  <th className="py-2 pr-3">Company</th>
-                  <th className="py-2 pr-3">Message</th>
-                  <th className="py-2 pr-3">Status</th>
+                  <th className="py-2 pr-3">{t('leads.when')}</th>
+                  <th className="py-2 pr-3">{t('leads.kind')}</th>
+                  <th className="py-2 pr-3">{t('leads.name')}</th>
+                  <th className="py-2 pr-3">{t('leads.email')}</th>
+                  <th className="py-2 pr-3">{t('leads.company')}</th>
+                  <th className="py-2 pr-3">{t('leads.message')}</th>
+                  <th className="py-2 pr-3">{t('leads.status')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -133,18 +135,18 @@ export default async function AdminPage() {
       {/* Users */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base text-foreground">Users (latest {users.length})</CardTitle>
+          <CardTitle className="text-base text-foreground">{t('users.title', { n: users.length })}</CardTitle>
         </CardHeader>
         <CardContent className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-xs text-muted-foreground">
-                <th className="py-2 pr-3">Joined</th>
-                <th className="py-2 pr-3">Email</th>
-                <th className="py-2 pr-3">Name</th>
-                <th className="py-2 pr-3">Plan</th>
-                <th className="py-2 pr-3">Sub status</th>
-                <th className="py-2 pr-3">Role</th>
+                <th className="py-2 pr-3">{t('users.joined')}</th>
+                <th className="py-2 pr-3">{t('users.email')}</th>
+                <th className="py-2 pr-3">{t('users.name')}</th>
+                <th className="py-2 pr-3">{t('users.plan')}</th>
+                <th className="py-2 pr-3">{t('users.subStatus')}</th>
+                <th className="py-2 pr-3">{t('users.role')}</th>
               </tr>
             </thead>
             <tbody>
@@ -166,19 +168,19 @@ export default async function AdminPage() {
       {/* Events */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base text-foreground">Events (latest {events.length})</CardTitle>
+          <CardTitle className="text-base text-foreground">{t('events.title', { n: events.length })}</CardTitle>
         </CardHeader>
         <CardContent className="overflow-x-auto">
           {events.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No events yet.</p>
+            <p className="text-sm text-muted-foreground">{t('events.empty')}</p>
           ) : (
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-xs text-muted-foreground">
-                  <th className="py-2 pr-3">When</th>
-                  <th className="py-2 pr-3">Type</th>
-                  <th className="py-2 pr-3">Email</th>
-                  <th className="py-2 pr-3">Detail</th>
+                  <th className="py-2 pr-3">{t('events.when')}</th>
+                  <th className="py-2 pr-3">{t('events.type')}</th>
+                  <th className="py-2 pr-3">{t('events.email')}</th>
+                  <th className="py-2 pr-3">{t('events.detail')}</th>
                 </tr>
               </thead>
               <tbody>

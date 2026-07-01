@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { getAdminUser } from '@/lib/admin';
 import { prisma } from '@/lib/prisma';
 import { graphStats } from '@/lib/knowledge-graph';
@@ -15,6 +16,7 @@ export const dynamic = 'force-dynamic';
 export default async function AdminKnowledgePage() {
   const admin = await getAdminUser();
   if (!admin) notFound();
+  const t = await getTranslations('admin');
 
   const [stats, nodes, edges] = await Promise.all([
     graphStats(),
@@ -30,18 +32,18 @@ export default async function AdminKnowledgePage() {
   return (
     <div className="max-w-5xl space-y-6">
       <PageHeader
-        title="Knowledge graph"
-        subtitle="Knowledge OS L2 — review AI-extracted entities & relationships before they enter the graph."
-        action={<Link href="/admin"><Button variant="outline" size="sm"><ArrowLeft size={14} /> Admin</Button></Link>}
+        title={t('knowledge.title')}
+        subtitle={t('knowledge.subtitle')}
+        action={<Link href="/admin"><Button variant="outline" size="sm"><ArrowLeft size={14} /> {t('back')}</Button></Link>}
       />
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
         {[
-          ['Nodes', stats.nodes],
-          ['Edges', stats.edges],
-          ['Approved', stats.apprNodes],
-          ['Candidate nodes', stats.candNodes],
-          ['Candidate edges', stats.candEdges],
+          [t('knowledge.statNodes'), stats.nodes],
+          [t('knowledge.statEdges'), stats.edges],
+          [t('knowledge.statApproved'), stats.apprNodes],
+          [t('knowledge.statCandNodes'), stats.candNodes],
+          [t('knowledge.statCandEdges'), stats.candEdges],
         ].map(([l, v]) => (
           <Card key={l as string}><CardContent className="p-4"><div className="text-2xl font-bold">{v}</div><div className="text-xs text-muted-foreground">{l}</div></CardContent></Card>
         ))}
@@ -49,13 +51,13 @@ export default async function AdminKnowledgePage() {
 
       {/* Candidate nodes */}
       <Card>
-        <CardHeader><CardTitle className="text-base">Candidate entities ({nodes.length})</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">{t('knowledge.candEntities', { n: nodes.length })}</CardTitle></CardHeader>
         <CardContent className="overflow-x-auto">
           {nodes.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No candidates. Run extraction (/api/cron/extract) over indexed documents.</p>
+            <p className="text-sm text-muted-foreground">{t('knowledge.candEmpty')}</p>
           ) : (
             <table className="w-full text-sm">
-              <thead><tr className="text-left text-xs text-muted-foreground"><th className="py-2 pr-3">Type</th><th className="pr-3">Name</th><th className="pr-3">Conf.</th><th className="pr-3">Source</th><th /></tr></thead>
+              <thead><tr className="text-left text-xs text-muted-foreground"><th className="py-2 pr-3">{t('knowledge.colType')}</th><th className="pr-3">{t('knowledge.colName')}</th><th className="pr-3">{t('knowledge.colConf')}</th><th className="pr-3">{t('knowledge.colSource')}</th><th /></tr></thead>
               <tbody>
                 {nodes.map((n) => (
                   <tr key={n.id} className="border-t border-border">
@@ -79,13 +81,13 @@ export default async function AdminKnowledgePage() {
 
       {/* Candidate edges */}
       <Card>
-        <CardHeader><CardTitle className="text-base">Candidate relationships ({edges.length})</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">{t('knowledge.candRel', { n: edges.length })}</CardTitle></CardHeader>
         <CardContent className="overflow-x-auto">
           {edges.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No candidate relationships.</p>
+            <p className="text-sm text-muted-foreground">{t('knowledge.candRelEmpty')}</p>
           ) : (
             <table className="w-full text-sm">
-              <thead><tr className="text-left text-xs text-muted-foreground"><th className="py-2 pr-3">Relationship</th><th className="pr-3">Conf.</th><th /></tr></thead>
+              <thead><tr className="text-left text-xs text-muted-foreground"><th className="py-2 pr-3">{t('knowledge.colRel')}</th><th className="pr-3">{t('knowledge.colConf')}</th><th /></tr></thead>
               <tbody>
                 {edges.map((e) => (
                   <tr key={e.id} className="border-t border-border">

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { saveDraftJsonAction, publishCheckedAction } from '@/app/actions/playbooks-admin';
@@ -43,10 +44,11 @@ function LSField({ label, value, onChange }: { label: string; value: LS; onChang
 }
 
 function LSAField({ label, value, onChange }: { label: string; value: LSA; onChange: (v: LSA) => void }) {
+  const t = useTranslations('admin.editor');
   const v = value ?? emptyLSA();
   return (
     <div className="space-y-1">
-      <div className={labelCls}>{label} <span className="opacity-60">(one per line)</span></div>
+      <div className={labelCls}>{label} <span className="opacity-60">({t('oneperline')})</span></div>
       <div className="grid gap-1.5 sm:grid-cols-3">
         {LOCS.map((l) => (
           <textarea
@@ -64,15 +66,16 @@ function LSAField({ label, value, onChange }: { label: string; value: LSA; onCha
 }
 
 function RefEditor({ refs, onChange }: { refs: PlaybookRef[]; onChange: (r: PlaybookRef[]) => void }) {
+  const t = useTranslations('admin.editor');
   const list = refs ?? [];
   return (
     <div className="space-y-1">
-      <div className={labelCls}>References (label + official URL)</div>
+      <div className={labelCls}>{t('references')}</div>
       {list.map((r, i) => (
         <div key={i} className="flex gap-1.5">
           <input
             className={inputCls + ' max-w-[40%]'}
-            placeholder="Label"
+            placeholder={t('refLabel')}
             value={r.label}
             onChange={(e) => { const n = clone(list); n[i] = { ...n[i], label: e.target.value }; onChange(n); }}
           />
@@ -88,7 +91,7 @@ function RefEditor({ refs, onChange }: { refs: PlaybookRef[]; onChange: (r: Play
         </div>
       ))}
       <Button type="button" variant="outline" size="sm" onClick={() => onChange([...list, { label: '', url: '' }])}>
-        <Plus size={13} /> Add reference
+        <Plus size={13} /> {t('addReference')}
       </Button>
     </div>
   );
@@ -97,6 +100,7 @@ function RefEditor({ refs, onChange }: { refs: PlaybookRef[]; onChange: (r: Play
 // ---- main editor ----
 export function PlaybookEditor({ id, initialJson }: { id: string; initialJson: string }) {
   const router = useRouter();
+  const t = useTranslations('admin.editor');
   const [obj, setObj] = useState<RawPlaybook>(() => JSON.parse(initialJson));
   const [tab, setTab] = useState<'form' | 'json' | 'verify'>('form');
   const [jsonText, setJsonText] = useState(initialJson);
@@ -154,7 +158,7 @@ export function PlaybookEditor({ id, initialJson }: { id: string; initialJson: s
       fd.set('id', id);
       fd.set('json', raw);
       const res = await saveDraftJsonAction(fd);
-      setMsg(res.ok ? { ok: true, text: 'Saved.' } : { ok: false, text: `Error: ${res.error}` });
+      setMsg(res.ok ? { ok: true, text: t('saved') } : { ok: false, text: res.error ?? '' });
     } finally { setSaving(false); }
   }
 
@@ -180,8 +184,8 @@ export function PlaybookEditor({ id, initialJson }: { id: string; initialJson: s
       await saveDraftJsonAction(fd);
       const res = await publishCheckedAction(id);
       if (res.ok) { router.push('../playbooks'); router.refresh(); }
-      else if (res.error === 'broken_links') setMsg({ ok: false, text: `Broken links: ${res.brokenLinks?.join(', ')}` });
-      else setMsg({ ok: false, text: `Error: ${res.error}` });
+      else if (res.error === 'broken_links') setMsg({ ok: false, text: `${t('brokenLinks')}: ${res.brokenLinks?.join(', ')}` });
+      else setMsg({ ok: false, text: res.error ?? '' });
     } finally { setPublishing(false); }
   }
 
@@ -191,7 +195,7 @@ export function PlaybookEditor({ id, initialJson }: { id: string; initialJson: s
       <div className="flex flex-wrap items-center gap-2">
         {(['form', 'json', 'verify'] as const).map((tb) => (
           <Button key={tb} size="sm" variant={tab === tb ? 'default' : 'outline'} onClick={() => switchTab(tb)}>
-            {tb === 'verify' ? 'Verify & Publish' : tb === 'json' ? 'JSON' : 'Form'}
+            {tb === 'verify' ? t('tabVerify') : tb === 'json' ? t('tabJson') : t('tabForm')}
           </Button>
         ))}
         <div className="ml-auto flex items-center gap-2">
@@ -201,7 +205,7 @@ export function PlaybookEditor({ id, initialJson }: { id: string; initialJson: s
             </span>
           )}
           <Button size="sm" onClick={save} disabled={saving}>
-            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save size={14} />} Save draft
+            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save size={14} />} {t('saveDraft')}
           </Button>
         </div>
       </div>
@@ -210,70 +214,70 @@ export function PlaybookEditor({ id, initialJson }: { id: string; initialJson: s
         <div className="space-y-4">
           <div className="grid gap-2 sm:grid-cols-2">
             <div className="space-y-1">
-              <div className={labelCls}>Slug</div>
+              <div className={labelCls}>{t('slug')}</div>
               <Input value={obj.slug ?? ''} onChange={(e) => set({ slug: e.target.value })} />
             </div>
             <div className="space-y-1">
-              <div className={labelCls}>Sector</div>
+              <div className={labelCls}>{t('sector')}</div>
               <Input value={obj.sector ?? ''} onChange={(e) => set({ sector: e.target.value })} />
             </div>
           </div>
-          <LSField label="Title" value={obj.title} onChange={(v) => set({ title: v })} />
-          <LSField label="Summary" value={obj.summary} onChange={(v) => set({ summary: v })} />
-          <LSAField label="Applicable to" value={obj.applicableTo} onChange={(v) => set({ applicableTo: v })} />
-          <LSAField label="Prerequisites" value={obj.prerequisites} onChange={(v) => set({ prerequisites: v })} />
+          <LSField label={t('titleField')} value={obj.title} onChange={(v) => set({ title: v })} />
+          <LSField label={t('summary')} value={obj.summary} onChange={(v) => set({ summary: v })} />
+          <LSAField label={t('applicableTo')} value={obj.applicableTo} onChange={(v) => set({ applicableTo: v })} />
+          <LSAField label={t('prerequisites')} value={obj.prerequisites} onChange={(v) => set({ prerequisites: v })} />
 
           {/* tasks */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <div className="text-sm font-semibold">Tasks ({obj.tasks?.length ?? 0})</div>
+              <div className="text-sm font-semibold">{t('tasks')} ({obj.tasks?.length ?? 0})</div>
               <Button type="button" variant="outline" size="sm"
                 onClick={() => set({ tasks: [...(obj.tasks ?? []), { id: '', name: emptyLS(), description: emptyLS() }] })}>
-                <Plus size={13} /> Add task
+                <Plus size={13} /> {t('addTask')}
               </Button>
             </div>
-            {(obj.tasks ?? []).map((t, i) => (
+            {(obj.tasks ?? []).map((task, i) => (
               <div key={i} className="space-y-2 rounded-lg border border-border p-3">
                 <div className="flex items-center gap-2">
-                  <input className={inputCls + ' max-w-[200px]'} placeholder="task id"
-                    value={t.id} onChange={(e) => setTask(i, { id: e.target.value })} />
+                  <input className={inputCls + ' max-w-[200px]'} placeholder={t('taskId')}
+                    value={task.id} onChange={(e) => setTask(i, { id: e.target.value })} />
                   <Button type="button" variant="ghost" size="sm" className="ml-auto"
                     onClick={() => set({ tasks: (obj.tasks ?? []).filter((_, j) => j !== i) })}>
                     <Trash2 size={13} />
                   </Button>
                 </div>
-                <LSField label="Name" value={t.name} onChange={(v) => setTask(i, { name: v })} />
-                <LSField label="Description" value={t.description} onChange={(v) => setTask(i, { description: v })} />
+                <LSField label={t('name')} value={task.name} onChange={(v) => setTask(i, { name: v })} />
+                <LSField label={t('description')} value={task.description} onChange={(v) => setTask(i, { description: v })} />
                 <div className="grid gap-2 sm:grid-cols-2">
                   <div className="space-y-1">
-                    <div className={labelCls}>Authority</div>
-                    <input className={inputCls} value={t.authority ?? ''} onChange={(e) => setTask(i, { authority: e.target.value })} />
+                    <div className={labelCls}>{t('authority')}</div>
+                    <input className={inputCls} value={task.authority ?? ''} onChange={(e) => setTask(i, { authority: e.target.value })} />
                   </div>
                   <div className="space-y-1">
-                    <div className={labelCls}>Permit</div>
-                    <input className={inputCls} value={t.permit ?? ''} onChange={(e) => setTask(i, { permit: e.target.value })} />
+                    <div className={labelCls}>{t('permit')}</div>
+                    <input className={inputCls} value={task.permit ?? ''} onChange={(e) => setTask(i, { permit: e.target.value })} />
                   </div>
                 </div>
-                <LSField label="Cost" value={t.cost ?? emptyLS()} onChange={(v) => setTask(i, { cost: v })} />
-                <LSField label="Timeline" value={t.timeline ?? emptyLS()} onChange={(v) => setTask(i, { timeline: v })} />
-                <LSAField label="Documents" value={t.documents ?? emptyLSA()} onChange={(v) => setTask(i, { documents: v })} />
-                <LSAField label="Risks" value={t.risks ?? emptyLSA()} onChange={(v) => setTask(i, { risks: v })} />
+                <LSField label={t('cost')} value={task.cost ?? emptyLS()} onChange={(v) => setTask(i, { cost: v })} />
+                <LSField label={t('timeline')} value={task.timeline ?? emptyLS()} onChange={(v) => setTask(i, { timeline: v })} />
+                <LSAField label={t('documents')} value={task.documents ?? emptyLSA()} onChange={(v) => setTask(i, { documents: v })} />
+                <LSAField label={t('risks')} value={task.risks ?? emptyLSA()} onChange={(v) => setTask(i, { risks: v })} />
                 <div className="space-y-1">
-                  <div className={labelCls}>Depends on (comma-separated task ids)</div>
-                  <input className={inputCls} value={(t.dependsOn ?? []).join(', ')}
+                  <div className={labelCls}>{t('dependsOn')}</div>
+                  <input className={inputCls} value={(task.dependsOn ?? []).join(', ')}
                     onChange={(e) => setTask(i, { dependsOn: e.target.value.split(',').map((s) => s.trim()).filter(Boolean) })} />
                 </div>
-                <RefEditor refs={t.references ?? []} onChange={(r) => setTask(i, { references: r })} />
+                <RefEditor refs={task.references ?? []} onChange={(r) => setTask(i, { references: r })} />
               </div>
             ))}
           </div>
 
-          <LSAField label="Overall risks" value={obj.risks} onChange={(v) => set({ risks: v })} />
-          <LSField label="Estimated cost" value={obj.estCost} onChange={(v) => set({ estCost: v })} />
-          <LSField label="Estimated timeline" value={obj.estTimeline} onChange={(v) => set({ estTimeline: v })} />
+          <LSAField label={t('overallRisks')} value={obj.risks} onChange={(v) => set({ risks: v })} />
+          <LSField label={t('estCost')} value={obj.estCost} onChange={(v) => set({ estCost: v })} />
+          <LSField label={t('estTimeline')} value={obj.estTimeline} onChange={(v) => set({ estTimeline: v })} />
           <RefEditor refs={obj.references ?? []} onChange={(r) => set({ references: r })} />
           <div className="space-y-1">
-            <div className={labelCls}>Keywords (comma-separated, mix en/fr/zh)</div>
+            <div className={labelCls}>{t('keywords')}</div>
             <input className={inputCls} value={(obj.keywords ?? []).join(', ')}
               onChange={(e) => set({ keywords: e.target.value.split(',').map((s) => s.trim()).filter(Boolean) })} />
           </div>
@@ -282,7 +286,7 @@ export function PlaybookEditor({ id, initialJson }: { id: string; initialJson: s
 
       {tab === 'json' && (
         <div className="space-y-1">
-          {jsonError && <p className="text-xs text-destructive">Invalid JSON: {jsonError}</p>}
+          {jsonError && <p className="text-xs text-destructive">{t('invalidJson')}: {jsonError}</p>}
           <textarea value={jsonText} spellCheck={false} rows={28}
             onChange={(e) => setJsonText(e.target.value)} onBlur={applyJsonToObj}
             className="w-full rounded-md border border-input bg-background p-3 font-mono text-xs" />
@@ -292,17 +296,17 @@ export function PlaybookEditor({ id, initialJson }: { id: string; initialJson: s
       {tab === 'verify' && (
         <div className="space-y-4">
           <div className="rounded-lg border border-amber-500/40 bg-amber-500/5 p-3 text-sm">
-            <div className="flex items-center gap-2 font-medium"><ShieldCheck size={15} /> Verify before publishing</div>
+            <div className="flex items-center gap-2 font-medium"><ShieldCheck size={15} /> {t('verifyHeading')}</div>
             <p className="mt-1 text-xs text-muted-foreground">
-              Confirm each authority name and reference URL is real and correct. AI can hallucinate these. Publish unlocks only when all are confirmed and no link is broken.
+              {t('verifyDesc')}
             </p>
           </div>
 
           <div>
             <div className="mb-1.5 flex items-center gap-2">
-              <div className="text-sm font-semibold">Reference links ({urls.length})</div>
+              <div className="text-sm font-semibold">{t('refLinks')} ({urls.length})</div>
               <Button size="sm" variant="outline" onClick={checkLinks} disabled={checking || !urls.length}>
-                {checking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Link2 size={13} />} Check links
+                {checking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Link2 size={13} />} {t('checkLinks')}
               </Button>
             </div>
             <div className="space-y-1">
@@ -318,16 +322,16 @@ export function PlaybookEditor({ id, initialJson }: { id: string; initialJson: s
                         {r.ok ? `OK ${r.status ?? ''}` : `✗ ${r.error ?? r.status ?? 'broken'}`}
                       </span>
                     )}
-                    <a href={u} target="_blank" rel="noopener noreferrer" className="text-muted-foreground underline">open</a>
+                    <a href={u} target="_blank" rel="noopener noreferrer" className="text-muted-foreground underline">{t('open')}</a>
                   </label>
                 );
               })}
-              {!urls.length && <p className="text-xs text-muted-foreground">No reference URLs.</p>}
+              {!urls.length && <p className="text-xs text-muted-foreground">{t('noUrls')}</p>}
             </div>
           </div>
 
           <div>
-            <div className="mb-1.5 text-sm font-semibold">Authorities / permits ({authorities.length})</div>
+            <div className="mb-1.5 text-sm font-semibold">{t('authorities')} ({authorities.length})</div>
             <div className="space-y-1">
               {authorities.map((a) => (
                 <label key={a} className="flex items-center gap-2 rounded-md border border-border px-2 py-1.5 text-xs">
@@ -336,16 +340,16 @@ export function PlaybookEditor({ id, initialJson }: { id: string; initialJson: s
                   <span className="flex-1">{a}</span>
                 </label>
               ))}
-              {!authorities.length && <p className="text-xs text-muted-foreground">No authorities set.</p>}
+              {!authorities.length && <p className="text-xs text-muted-foreground">{t('noAuthorities')}</p>}
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             <Button onClick={publish} disabled={!allConfirmed || publishing}>
-              {publishing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Rocket size={14} />} Publish
+              {publishing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Rocket size={14} />} {t('publish')}
             </Button>
             {!allConfirmed && (
-              <span className="text-xs text-muted-foreground">Confirm all items (and fix broken links) to enable.</span>
+              <span className="text-xs text-muted-foreground">{t('publishHint')}</span>
             )}
           </div>
         </div>

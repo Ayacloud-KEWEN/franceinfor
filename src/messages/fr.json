@@ -646,6 +646,65 @@
     "requestSubmit": "Envoyer la demande",
     "requestThanks": "Bien reçu, merci ! Nous étudierons votre demande."
   },
+  "admin": {
+    "title": "Administration",
+    "subtitle": "Utilisateurs, événements de facturation & demandes de service",
+    "back": "Admin",
+    "nav": { "projects": "Projets", "knowledge": "Connaissances", "playbooks": "Playbooks", "requests": "Demandes de playbook", "analytics": "Google Analytics" },
+    "stats": { "users": "Utilisateurs", "paid": "Payants", "professional": "Professional", "business": "Business", "newLeads": "Nouveaux leads" },
+    "leads": { "title": "Leads", "empty": "Aucun lead pour l’instant.", "when": "Quand", "kind": "Type", "name": "Nom", "email": "E-mail", "company": "Société", "message": "Message", "status": "Statut" },
+    "users": { "title": "Utilisateurs (derniers {n})", "joined": "Inscrit le", "email": "E-mail", "name": "Nom", "plan": "Formule", "subStatus": "Statut abo.", "role": "Rôle" },
+    "events": { "title": "Événements (derniers {n})", "empty": "Aucun événement pour l’instant.", "when": "Quand", "type": "Type", "email": "E-mail", "detail": "Détail" },
+    "projects": {
+      "title": "Expérience projet",
+      "subtitle": "Knowledge OS L4 — capturez l’exécution réelle ; Experience Intelligence l’agrège.",
+      "ei": "Experience Intelligence",
+      "statProjects": "Projets", "statCompleted": "Terminés", "statSuccess": "Taux de réussite", "statAvgDuration": "Durée moyenne", "statAvgCost": "Coût moyen",
+      "commonProblems": "Problèmes les plus fréquents :",
+      "newProject": "Nouveau projet", "phTitle": "Titre *", "phSlug": "Slug du playbook (ex. france-data-center)", "phSector": "Secteur", "phRegion": "Région", "create": "Créer",
+      "empty": "Aucun projet pour l’instant.",
+      "phActualDays": "Jours réels", "phActualCost": "Coût réel €", "save": "Enregistrer",
+      "colStep": "Étape", "colStatus": "Statut", "colDays": "Jours", "colApproval": "Instruction", "colProblem": "Problème → Solution", "colLessons": "Enseignements",
+      "addStep": "+ Ajouter une étape", "phStepName": "Nom de l’étape *", "phAuthority": "Autorité", "phApprovalDays": "Jours d’instruction", "phPartner": "Partenaire", "phProblem": "Problème", "phSolution": "Solution", "phLessons": "Enseignements tirés", "addStepBtn": "Ajouter l’étape"
+    },
+    "knowledge": {
+      "title": "Graphe de connaissances",
+      "subtitle": "Knowledge OS L2 — vérifiez les entités & relations extraites par l’IA avant leur entrée dans le graphe.",
+      "statNodes": "Nœuds", "statEdges": "Relations", "statApproved": "Approuvés", "statCandNodes": "Nœuds candidats", "statCandEdges": "Relations candidates",
+      "candEntities": "Entités candidates ({n})", "candEmpty": "Aucun candidat. Lancez l’extraction (/api/cron/extract) sur les documents indexés.",
+      "colType": "Type", "colName": "Nom", "colConf": "Conf.", "colSource": "Source",
+      "candRel": "Relations candidates ({n})", "candRelEmpty": "Aucune relation candidate.", "colRel": "Relation"
+    },
+    "playbooks": {
+      "title": "Playbooks",
+      "subtitle": "Rédigez avec l’IA, vérifiez et publiez des playbooks. Les brouillons restent cachés du site public jusqu’à publication.",
+      "empty": "Aucun playbook pour l’instant.", "reviewPublish": "Vérifier & publier", "edit": "Modifier",
+      "editTitle": "Modifier le playbook", "editSubtitle": "Vérifiez le contenu rédigé par l’IA. La publication est dans l’onglet « Vérifier & publier » — elle se débloque une fois les autorités et liens confirmés.", "preview": "Aperçu"
+    },
+    "requests": {
+      "title": "Demandes de playbook",
+      "subtitle": "Demande client de nouveaux playbooks. Triez ici ; rédigez le playbook dans le code, puis synchronisez.",
+      "empty": "Aucune demande pour l’instant.", "note": "Note interne", "save": "Enregistrer"
+    },
+    "generator": {
+      "heading": "Rédiger un playbook avec l’IA",
+      "desc": "Génère un BROUILLON ancré (autorités/liens réels issus de la base de connaissances) à vérifier et publier. Jamais publié automatiquement.",
+      "placeholder": "ex. Vendre du vin français en Chine / Ouvrir un restaurant à Paris",
+      "generate": "Générer le brouillon", "error": "Erreur"
+    },
+    "editor": {
+      "tabForm": "Formulaire", "tabJson": "JSON", "tabVerify": "Vérifier & publier",
+      "saveDraft": "Enregistrer le brouillon", "formatJson": "Formater le JSON", "saved": "Enregistré.", "invalidJson": "JSON invalide",
+      "slug": "Slug", "sector": "Secteur", "titleField": "Titre", "summary": "Résumé", "applicableTo": "Public concerné", "prerequisites": "Prérequis",
+      "tasks": "Tâches", "addTask": "Ajouter une tâche", "taskId": "id de tâche", "name": "Nom", "description": "Description", "authority": "Autorité", "permit": "Autorisation",
+      "cost": "Coût", "timeline": "Délai", "documents": "Documents", "risks": "Risques", "dependsOn": "Dépend de (ids de tâches, séparés par des virgules)", "references": "Références (libellé + URL officielle)", "refLabel": "Libellé",
+      "addReference": "Ajouter une référence", "overallRisks": "Risques globaux", "estCost": "Coût estimé", "estTimeline": "Délai estimé", "keywords": "Mots-clés (séparés par des virgules, mélange en/fr/zh)", "oneperline": "un par ligne",
+      "verifyHeading": "Vérifier avant publication", "verifyDesc": "Confirmez que chaque nom d’autorité et URL de référence est réel et correct. L’IA peut les inventer. La publication se débloque une fois tout confirmé et aucun lien cassé.",
+      "refLinks": "Liens de référence", "checkLinks": "Vérifier les liens", "authorities": "Autorités / autorisations", "noUrls": "Aucune URL de référence.", "noAuthorities": "Aucune autorité définie.",
+      "publish": "Publier", "publishHint": "Confirmez tous les éléments (et corrigez les liens cassés) pour activer.", "brokenLinks": "Liens cassés", "open": "ouvrir"
+    },
+    "draftFromRequest": "Brouillon IA"
+  },
   "help": {
     "title": "Aide & guide d’utilisation",
     "subtitle": "Comment utiliser FranceGo pour s’implanter et croître en France — module par module.",

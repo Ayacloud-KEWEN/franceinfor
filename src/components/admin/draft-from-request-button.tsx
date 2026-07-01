@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { draftFromRequestAction } from '@/app/actions/playbooks-admin';
 import { Sparkles, Loader2 } from 'lucide-react';
@@ -9,6 +10,7 @@ import { Sparkles, Loader2 } from 'lucide-react';
 // One-click: AI-draft a playbook from this customer request, then open the draft.
 export function DraftFromRequestButton({ requestId }: { requestId: string }) {
   const router = useRouter();
+  const t = useTranslations('admin');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -30,7 +32,7 @@ export function DraftFromRequestButton({ requestId }: { requestId: string }) {
   return (
     <div className="flex items-center gap-2">
       <Button size="sm" variant="outline" onClick={run} disabled={loading}>
-        {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles size={13} />} AI draft
+        {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles size={13} />} {t('draftFromRequest')}
       </Button>
       {error && <span className="text-xs text-destructive">{error}</span>}
     </div>

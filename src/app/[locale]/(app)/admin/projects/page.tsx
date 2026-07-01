@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { getAdminUser } from '@/lib/admin';
 import { listProjects, experienceStats } from '@/lib/projects';
 import { createProjectAction, updateProjectAction, addStepAction } from '@/app/actions/projects';
@@ -20,28 +21,29 @@ const inputCls = 'rounded-md border border-input bg-background px-2 py-1.5 text-
 export default async function AdminProjectsPage() {
   const admin = await getAdminUser();
   if (!admin) notFound();
+  const t = await getTranslations('admin');
 
   const [projects, stats] = await Promise.all([listProjects(), experienceStats()]);
 
   return (
     <div className="max-w-5xl space-y-6">
       <PageHeader
-        title="Project experience"
-        subtitle="Knowledge OS L4 — capture real execution; Experience Intelligence aggregates it."
-        action={<Link href="/admin"><Button variant="outline" size="sm"><ArrowLeft size={14} /> Admin</Button></Link>}
+        title={t('projects.title')}
+        subtitle={t('projects.subtitle')}
+        action={<Link href="/admin"><Button variant="outline" size="sm"><ArrowLeft size={14} /> {t('back')}</Button></Link>}
       />
 
       {/* Experience Intelligence */}
       <Card>
-        <CardHeader><CardTitle className="flex items-center gap-2 text-base"><Brain size={15} className="text-primary" /> Experience Intelligence</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="flex items-center gap-2 text-base"><Brain size={15} className="text-primary" /> {t('projects.ei')}</CardTitle></CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
             {[
-              ['Projects', stats.total],
-              ['Completed', stats.completed],
-              ['Success rate', stats.successRate != null ? `${stats.successRate}%` : '—'],
-              ['Avg duration', stats.avgDays != null ? `${stats.avgDays} d` : '—'],
-              ['Avg cost', stats.avgCostEur != null ? `€${stats.avgCostEur.toLocaleString()}` : '—'],
+              [t('projects.statProjects'), stats.total],
+              [t('projects.statCompleted'), stats.completed],
+              [t('projects.statSuccess'), stats.successRate != null ? `${stats.successRate}%` : '—'],
+              [t('projects.statAvgDuration'), stats.avgDays != null ? `${stats.avgDays} d` : '—'],
+              [t('projects.statAvgCost'), stats.avgCostEur != null ? `€${stats.avgCostEur.toLocaleString()}` : '—'],
             ].map(([label, value]) => (
               <div key={label as string} className="rounded-lg border border-border p-3">
                 <div className="text-xl font-bold tabular-nums">{value}</div>
@@ -51,7 +53,7 @@ export default async function AdminProjectsPage() {
           </div>
           {stats.commonProblems.length > 0 && (
             <div className="mt-3 text-sm">
-              <span className="text-muted-foreground">Most common problems: </span>
+              <span className="text-muted-foreground">{t('projects.commonProblems')} </span>
               {stats.commonProblems.map((p) => `${p.problem} (${p.count})`).join(' · ')}
             </div>
           )}
@@ -60,21 +62,21 @@ export default async function AdminProjectsPage() {
 
       {/* Create project */}
       <Card>
-        <CardHeader><CardTitle className="text-base">New project</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">{t('projects.newProject')}</CardTitle></CardHeader>
         <CardContent>
           <form action={createProjectAction} className="grid gap-2 sm:grid-cols-4">
-            <Input name="title" required placeholder="Title *" className="sm:col-span-2" />
-            <Input name="playbookSlug" placeholder="Playbook slug (e.g. france-data-center)" className="sm:col-span-2" />
-            <Input name="sector" placeholder="Sector" />
-            <Input name="region" placeholder="Region" />
-            <div className="sm:col-span-4"><Button type="submit" size="sm">Create</Button></div>
+            <Input name="title" required placeholder={t('projects.phTitle')} className="sm:col-span-2" />
+            <Input name="playbookSlug" placeholder={t('projects.phSlug')} className="sm:col-span-2" />
+            <Input name="sector" placeholder={t('projects.phSector')} />
+            <Input name="region" placeholder={t('projects.phRegion')} />
+            <div className="sm:col-span-4"><Button type="submit" size="sm">{t('projects.create')}</Button></div>
           </form>
         </CardContent>
       </Card>
 
       {/* Projects */}
       {projects.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No projects yet.</p>
+        <p className="text-sm text-muted-foreground">{t('projects.empty')}</p>
       ) : projects.map((proj) => (
         <Card key={proj.id}>
           <CardHeader className="flex flex-row items-center justify-between gap-2">
@@ -93,16 +95,16 @@ export default async function AdminProjectsPage() {
               <select name="status" defaultValue={proj.status} className={inputCls}>
                 {PROJECT_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
-              <Input name="actualDays" type="number" placeholder="Actual days" defaultValue={proj.actualDays ?? ''} className="w-28" />
-              <Input name="actualCostEur" type="number" placeholder="Actual €" defaultValue={proj.actualCostEur ?? ''} className="w-28" />
-              <Button type="submit" variant="outline" size="sm">Save</Button>
+              <Input name="actualDays" type="number" placeholder={t('projects.phActualDays')} defaultValue={proj.actualDays ?? ''} className="w-28" />
+              <Input name="actualCostEur" type="number" placeholder={t('projects.phActualCost')} defaultValue={proj.actualCostEur ?? ''} className="w-28" />
+              <Button type="submit" variant="outline" size="sm">{t('projects.save')}</Button>
             </form>
 
             {/* Steps */}
             {proj.steps.length > 0 && (
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
-                  <thead><tr className="text-left text-muted-foreground"><th className="py-1 pr-3">Step</th><th className="pr-3">Status</th><th className="pr-3">Days</th><th className="pr-3">Approval</th><th className="pr-3">Problem → Solution</th><th>Lessons</th></tr></thead>
+                  <thead><tr className="text-left text-muted-foreground"><th className="py-1 pr-3">{t('projects.colStep')}</th><th className="pr-3">{t('projects.colStatus')}</th><th className="pr-3">{t('projects.colDays')}</th><th className="pr-3">{t('projects.colApproval')}</th><th className="pr-3">{t('projects.colProblem')}</th><th>{t('projects.colLessons')}</th></tr></thead>
                   <tbody>
                     {proj.steps.map((s) => (
                       <tr key={s.id} className="border-t border-border align-top">
@@ -121,21 +123,21 @@ export default async function AdminProjectsPage() {
 
             {/* Add step */}
             <details>
-              <summary className="cursor-pointer text-xs font-medium text-primary">+ Add step</summary>
+              <summary className="cursor-pointer text-xs font-medium text-primary">{t('projects.addStep')}</summary>
               <form action={addStepAction} className="mt-2 grid gap-2 sm:grid-cols-4">
                 <input type="hidden" name="projectId" value={proj.id} />
-                <Input name="name" required placeholder="Step name *" className="sm:col-span-2" />
+                <Input name="name" required placeholder={t('projects.phStepName')} className="sm:col-span-2" />
                 <select name="status" defaultValue="DONE" className={inputCls}>
                   {STEP_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
                 </select>
-                <Input name="authority" placeholder="Authority" />
-                <Input name="actualDays" type="number" placeholder="Actual days" />
-                <Input name="approvalDays" type="number" placeholder="Approval days" />
-                <Input name="partner" placeholder="Partner" />
-                <Input name="problem" placeholder="Problem" />
-                <Input name="solution" placeholder="Solution" className="sm:col-span-2" />
-                <Input name="lessons" placeholder="Lessons learned" className="sm:col-span-2" />
-                <div className="sm:col-span-4"><Button type="submit" size="sm" variant="outline">Add step</Button></div>
+                <Input name="authority" placeholder={t('projects.phAuthority')} />
+                <Input name="actualDays" type="number" placeholder={t('projects.phActualDays')} />
+                <Input name="approvalDays" type="number" placeholder={t('projects.phApprovalDays')} />
+                <Input name="partner" placeholder={t('projects.phPartner')} />
+                <Input name="problem" placeholder={t('projects.phProblem')} />
+                <Input name="solution" placeholder={t('projects.phSolution')} className="sm:col-span-2" />
+                <Input name="lessons" placeholder={t('projects.phLessons')} className="sm:col-span-2" />
+                <div className="sm:col-span-4"><Button type="submit" size="sm" variant="outline">{t('projects.addStepBtn')}</Button></div>
               </form>
             </details>
           </CardContent>

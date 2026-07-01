@@ -646,6 +646,65 @@
     "requestSubmit": "Submit request",
     "requestThanks": "Received, thank you! We'll review your request."
   },
+  "admin": {
+    "title": "Admin",
+    "subtitle": "Users, billing events & service inquiries",
+    "back": "Admin",
+    "nav": { "projects": "Projects", "knowledge": "Knowledge", "playbooks": "Playbooks", "requests": "Playbook requests", "analytics": "Google Analytics" },
+    "stats": { "users": "Users", "paid": "Paid", "professional": "Professional", "business": "Business", "newLeads": "New leads" },
+    "leads": { "title": "Leads", "empty": "No leads yet.", "when": "When", "kind": "Kind", "name": "Name", "email": "Email", "company": "Company", "message": "Message", "status": "Status" },
+    "users": { "title": "Users (latest {n})", "joined": "Joined", "email": "Email", "name": "Name", "plan": "Plan", "subStatus": "Sub status", "role": "Role" },
+    "events": { "title": "Events (latest {n})", "empty": "No events yet.", "when": "When", "type": "Type", "email": "Email", "detail": "Detail" },
+    "projects": {
+      "title": "Project experience",
+      "subtitle": "Knowledge OS L4 — capture real execution; Experience Intelligence aggregates it.",
+      "ei": "Experience Intelligence",
+      "statProjects": "Projects", "statCompleted": "Completed", "statSuccess": "Success rate", "statAvgDuration": "Avg duration", "statAvgCost": "Avg cost",
+      "commonProblems": "Most common problems:",
+      "newProject": "New project", "phTitle": "Title *", "phSlug": "Playbook slug (e.g. france-data-center)", "phSector": "Sector", "phRegion": "Region", "create": "Create",
+      "empty": "No projects yet.",
+      "phActualDays": "Actual days", "phActualCost": "Actual €", "save": "Save",
+      "colStep": "Step", "colStatus": "Status", "colDays": "Days", "colApproval": "Approval", "colProblem": "Problem → Solution", "colLessons": "Lessons",
+      "addStep": "+ Add step", "phStepName": "Step name *", "phAuthority": "Authority", "phApprovalDays": "Approval days", "phPartner": "Partner", "phProblem": "Problem", "phSolution": "Solution", "phLessons": "Lessons learned", "addStepBtn": "Add step"
+    },
+    "knowledge": {
+      "title": "Knowledge graph",
+      "subtitle": "Knowledge OS L2 — review AI-extracted entities & relationships before they enter the graph.",
+      "statNodes": "Nodes", "statEdges": "Edges", "statApproved": "Approved", "statCandNodes": "Candidate nodes", "statCandEdges": "Candidate edges",
+      "candEntities": "Candidate entities ({n})", "candEmpty": "No candidates. Run extraction (/api/cron/extract) over indexed documents.",
+      "colType": "Type", "colName": "Name", "colConf": "Conf.", "colSource": "Source",
+      "candRel": "Candidate relationships ({n})", "candRelEmpty": "No candidate relationships.", "colRel": "Relationship"
+    },
+    "playbooks": {
+      "title": "Playbooks",
+      "subtitle": "AI-draft, review and publish playbooks. Drafts stay hidden from the public site until published.",
+      "empty": "No playbooks yet.", "reviewPublish": "Review & publish", "edit": "Edit",
+      "editTitle": "Edit playbook", "editSubtitle": "Review AI-drafted content. Publish is in the 'Verify & Publish' tab — it unlocks only after you confirm authorities and links.", "preview": "Preview"
+    },
+    "requests": {
+      "title": "Playbook requests",
+      "subtitle": "Customer demand for new playbooks. Triage here; author the playbook in code, then sync.",
+      "empty": "No requests yet.", "note": "Internal note", "save": "Save"
+    },
+    "generator": {
+      "heading": "AI draft a new playbook",
+      "desc": "Generates a grounded DRAFT (real authorities/links from the Knowledge Base) for you to review and publish. Never auto-published.",
+      "placeholder": "e.g. Selling French wine to China / Opening a restaurant in Paris",
+      "generate": "Generate draft", "error": "Error"
+    },
+    "editor": {
+      "tabForm": "Form", "tabJson": "JSON", "tabVerify": "Verify & Publish",
+      "saveDraft": "Save draft", "formatJson": "Format JSON", "saved": "Saved.", "invalidJson": "Invalid JSON",
+      "slug": "Slug", "sector": "Sector", "titleField": "Title", "summary": "Summary", "applicableTo": "Applicable to", "prerequisites": "Prerequisites",
+      "tasks": "Tasks", "addTask": "Add task", "taskId": "task id", "name": "Name", "description": "Description", "authority": "Authority", "permit": "Permit",
+      "cost": "Cost", "timeline": "Timeline", "documents": "Documents", "risks": "Risks", "dependsOn": "Depends on (comma-separated task ids)", "references": "References (label + official URL)", "refLabel": "Label",
+      "addReference": "Add reference", "overallRisks": "Overall risks", "estCost": "Estimated cost", "estTimeline": "Estimated timeline", "keywords": "Keywords (comma-separated, mix en/fr/zh)", "oneperline": "one per line",
+      "verifyHeading": "Verify before publishing", "verifyDesc": "Confirm each authority name and reference URL is real and correct. AI can hallucinate these. Publish unlocks only when all are confirmed and no link is broken.",
+      "refLinks": "Reference links", "checkLinks": "Check links", "authorities": "Authorities / permits", "noUrls": "No reference URLs.", "noAuthorities": "No authorities set.",
+      "publish": "Publish", "publishHint": "Confirm all items (and fix broken links) to enable.", "brokenLinks": "Broken links", "open": "open"
+    },
+    "draftFromRequest": "AI draft"
+  },
   "help": {
     "title": "Help & user guide",
     "subtitle": "How to use FranceGo to enter and grow in the French market — module by module.",

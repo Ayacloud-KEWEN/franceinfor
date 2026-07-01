@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { getAdminUser } from '@/lib/admin';
 import { prisma } from '@/lib/prisma';
 import { updatePlaybookRequestAction } from '@/app/actions/playbook-requests';
@@ -23,6 +24,7 @@ function fmt(d: Date): string {
 export default async function AdminPlaybookRequestsPage() {
   const admin = await getAdminUser();
   if (!admin) notFound();
+  const t = await getTranslations('admin');
 
   const requests = await prisma.playbookRequest.findMany({
     orderBy: { createdAt: 'desc' },
@@ -32,13 +34,13 @@ export default async function AdminPlaybookRequestsPage() {
   return (
     <div className="max-w-5xl space-y-6">
       <PageHeader
-        title="Playbook requests"
-        subtitle="Customer demand for new playbooks. Triage here; author the playbook in code, then sync."
-        action={<Link href="/admin"><Button variant="outline" size="sm"><ArrowLeft size={14} /> Admin</Button></Link>}
+        title={t('requests.title')}
+        subtitle={t('requests.subtitle')}
+        action={<Link href="/admin"><Button variant="outline" size="sm"><ArrowLeft size={14} /> {t('back')}</Button></Link>}
       />
 
       {requests.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No requests yet.</p>
+        <p className="text-sm text-muted-foreground">{t('requests.empty')}</p>
       ) : (
         <div className="space-y-3">
           {requests.map((r) => (
@@ -66,10 +68,10 @@ export default async function AdminPlaybookRequestsPage() {
                   <Input
                     name="adminNote"
                     defaultValue={r.adminNote ?? ''}
-                    placeholder="Internal note"
+                    placeholder={t('requests.note')}
                     className="max-w-xs"
                   />
-                  <Button type="submit" size="sm" variant="outline">Save</Button>
+                  <Button type="submit" size="sm" variant="outline">{t('requests.save')}</Button>
                   <DraftFromRequestButton requestId={r.id} />
                 </form>
               </CardContent>

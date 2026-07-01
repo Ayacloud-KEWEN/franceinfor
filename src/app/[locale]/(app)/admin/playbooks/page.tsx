@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { getAdminUser } from '@/lib/admin';
 import { adminListPlaybooks } from '@/lib/playbooks-db';
 import { deletePlaybookAction } from '@/app/actions/playbooks-admin';
@@ -24,20 +25,21 @@ export default async function AdminPlaybooksPage({
   const admin = await getAdminUser();
   if (!admin) notFound();
   const { locale } = await params;
+  const t = await getTranslations('admin');
   const rows = await adminListPlaybooks(locale as Loc);
 
   return (
     <div className="max-w-5xl space-y-6">
       <PageHeader
-        title="Playbooks"
-        subtitle="AI-draft, review and publish playbooks. Drafts stay hidden from the public site until published."
-        action={<Link href="/admin"><Button variant="outline" size="sm"><ArrowLeft size={14} /> Admin</Button></Link>}
+        title={t('playbooks.title')}
+        subtitle={t('playbooks.subtitle')}
+        action={<Link href="/admin"><Button variant="outline" size="sm"><ArrowLeft size={14} /> {t('back')}</Button></Link>}
       />
 
       <PlaybookGenerator />
 
       {rows.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No playbooks yet.</p>
+        <p className="text-sm text-muted-foreground">{t('playbooks.empty')}</p>
       ) : (
         <div className="space-y-2">
           {rows.map((r) => (
@@ -62,7 +64,7 @@ export default async function AdminPlaybooksPage({
                 <div className="flex items-center gap-2">
                   <Link href={`/admin/playbooks/${r.id}`}>
                     <Button size="sm" variant={r.status === 'DRAFT' ? 'default' : 'outline'}>
-                      {r.status === 'DRAFT' ? <><Rocket size={13} /> Review &amp; publish</> : <><Pencil size={13} /> Edit</>}
+                      {r.status === 'DRAFT' ? <><Rocket size={13} /> {t('playbooks.reviewPublish')}</> : <><Pencil size={13} /> {t('playbooks.edit')}</>}
                     </Button>
                   </Link>
                   <form action={deletePlaybookAction}>

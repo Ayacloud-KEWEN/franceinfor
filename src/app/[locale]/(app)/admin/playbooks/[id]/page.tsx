@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { getAdminUser } from '@/lib/admin';
 import { getRawPlaybook } from '@/lib/playbooks-db';
 import { PlaybookEditor } from '@/components/admin/playbook-editor';
@@ -17,21 +18,22 @@ export default async function AdminPlaybookEditPage({
   const admin = await getAdminUser();
   if (!admin) notFound();
   const { id } = await params;
+  const t = await getTranslations('admin');
   const raw = await getRawPlaybook(id);
   if (!raw) notFound();
 
   return (
     <div className="max-w-4xl space-y-4">
       <PageHeader
-        title="Edit playbook"
-        subtitle="Review AI-drafted content. Publish is in the 'Verify & Publish' tab — it unlocks only after you confirm authorities and links."
+        title={t('playbooks.editTitle')}
+        subtitle={t('playbooks.editSubtitle')}
         action={
           <div className="flex gap-2">
             <Link href="/admin/playbooks">
-              <Button variant="outline" size="sm"><ArrowLeft size={14} /> Back</Button>
+              <Button variant="outline" size="sm"><ArrowLeft size={14} /> {t('back')}</Button>
             </Link>
             <Link href={`/playbooks/${raw.slug}`} target="_blank">
-              <Button variant="outline" size="sm">Preview <ExternalLink size={13} /></Button>
+              <Button variant="outline" size="sm">{t('playbooks.preview')} <ExternalLink size={13} /></Button>
             </Link>
           </div>
         }
