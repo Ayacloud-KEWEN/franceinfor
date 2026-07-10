@@ -43,6 +43,7 @@ prisma/                        schema + seed
 ## 部署（手动，2026-07 起）
 GitHub Actions 自动部署**已移除**。现在流程：本地 `git push` → 服务器上 `npm run deploy`（= `git pull && npm ci && prisma db push && npm run build && pm2 reload`）。
 - 服务器：root（PM2），目录 `/home/france-infor/htdocs/infr.europeanaialliance.org`，PM2 进程 `france-os`，端口 **3011**。
+- **仓库 private**，服务器拉取走 SSH + **只读 Deploy Key**（`~/.ssh/github_deploy`，2026-07-10 重建；配置见 `DEPLOYMENT.md` §10）。⚠️ `git pull` 报 `Permission denied (publickey)` 时改 public 没用——SSH remote 必须走密钥；Deploy Key 与当年挖矿入侵无关（入口是 root 密码爆破）。
 - 改 `.env` 运行时变量 → `pm2 restart france-os --update-env`；改 `NEXT_PUBLIC_*` 或 `messages/*.json` → 必须重新 `npm run build`。
 - ⚠️ **pgvector 前提**：`prisma db push` 需 pg 装 pgvector，否则整条 push 失败、新表/列不建（页面 500）。装：`apt install postgresql-16-pgvector` + `CREATE EXTENSION vector`。
 - ⚠️ **EADDRINUSE 3011 崩溃循环**：`pm2 ls` 见 france-os `errored`、↺ 飙升 = 僵尸进程占端口、旧构建仍在顶。干净重启：`pm2 delete france-os && sudo fuser -k 3011/tcp && rm -rf .next && npm run build && pm2 start ecosystem.config.cjs --only france-os && pm2 save`。
