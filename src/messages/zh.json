@@ -207,14 +207,16 @@
   },
   "tenders": {
     "title": "招标情报",
-    "subtitle": "公共采购机会（BOAMP 实时数据）",
+    "subtitle": "公共采购机会（BOAMP · TED · PLACE 实时数据）",
     "searchPlaceholder": "关键词、行业、采购方...",
     "buyer": "采购方",
     "deadline": "截止日期",
     "match": "匹配度",
     "winProb": "中标概率",
     "view": "查看",
-    "loading": "正在加载实时招标..."
+    "loading": "正在加载实时招标...",
+    "externalNotice": "FranceMarches 平台启用了反机器人防护，无法在站内直接展示搜索结果。点击下方按钮，在新窗口中带着您的关键词打开 FranceMarches 搜索页面。",
+    "openExternal": "在 FranceMarches 中搜索"
   },
   "copilot": {
     "title": "法国市场进入智能助手",

@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { PageHeader } from '@/components/page-header';
 import { CreditCheck } from '@/components/modules/credit-check';
 import { CreditMethodology } from '@/components/modules/credit-methodology';
+import { CreditKnowledge } from '@/components/modules/credit-knowledge';
 
 export default async function CreditPage() {
   const t = await getTranslations('modules');
@@ -9,6 +10,7 @@ export default async function CreditPage() {
     <div>
       <PageHeader title={t('creditTitle')} subtitle={t('creditSubtitle')} />
       <CreditCheck />
+      <CreditKnowledge />
       <CreditMethodology />
     </div>
   );

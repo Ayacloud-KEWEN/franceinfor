@@ -7,7 +7,9 @@ import { Input } from '@/components/ui/input';
 import { Loader2, Check, ArrowRight } from 'lucide-react';
 
 // Lead-capture form for the value-added service guides. Posts to /api/leads.
-export function LeadForm({ kind }: { kind: 'COMPANY' | 'BRAND' }) {
+// `context` tags the lead's message (e.g. "[LANDING PACK]") so the admin
+// console can tell which offer it came from without a schema change.
+export function LeadForm({ kind, context }: { kind: 'COMPANY' | 'BRAND'; context?: string }) {
   const t = useTranslations('services.lead');
   const locale = useLocale();
   const [state, setState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
@@ -25,7 +27,9 @@ export function LeadForm({ kind }: { kind: 'COMPANY' | 'BRAND' }) {
           name: fd.get('name'),
           email: fd.get('email'),
           company: fd.get('company'),
-          message: fd.get('message'),
+          message: context
+            ? `[${context}] ${String(fd.get('message') || '')}`.trim()
+            : fd.get('message'),
           website: fd.get('website'), // honeypot — must stay empty
           locale,
         }),

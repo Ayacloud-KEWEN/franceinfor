@@ -10,16 +10,20 @@ import { Badge, ScorePill } from '@/components/ui/badge';
 import { HistoryChart } from '@/components/markets/history-chart';
 import { CompanyAiSummary } from '@/components/companies/ai-summary';
 import { ArrowLeft, ArrowRight, ExternalLink, Globe2 } from 'lucide-react';
+import { getEcosystem, type Loc } from '@/lib/data/ecosystem';
+import { EcosystemPanel } from '@/components/markets/ecosystem-panel';
 
 export default async function MarketDetailPage({
   params,
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
+  const loc: Loc = locale === 'fr' ? 'fr' : locale === 'zh' ? 'zh' : 'en';
   const t = await getTranslations('markets');
   const base = getIndustry(slug);
   if (!base) notFound();
+  const eco = getEcosystem(slug);
 
   // Real Eurostat stats for this industry + history + sector companies + news.
   let ind: Industry = base;
@@ -103,6 +107,9 @@ export default async function MarketDetailPage({
           <CardContent><HistoryChart data={forecast} /></CardContent>
         </Card>
       </div>
+
+      {/* Ecosystem: real players by value-chain role (NAF codes) */}
+      {eco && <EcosystemPanel eco={eco} loc={loc} />}
 
       {/* Leading companies (real) */}
       {companies.length > 0 && (

@@ -41,6 +41,18 @@
 - **许可证**：欧盟数据再利用政策，允许复用
 - **商用限制**：✅ 允许商用，需署名（注明来源 TED）。
 
+### 3b. PLACE — 国家采购平台 marches-publics.gouv.fr ✅ 免费（HTML 解析）
+- **用途**：招标情报(M5) — 法国国家（État）在线招标（招标页第 3 个 tab）
+- **端点**：`https://www.marches-publics.gouv.fr/espace-entreprise/search?keyWord=...`（关键词）/ `/?page=Entreprise.EntrepriseAdvancedSearch&AllCons`（全部在线）
+- **代码**：[src/lib/sources/place.ts](src/lib/sources/place.ts)
+- **认证**：无需密钥；无 JSON API，解析服务端渲染的 HTML（robots.txt 全放行）
+- **限制**：每次仅返回第一页 10 条（翻页需模拟 PRADO postback，未实现）；HTML 结构变更会导致解析失败（ATEXO MPE 平台，结构较稳定）
+- **详情链接**：`/entreprise/consultation/{id}`
+
+### 3c. FranceMarches（商业聚合平台）🔴 仅外链
+- **用途**：招标页第 4 个 tab —— 站内不展示结果，仅生成带关键词的外链跳转 `https://www.francemarches.com/recherche?q=...`
+- **原因**：站点启用 DataDome 反爬（服务端请求一律 403），且为商业聚合站（数据源本就是 BOAMP/JOUE），不做绕过。
+
 ### 4. BODACC（法定民商事公告）✅ 免费 / 🔴 商用有重要限制
 - **用途**：信用「法律风险」(M12) — 破产/重整程序、法律事件
 - **端点**：`https://bodacc-datadila.opendatasoft.com/api/explore/v2.1/.../annonces-commerciales`

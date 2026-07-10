@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 import { SaveButton } from '@/components/saved/save-button';
 import type { TenderResult } from '@/lib/sources/boamp';
 
-type Source = 'boamp' | 'ted';
+type Source = 'boamp' | 'ted' | 'place' | 'francemarches';
 const PAGE = 15;
 
 async function fetchTenders(q: string, source: Source): Promise<{ results: TenderResult[]; total: number }> {
@@ -30,9 +30,12 @@ export function TenderSearch() {
   const [source, setSource] = useState<Source>('boamp');
   const [visible, setVisible] = useState(PAGE);
 
+  const isExternal = source === 'francemarches';
+
   const { data, isFetching, isError, error } = useQuery({
     queryKey: ['tenders', source, query],
     queryFn: () => fetchTenders(query === '*' ? '' : query, source),
+    enabled: !isExternal,
   });
 
   // Reset pagination whenever the query or source changes.
@@ -45,7 +48,13 @@ export function TenderSearch() {
   const sources: { id: Source; label: string }[] = [
     { id: 'boamp', label: 'BOAMP (France)' },
     { id: 'ted', label: 'TED (EU)' },
+    { id: 'place', label: 'PLACE (État)' },
+    { id: 'francemarches', label: 'FranceMarches' },
   ];
+
+  const fmUrl = `https://www.francemarches.com/recherche?q=${encodeURIComponent(
+    query === '*' ? input.trim() : query
+  )}`;
 
   return (
     <div className="space-y-4">
@@ -80,6 +89,20 @@ export function TenderSearch() {
           <Search size={16} />
         </Button>
       </form>
+
+      {isExternal && (
+        <Card className="p-4">
+          <p className="text-sm text-muted-foreground">{t('externalNotice')}</p>
+          <a
+            href={fmUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:opacity-90"
+          >
+            {t('openExternal')} <ExternalLink size={14} />
+          </a>
+        </Card>
+      )}
 
       {isFetching && (
         <div className="flex items-center gap-2 text-sm text-muted-foreground">

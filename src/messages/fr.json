@@ -207,14 +207,16 @@
   },
   "tenders": {
     "title": "Intelligence Appels d'offres",
-    "subtitle": "Opportunités de marchés publics (BOAMP en direct)",
+    "subtitle": "Opportunités de marchés publics (BOAMP · TED · PLACE en direct)",
     "searchPlaceholder": "Mot-clé, secteur, acheteur...",
     "buyer": "Acheteur",
     "deadline": "Échéance",
     "match": "Corresp.",
     "winProb": "Prob. gain",
     "view": "Voir",
-    "loading": "Chargement des appels d'offres en direct..."
+    "loading": "Chargement des appels d'offres en direct...",
+    "externalNotice": "FranceMarches utilise une protection anti-robot : les résultats ne peuvent pas être affichés dans l'application. Cliquez ci-dessous pour ouvrir la recherche FranceMarches avec vos mots-clés dans une nouvelle fenêtre.",
+    "openExternal": "Rechercher sur FranceMarches"
   },
   "copilot": {
     "title": "Copilote d'entrée sur le marché français",

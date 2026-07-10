@@ -2,6 +2,8 @@ import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { INDUSTRIES } from '@/lib/data/industries';
 import { searchCompanies, type CompanyResult } from '@/lib/sources/recherche-entreprises';
+import { matchEcosystem, ECOSYSTEM_LABELS, type Loc } from '@/lib/data/ecosystem';
+import { EcosystemPanel } from '@/components/markets/ecosystem-panel';
 import { fetchFranceNews, type LiveNewsItem } from '@/lib/sources/news';
 import { PageHeader } from '@/components/page-header';
 import { MarketSearch } from '@/components/markets/market-search';
@@ -34,10 +36,13 @@ export default async function MarketSearchPage({
   searchParams: Promise<{ q?: string }>;
 }) {
   const [t, tc] = await Promise.all([getTranslations('markets'), getTranslations('common')]);
+  const { locale } = await params;
+  const loc: Loc = locale === 'fr' ? 'fr' : locale === 'zh' ? 'zh' : 'en';
   const { q = '' } = await searchParams;
   const term = q.trim();
 
   const curated = term ? matchCurated(term) : undefined;
+  const eco = term ? matchEcosystem(term) : undefined;
 
   let companies: CompanyResult[] = [];
   let total = 0;
@@ -95,11 +100,14 @@ export default async function MarketSearchPage({
         </Card>
       </div>
 
-      {/* Companies */}
+      {/* Real sector players by NAF activity code (value-chain roles) */}
+      {eco && <EcosystemPanel eco={eco} loc={loc} />}
+
+      {/* Companies matching by name */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base text-foreground">
-            <Building2 size={15} /> {t('topCompanies')}
+            <Building2 size={15} /> {eco ? ECOSYSTEM_LABELS.nameMatches[loc] : t('topCompanies')}
           </CardTitle>
         </CardHeader>
         <CardContent>

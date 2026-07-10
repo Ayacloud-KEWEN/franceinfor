@@ -207,14 +207,16 @@
   },
   "tenders": {
     "title": "Tender Intelligence",
-    "subtitle": "Public procurement opportunities (live BOAMP)",
+    "subtitle": "Public procurement opportunities (live BOAMP · TED · PLACE)",
     "searchPlaceholder": "Keyword, sector, buyer...",
     "buyer": "Buyer",
     "deadline": "Deadline",
     "match": "Match",
     "winProb": "Win Prob.",
     "view": "View",
-    "loading": "Loading live tenders..."
+    "loading": "Loading live tenders...",
+    "externalNotice": "FranceMarches uses anti-bot protection, so results cannot be displayed inside the app. Click below to open the FranceMarches search page with your keywords in a new window.",
+    "openExternal": "Search on FranceMarches"
   },
   "copilot": {
     "title": "France Market Entry Copilot",

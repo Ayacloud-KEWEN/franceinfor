@@ -156,6 +156,66 @@ export async function searchCompanies(
   return { results: raw.map(mapCompany), total: json.total_results ?? raw.length };
 }
 
+// INSEE employee-band codes, in ascending size order (for ranking).
+const TRANCHE_RANK: Record<string, number> = {
+  '00': 0, '01': 1, '02': 2, '03': 3, '11': 4, '12': 5, '21': 6, '22': 7,
+  '31': 8, '32': 9, '41': 10, '42': 11, '51': 12, '52': 13, '53': 14,
+};
+const CATEGORY_RANK: Record<string, number> = { GE: 3, ETI: 2, PME: 1 };
+
+function sizeRank(c: CompanyResult): number {
+  return (
+    (CATEGORY_RANK[c.category ?? ''] ?? 0) * 100 +
+    (TRANCHE_RANK[c.employees ?? ''] ?? 0)
+  );
+}
+
+// Structured search by NAF activity codes — finds the REAL players of a
+// sector (by declared main activity), instead of companies whose NAME merely
+// contains the keyword. Large companies (GE/ETI) first; falls back to all
+// sizes when a niche sector has few big players.
+export async function searchCompaniesByNaf(
+  nafCodes: string[],
+  limit = 6
+): Promise<{ results: CompanyResult[]; total: number }> {
+  const base = new URLSearchParams({
+    activite_principale: nafCodes.join(','),
+    etat_administratif: 'A',
+    per_page: '25',
+    page: '1',
+  });
+
+  const fetchPage = async (extra?: Record<string, string>) => {
+    const p = new URLSearchParams(base);
+    for (const [k, v] of Object.entries(extra ?? {})) p.set(k, v);
+    const res = await fetch(`${BASE}/search?${p.toString()}`, {
+      headers: { accept: 'application/json' },
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) throw new Error(`recherche-entreprises ${res.status}`);
+    const json = await res.json();
+    return {
+      results: ((json.results ?? []) as RawCompany[]).map(mapCompany),
+      total: (json.total_results as number) ?? 0,
+    };
+  };
+
+  // Total sector population (all sizes), and the big players (GE/ETI).
+  const [all, big] = await Promise.all([
+    fetchPage(),
+    fetchPage({ categorie_entreprise: 'GE,ETI' }),
+  ]);
+
+  // Prefer big players; top up with the largest of the rest if too few.
+  const seen = new Set(big.results.map((c) => c.siren));
+  const merged = [
+    ...big.results,
+    ...all.results.filter((c) => !seen.has(c.siren)),
+  ].sort((a, b) => sizeRank(b) - sizeRank(a));
+
+  return { results: merged.slice(0, limit), total: all.total };
+}
+
 export async function getCompany(siren: string): Promise<CompanyResult | null> {
   const url = `${BASE}/search?q=${encodeURIComponent(siren)}&page=1&per_page=1`;
   const res = await fetch(url, {
