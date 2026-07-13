@@ -6,6 +6,8 @@ import { KpiGrid, type KpiItem } from '@/components/dashboard/kpi-grid';
 import { DashboardFeed } from '@/components/dashboard/dashboard-feed';
 import { DashboardAsk } from '@/components/dashboard/dashboard-ask';
 import { DashboardPlaybooks } from '@/components/dashboard/dashboard-playbooks';
+import { EntryPlanCard } from '@/components/dashboard/entry-plan-card';
+import { parseProfile, parseProgress, toLoc } from '@/lib/profile';
 import { Link } from '@/i18n/routing';
 import { fetchFranceNews, type LiveNewsItem } from '@/lib/sources/news';
 import { searchTenders, type TenderResult } from '@/lib/sources/boamp';
@@ -32,6 +34,13 @@ export default async function DashboardPage({
     getCurrentUser(),
   ]);
   const name = user?.name || user?.email?.split('@')[0] || 'there';
+  const loc = toLoc(locale);
+  const profile = parseProfile(user);
+  const progress = parseProgress(user);
+  const showOnboardingPrompt = user != null && user.onboardedAt == null;
+  const profileLine = profile
+    ? [profile.product, profile.industry, profile.region].filter(Boolean).join(' · ')
+    : '';
 
   // Live data: France business news + open public tenders + active buyers + playbooks.
   const [news, tenders, intent, playbooks] = await Promise.all([
@@ -81,7 +90,17 @@ export default async function DashboardPage({
         <h1 className="text-xl font-bold tracking-tight sm:text-3xl">
           {t('goodMorning')}, {name} 👋
         </h1>
-        <p className="mt-1 text-sm text-muted-foreground">{t('subtitle')}</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {profileLine || t('subtitle')}
+        </p>
+        {showOnboardingPrompt && (
+          <Link
+            href="/onboarding"
+            className="mt-2 inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary hover:bg-primary/20"
+          >
+            {t('completeProfile')} →
+          </Link>
+        )}
 
         {/* Prominent natural-language ask box */}
         <DashboardAsk />
@@ -143,20 +162,24 @@ export default async function DashboardPage({
           </CardContent>
         </Card>
 
-        {/* PLAYBOOKS — actionable how-to guides */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-base text-foreground">
-              <BookOpen size={16} className="text-primary" /> {t('playbooks')}
-            </CardTitle>
-            <Link href="/playbooks" className="text-xs text-primary hover:underline">
-              {t('playbooksAll')}
-            </Link>
-          </CardHeader>
-          <CardContent>
-            <DashboardPlaybooks items={topPlaybooks} />
-          </CardContent>
-        </Card>
+        {/* Right column: market-entry spine + playbooks */}
+        <div className="space-y-6">
+          <EntryPlanCard profile={profile} progress={progress} loc={loc} />
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="flex items-center gap-2 text-base text-foreground">
+                <BookOpen size={16} className="text-primary" /> {t('playbooks')}
+              </CardTitle>
+              <Link href="/playbooks" className="text-xs text-primary hover:underline">
+                {t('playbooksAll')}
+              </Link>
+            </CardHeader>
+            <CardContent>
+              <DashboardPlaybooks items={topPlaybooks} />
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );

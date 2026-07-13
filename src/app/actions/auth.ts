@@ -35,7 +35,8 @@ export async function registerAction(
   });
   await recordEvent('USER_REGISTERED', { userId: user.id, email: user.email, meta: { name } });
   await createSession(user.id);
-  redirect(`/${locale}/dashboard`);
+  // New users go through onboarding (profile capture) before the dashboard.
+  redirect(`/${locale}/onboarding`);
 }
 
 export async function loginAction(

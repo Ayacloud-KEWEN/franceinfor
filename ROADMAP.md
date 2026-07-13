@@ -15,7 +15,8 @@
 - ☑ **管理后台 `/[locale]/admin`**(仅 `role=ADMIN`)：用户列表(注册时间/套餐/订阅状态)、事件流(注册/升级/降级/退订/留资,`Event` 审计表)、留资列表 + KPI 卡。
 - ☑ **关注列表 / 轻量 CRM**：`/watchlist` 按阶段看板(潜在→接触→商谈→赢单/丢单)，每项可改阶段、加备注、移除。收藏按钮已接入**企业(搜索+详情)、招标、机会发现**。`SavedItem` 已扩展 `note/stage/tags`。**待扩展**：买家意向(intent)收藏、标签编辑 UI、拖拽换列、看板内招标外链。
 - ☑ **订阅提醒 + 每日邮件**：设置页开关 + 关键词 → `scripts/daily-cron.sh` 每日触发 `/api/cron/digest` → 「法国机会雷达」邮件。**按用户界面语言发送**（标题+章节本地化、新闻/招标标题翻译）、HTML 精美版式（`lib/digest.ts`、`lib/notify.ts` 接 Resend）。需 `RESEND_API_KEY` + 已验证发信域 + `CRON_SECRET` + crontab。
-- ☐ **注册画像 → 个性化**：注册收集 产品/行业/地区/预算 → Dashboard、机会发现、Copilot 围绕画像出结果。
+- ☑ **注册画像 → 个性化**：注册后跳 `/onboarding` 采集 产品/行业/地区/阶段/预算/目标 → 存 `User.profile`（JSON）+ `onboardedAt`；可在设置页编辑、Dashboard 顶部提示补全。个性化已落地：Dashboard hero 显示画像行、机会发现(`/discover`)表单预填、落地路线按目标高亮"推荐"步骤。代码 `lib/profile.ts`、`app/actions/profile.ts`、`components/onboarding/`。**待扩展**：Copilot 上下文注入画像、markets/funding 预填。
+- ☑ **🧭 市场进入项目主线 `/plan`**（补最大产品空白）：把 20 个模块串成一条带进度的落地主线（调研→立足→拿单，11 步、每步深链对应模块），逐步 todo/doing/done 状态存 `User.entryProgress`（JSON），按画像目标高亮推荐步骤。Dashboard 有"接下来做什么"卡片（总进度+下一步）。代码 `lib/data/entry-plan.ts`、`app/[locale]/(app)/plan/`、`components/plan/`、`api/plan`。**待扩展**：按 stage 自动预勾选已完成阶段、步骤完成度接入运营统计。
 - ☐ 保存搜索 / 搜索历史。
 
 ## 第二波 — 数据深度与差异化(护城河)
@@ -34,6 +35,7 @@
 
 - ☑ **分行业落地合规清单** `/compliance`：按行业(食品/健康/建筑/金融/化妆品/软件/零售/能源/通用)给出 法律形式 · TVA/税务 · 雇佣法 · 行业监管认证(CE/HACCP/ACPR/Qualibat…) · GDPR；内容为**人工整理的真实法规事实(非 LLM 生成)** + 免责声明;底部接注册留资 CTA → 「咨询+落地」组合。代码 `lib/data/compliance.ts`、`components/compliance/`。**正文中英双语**(zh/en，fr 回退 en)；**一键导出 PDF**(浏览器打印→另存，隐藏侧栏/顶栏/CTA，带 FranceGo 品牌表头，支持中文)。**待办**：按公司画像自动选行业、fr 正文、服务端直接生成可下载 .pdf(需嵌 CJK 字体)。
 - ☐ **政府招商激励**：Business France / French Tech Visa / Choose France / 各大区优惠 的内容化与匹配。
+- ☑ **💰 市场进入成本 / ROI 测算器**（强留资磁石）：企业页落地包**上方**，输入 法律形式/地区/办公室/雇员数/薪资/营收/毛利 → 明细化估算落地首年总成本（注册+商标+办公室+雇主总成本 salary×1.42+会计+保险+合规）+ 回本周期 + ROI，纯函数实时重算。数据为人工策展 2026 法国基准，复用落地包"雇主成本×1.42"与信用模块账期（附"预留流动资金→查看账期"链接）；地区按画像预填。形成"算成本→发现麻烦→落地包一站办齐→留资"漏斗。代码 `lib/data/cost-model.ts`、`components/modules/entry-cost-calculator.tsx`。
 - ☐ **材料本地化**：一键把客户公司简介/产品页/邮件翻译并「法国化」(复用现有翻译能力)。
 - ☐ GDPR 合规的决策者触达：公开商务联系方式 + 合规外联模板(勿抓个人邮箱，规避法律风险)。
 

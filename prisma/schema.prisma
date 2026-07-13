@@ -43,6 +43,13 @@ model User {
   digestKeywords   String[]  @default([])
   digestLastSentAt DateTime?
 
+  // Onboarding profile (product / industry / region / stage / budget / goals)
+  // and personalization. Stored as JSON for flexibility.
+  profile     Json?
+  onboardedAt DateTime?
+  // Market-entry plan progress: { [stepId]: "todo" | "doing" | "done" }
+  entryProgress Json?
+
   @@index([stripeCustomerId])
   @@index([digestEnabled])
 

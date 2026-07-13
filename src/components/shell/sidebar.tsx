@@ -25,6 +25,7 @@ import {
   ClipboardCheck,
   BookOpen,
   HelpCircle,
+  Compass,
 } from 'lucide-react';
 
 type Item = { href: string; key: string; Icon: typeof LayoutDashboard };
@@ -34,6 +35,7 @@ const groups: { group: string; items: Item[] }[] = [
     group: 'overview',
     items: [
       { href: '/dashboard', key: 'dashboard', Icon: LayoutDashboard },
+      { href: '/plan', key: 'plan', Icon: Compass },
       { href: '/watchlist', key: 'watchlist', Icon: Bookmark },
     ],
   },

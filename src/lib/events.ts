@@ -36,5 +36,6 @@ const SUBJECTS: Partial<Record<EventType, string>> = {
   PLAN_UPGRADED: '⬆️ Plan upgraded',
   PLAN_DOWNGRADED: '⬇️ Plan downgraded',
   SUBSCRIPTION_CANCELED: '❌ Subscription canceled',
-  LEAD_CREATED: '📩 New service inquiry',
+  // LEAD_CREATED is notified via notifyNewLead() (richer email) from the leads
+  // route — omitted here to avoid a duplicate generic notification.
 };

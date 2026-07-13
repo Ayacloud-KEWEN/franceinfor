@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { consumeSearch } from '@/lib/usage';
-import { discover } from '@/lib/data/modules';
 import { discoverReal } from '@/lib/sources/discovery';
 
 export async function POST(req: NextRequest) {
@@ -21,7 +20,7 @@ export async function POST(req: NextRequest) {
 
   try {
     return NextResponse.json({ results: await discoverReal(input), source: 'live' });
-  } catch {
-    return NextResponse.json({ results: discover(input), source: 'mock' });
+  } catch (e) {
+    return NextResponse.json({ error: 'source_error', message: String(e) }, { status: 502 });
   }
 }

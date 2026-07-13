@@ -10,10 +10,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { BillingPanel } from '@/components/settings/billing-panel';
 import { DigestPanel } from '@/components/settings/digest-panel';
+import { ProfileForm } from '@/components/onboarding/profile-form';
+import { parseProfile } from '@/lib/profile';
 
 export default async function SettingsPage() {
-  const [t, user] = await Promise.all([
+  const [t, to, user] = await Promise.all([
     getTranslations('settings'),
+    getTranslations('onboarding'),
     getCurrentUser(),
   ]);
   if (!user) return null;
@@ -68,6 +71,16 @@ export default async function SettingsPage() {
             <p className="pt-1 text-xs text-muted-foreground">
               {ai.mock || !ai.configured ? t('aiMockNote') : t('aiOkNote')}
             </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base text-foreground">{to('settingsTitle')}</CardTitle>
+            <p className="mt-1 text-sm text-muted-foreground">{to('settingsSubtitle')}</p>
+          </CardHeader>
+          <CardContent>
+            <ProfileForm initial={parseProfile(user)} context="settings" />
           </CardContent>
         </Card>
 

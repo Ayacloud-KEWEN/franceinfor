@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import { recordEvent } from '@/lib/events';
+import { notifyNewLead } from '@/lib/notify';
 import { rateLimit, clientIp } from '@/lib/rate-limit';
 import type { LeadKind } from '@prisma/client';
 
@@ -46,10 +47,23 @@ export async function POST(req: NextRequest) {
     data: { kind, name, email, company, message, locale, userId: user?.id, userEmail: user?.email },
   });
 
+  // Audit trail (also pings admin generically for other event types).
   await recordEvent('LEAD_CREATED', {
     userId: user?.id,
     email,
     meta: { leadId: lead.id, kind, company },
+  });
+
+  // Rich, actionable lead notification (supersedes the generic ping).
+  await notifyNewLead({
+    id: lead.id,
+    kind,
+    name,
+    email,
+    company,
+    message,
+    locale,
+    userEmail: user?.email,
   });
 
   return NextResponse.json({ ok: true });

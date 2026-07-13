@@ -31,43 +31,6 @@ export const INTENT_COMPANIES: IntentCompany[] = INTENT_RAW.map((c) => ({
   action: 'Engage procurement + book discovery call',
 }));
 
-/* ---------------------------------- M10: Events ---------------------------------- */
-export interface BizEvent {
-  id: string;
-  name: string;
-  city: string;
-  date: string;
-  type: string;
-  matchScore: number;
-  expectedLeads: number;
-  businessValueK: number;
-}
-
-const EVENT_RAW = [
-  { id: 'e1', name: 'VivaTech', city: 'Paris', date: '2026-06-11', type: 'Trade Show' },
-  { id: 'e2', name: 'Big Data & AI Paris', city: 'Paris', date: '2026-10-01', type: 'Conference' },
-  { id: 'e3', name: 'Global Industrie', city: 'Lyon', date: '2026-03-24', type: 'Trade Show' },
-  { id: 'e4', name: 'FIC Cybersecurity', city: 'Lille', date: '2026-04-01', type: 'Conference' },
-  { id: 'e5', name: 'SIDO Lyon', city: 'Lyon', date: '2026-09-22', type: 'Networking' },
-  { id: 'e6', name: 'SantExpo', city: 'Paris', date: '2026-05-15', type: 'Trade Show' },
-  { id: 'e7', name: 'Maison & Objet', city: 'Paris', date: '2026-01-22', type: 'Trade Show' },
-  { id: 'e8', name: 'SIAL Paris', city: 'Paris', date: '2026-10-17', type: 'Trade Show' },
-  { id: 'e9', name: 'Pollutec', city: 'Lyon', date: '2026-11-10', type: 'Trade Show' },
-  { id: 'e10', name: "Salon de l'Agriculture", city: 'Paris', date: '2026-02-21', type: 'Trade Show' },
-  { id: 'e11', name: 'Foire de Paris', city: 'Paris', date: '2026-04-29', type: 'Trade Show' },
-  { id: 'e12', name: 'Batimat', city: 'Paris', date: '2026-10-05', type: 'Trade Show' },
-  { id: 'e13', name: 'Paris Air Show (Le Bourget)', city: 'Le Bourget', date: '2026-06-15', type: 'Trade Show' },
-  { id: 'e14', name: 'Première Vision', city: 'Paris', date: '2026-02-10', type: 'Trade Show' },
-  { id: 'e15', name: 'Tech for Retail', city: 'Paris', date: '2026-11-25', type: 'Conference' },
-];
-
-export const EVENTS: BizEvent[] = EVENT_RAW.map((e) => ({
-  ...e,
-  matchScore: seededScore(e.id + 'm', 50, 97),
-  expectedLeads: seededScore(e.id + 'l', 15, 120),
-  businessValueK: seededScore(e.id + 'v', 40, 900),
-}));
-
 /* ---------------------------------- M15: News Radar ---------------------------------- */
 export interface NewsItem {
   id: string;
@@ -120,42 +83,6 @@ export function searchBrands(q: string): BrandResult[] {
       recommendation: avail > 65 ? 'Available — proceed to register' : avail > 40 ? 'Caution — refine the mark' : 'High conflict — choose another mark',
     };
   });
-}
-
-/* ---------------------------------- M2: Opportunity Discovery ---------------------------------- */
-export interface DiscoveryItem {
-  name: string;
-  score: number;
-  reason: string;
-}
-export interface DiscoveryResult {
-  category: string;
-  items: DiscoveryItem[];
-}
-
-const SAMPLE_NAMES: Record<string, string[]> = {
-  Customers: ['Capgemini', 'Orange', 'BNP Paribas', 'Carrefour', 'Renault'],
-  Distributors: ['Rexel', 'Sonepar', 'Tech Data France', 'Ingram Micro FR', 'Also France'],
-  Integrators: ['Sopra Steria', 'Atos', 'Devoteam', 'Inetum', 'Capgemini Engineering'],
-  Partners: ['OVHcloud', 'Dassault Systèmes', 'Schneider Electric', 'Thales', 'Worldline'],
-  Investors: ['Bpifrance', 'Eurazeo', 'Partech', 'Idinvest', 'Alven'],
-  Accelerators: ['Station F', 'The Family', 'Techstars Paris', 'Wilco', '50 Partners'],
-  Associations: ['Numeum', 'France Digitale', 'MEDEF', 'CCI France', 'Systematic'],
-  'Public Buyers': ['UGAP', 'Région Île-de-France', 'Ville de Paris', 'Ministère des Armées', 'CNRS'],
-};
-
-export function discover(input: { product: string; industry: string; target: string }): DiscoveryResult[] {
-  const seed = `${input.product}|${input.industry}|${input.target}`;
-  return Object.entries(SAMPLE_NAMES).map(([category, names]) => ({
-    category,
-    items: names
-      .map((name) => ({
-        name,
-        score: seededScore(seed + category + name, 45, 98),
-        reason: `Strong fit for ${input.industry || 'your sector'} · ${input.target || 'France'}`,
-      }))
-      .sort((a, b) => b.score - a.score),
-  }));
 }
 
 /* ---------------------------------- M12: Credit Intelligence ---------------------------------- */
