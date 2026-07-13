@@ -3,13 +3,13 @@ import { getTranslations } from 'next-intl/server';
 import { getAdminUser } from '@/lib/admin';
 import { prisma } from '@/lib/prisma';
 import { graphStats } from '@/lib/knowledge-graph';
-import { reviewNodeAction, reviewEdgeAction } from '@/app/actions/knowledge';
+import { reviewNodeAction, reviewEdgeAction, runPipelineAction } from '@/app/actions/knowledge';
 import { PageHeader } from '@/components/page-header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/routing';
-import { ArrowLeft, Check, X } from 'lucide-react';
+import { ArrowLeft, Check, X, Sparkles } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,7 +34,14 @@ export default async function AdminKnowledgePage() {
       <PageHeader
         title={t('knowledge.title')}
         subtitle={t('knowledge.subtitle')}
-        action={<Link href="/admin"><Button variant="outline" size="sm"><ArrowLeft size={14} /> {t('back')}</Button></Link>}
+        action={
+          <div className="flex gap-2">
+            <form action={runPipelineAction}>
+              <Button size="sm" type="submit"><Sparkles size={14} /> {t('knowledge.runPipeline')}</Button>
+            </form>
+            <Link href="/admin"><Button variant="outline" size="sm"><ArrowLeft size={14} /> {t('back')}</Button></Link>
+          </div>
+        }
       />
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">

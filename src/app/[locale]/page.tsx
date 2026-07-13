@@ -10,7 +10,7 @@ import { CookieConsent } from '@/components/landing/cookie-consent';
 import { Analytics } from '@/components/landing/analytics';
 import {
   Building2, Gavel, TrendingUp, Landmark, ClipboardCheck, BookOpen, Bot, Mail,
-  Check, ArrowRight, Sparkles,
+  Compass, Calculator, Check, ArrowRight, Sparkles,
 } from 'lucide-react';
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://francego.fr';
@@ -45,7 +45,7 @@ export async function generateMetadata({
   };
 }
 
-const FEATURE_ICONS = [Building2, Gavel, TrendingUp, Landmark, ClipboardCheck, BookOpen, Bot, Mail];
+const FEATURE_ICONS = [Compass, Building2, Gavel, TrendingUp, Calculator, Landmark, ClipboardCheck, BookOpen, Bot, Mail];
 
 export default async function LandingPage({
   params,

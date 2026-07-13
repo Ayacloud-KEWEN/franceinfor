@@ -88,6 +88,61 @@ export async function extractPending(limit = 10): Promise<{ docs: number; nodes:
   return { docs: n, nodes, edges };
 }
 
+// ---- Retrieval (used by RAG) ----
+export interface GraphContext {
+  lines: string[];
+  sources: { label: string; url: string }[];
+  hits: number;
+}
+
+// Retrieve APPROVED graph facts relevant to a query: nodes whose canonical name
+// matches a query term, plus their 1-hop approved relations. This is what lets
+// the Copilot/reports reason over the structured knowledge graph — not just the
+// semantic chunks. Only approved facts are surfaced (curation gate).
+export async function graphContext(query: string, maxNodes = 6): Promise<GraphContext> {
+  const terms = query
+    .toLowerCase()
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter((w) => w.length >= 4);
+  if (!terms.length) return { lines: [], sources: [], hits: 0 };
+
+  const nodes = await prisma.knowledgeNode.findMany({
+    where: {
+      status: 'APPROVED',
+      OR: terms.map((t) => ({ name: { contains: t, mode: 'insensitive' as const } })),
+    },
+    orderBy: { confidence: 'desc' },
+    take: maxNodes,
+  });
+  if (!nodes.length) return { lines: [], sources: [], hits: 0 };
+
+  const ids = nodes.map((n) => n.id);
+  const edges = await prisma.knowledgeEdge.findMany({
+    where: {
+      status: 'APPROVED',
+      OR: [{ fromId: { in: ids } }, { toId: { in: ids } }],
+    },
+    include: { from: true, to: true },
+    orderBy: { confidence: 'desc' },
+    take: 30,
+  });
+
+  const lines: string[] = ['Knowledge graph — approved facts:'];
+  for (const n of nodes) lines.push(`- ${n.type}: ${n.name}`);
+  for (const e of edges) lines.push(`- ${e.from.name} —(${e.relation})→ ${e.to.name}`);
+
+  const sources: { label: string; url: string }[] = [];
+  const seen = new Set<string>();
+  for (const n of nodes) {
+    if (n.sourceRef && n.sourceRef.startsWith('http') && !seen.has(n.sourceRef)) {
+      seen.add(n.sourceRef);
+      sources.push({ label: n.name, url: n.sourceRef });
+    }
+  }
+
+  return { lines, sources, hits: nodes.length };
+}
+
 // ---- Review + stats ----
 export async function setNodeStatus(id: string, status: KnowledgeStatus) {
   await prisma.knowledgeNode.update({ where: { id }, data: { status } });

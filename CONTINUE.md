@@ -13,10 +13,13 @@
 - [README.md](README.md) — 概览 / 技术栈 / 本地运行 / AI 切换
 - [USER_GUIDE.md](USER_GUIDE.md) — 各模块功能与用法
 - [ROADMAP.md](ROADMAP.md) — **接下来做什么**（按优先级）
-- [DEPLOYMENT.md](DEPLOYMENT.md) — 部署 + 自动部署 + 踩坑
+- [DEPLOYMENT.md](DEPLOYMENT.md) — 部署 + 自动部署 + 踩坑（**§5c 有全部 API Key / 环境变量一览表：哪些必填/核心/可选、各自解锁什么、去哪申请**）
 - [DATA_SOURCES.md](DATA_SOURCES.md) — 数据源 / 许可证 / 商用限制
 
 > 还有持久化「记忆」会在每个会话自动加载（项目决策、踩坑等），无需手动找。
+
+### 近期新增功能（2026-07）
+落地路线主线 `/plan` + 注册画像个性化（onboarding→`User.profile`，个性化 dashboard/discover/markets/funding 预填 + Copilot）· 落地成本/ROI 测算器（企业页）· 招聘信号（France Travail，需 key）· 报告 RAG+来源引用 · 数据诚实化（去伪造分数：中标概率/高管三分）· **L2 知识图谱+pgvector**（抽取→审核→`graphContext` 注入 RAG；embedding 用 OpenAI，需 `OPENAI_API_KEY`）· BOAMP `select` 性能修复。**待填 key 才生效**：`OPENAI_API_KEY`(L2 向量)、`FRANCE_TRAVAIL_*`(招聘)、`PAPPERS_API_KEY`(信用财务) —— 详见 DEPLOYMENT §5c。
 
 ## 技术栈
 Next.js 15(App Router, React 19) · TS · Tailwind · next-intl(en/fr/zh) · Prisma + PostgreSQL(本地端口 5436) · Cookie 会话认证 · 可配置 LLM(Ollama/DeepSeek/OpenAI/Qwen/Claude) · Stripe 订阅。

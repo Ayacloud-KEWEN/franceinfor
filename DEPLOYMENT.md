@@ -98,6 +98,48 @@ NEWS_REVALIDATE_SECONDS="43200"
 > - 手动触发单个端点：`node -e "fetch('https://francego.fr/api/cron/digest?key='+process.env.KEY).then(r=>r.text()).then(console.log)"`（先 `export KEY=$(grep -E '^CRON_SECRET=' .env | cut -d= -f2-)`）。
 > - 知识图谱抽取只需配置了对话模型（如 DeepSeek）即可跑；`index` 的高质量向量需 `OPENAI_API_KEY` + `EMBED_PROVIDER=openai`，否则用本地兜底向量。
 
+## 5c. 🔑 API Key / 环境变量一览（全部功能开关）
+> 分三档：**必填**（不填跑不起来）· **核心**（强烈建议，否则大幅降级）· **可选**（各自优雅降级，不填不崩）。
+> 运行时变量改完 `pm2 restart france-os --update-env`；`NEXT_PUBLIC_*` 是**构建时**注入，改完要重新 `npm run build`。
+
+**必填**
+| 变量 | 作用 | 备注 |
+|---|---|---|
+| `DATABASE_URL` | Postgres 连接 | 密码含 `$` 写 `%24`；需 pgvector |
+| `SESSION_SECRET` | 会话加密 | `openssl rand -hex 32` |
+| `NEXT_PUBLIC_APP_URL` | 站点绝对地址 | **构建时**；如 `https://francego.fr` |
+
+**核心（强烈建议）**
+| 变量 | 解锁 | 不填的后果 |
+|---|---|---|
+| `AI_PROVIDER` + 对应 `*_API_KEY`（`OPENAI`/`DEEPSEEK`/`ANTHROPIC`/`QWEN`，或本地 Ollama） | Copilot、报告生成、图谱抽取、AI 摘要 | 回退 mock 文案 |
+| `OPENAI_API_KEY` (+ `EMBED_PROVIDER=openai`) | **L2 知识图谱语义检索的向量质量**（text-embedding-3-small） | 用 dev 兜底向量，质量低 |
+| `RESEND_API_KEY` (+ `RESEND_FROM` 已验证发信域 + `ADMIN_EMAIL`) | 找回密码、**留资/注册通知邮件**、每日机会摘要 | 仅写服务器日志，不真正发信 |
+| `CRON_SECRET` | 保护 4 个 cron 端点（digest/ingest/index/extract） | cron 端点 401，定时任务不可用 |
+
+**支付（开通订阅才需）**
+| 变量 | 解锁 |
+|---|---|
+| `STRIPE_SECRET_KEY`（`sk_live_`）、`STRIPE_WEBHOOK_SECRET`（`whsec_`）、`STRIPE_PRICE_PROFESSIONAL`、`STRIPE_PRICE_BUSINESS` | 在线订阅；不填→设置页显示「未开通在线支付」，其余正常 |
+
+**可选：解锁更多真实数据（各自降级，不填不崩）**
+| 变量 | 解锁 | 申请地址 | 不填的表现 |
+|---|---|---|---|
+| `FRANCE_TRAVAIL_CLIENT_ID` / `_SECRET` | **招聘信号**（France Travail 职位）→ `/signals` + 买家意向 | francetravail.io | 招聘区隐藏、intent 少一路信号 |
+| `PAPPERS_API_KEY` | 信用模块**更多小公司的真实财务** | pappers.fr/api | 仅用政府库财务（部分小公司为空） |
+| `EUIPO_CLIENT_ID` / `_SECRET` | **品牌搜索真实欧盟商标库** | developer.euipo.europa.eu | 品牌搜索走 mock 生成器 |
+| `INPI_USERNAME` / `_PASSWORD` | INPI RNE 企业注册补充 | data.inpi.fr（免费） | 用政府开放接口，够用 |
+| `AIDES_API_TOKEN` | **补贴匹配叠加 Aides-territoires 实时数据** | aides-territoires.beta.gouv.fr | 仅内置国家级补贴库 |
+
+**营销 / 其它**
+| 变量 | 作用 | 备注 |
+|---|---|---|
+| `NEXT_PUBLIC_GA_ID` | 落地页 GA4 分析（cookie 同意后才加载） | **构建时**；默认内置 `G-DR6YV2QTQN` |
+| `NEXT_PUBLIC_PARTNER_URL` / `_COMPANY_URL` / `_BRAND_URL` | 增值服务 CTA 外链 | **构建时**；空则占位 `#` |
+| `NEWS_REVALIDATE_SECONDS` | 新闻抓取缓存秒数 | 默认 12h |
+
+> **本次上线要补的运行时 key（`pm2 restart --update-env` 即可，无需 build）**：`OPENAI_API_KEY`（L2 向量+可作对话模型）、`FRANCE_TRAVAIL_CLIENT_ID/SECRET`（招聘信号）、`PAPPERS_API_KEY`（信用财务）。其余保持现状即可。
+
 ## 6. 安装 / 建表 / 构建
 ```bash
 node -v                   # 确认 ≥ 20

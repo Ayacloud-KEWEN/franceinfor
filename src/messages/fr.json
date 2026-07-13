@@ -571,16 +571,24 @@
       "subheading": "Une plateforme, quinze modules — du premier signal au contrat signé.",
       "items": [
         {
+          "title": "Plan d’implantation guidé",
+          "desc": "Tout votre parcours en un plan — étudier → s’implanter → développer, 11 étapes liées à chaque module, suivies et personnalisées selon vos objectifs."
+        },
+        {
           "title": "Intelligence entreprises",
-          "desc": "Cherchez parmi 25M+ d’entreprises françaises : finances, dirigeants, actionnaires et score d’opportunité."
+          "desc": "Cherchez parmi 25M+ d’entreprises françaises : finances, dirigeants et actionnaires réels issus du registre officiel."
         },
         {
           "title": "Appels d’offres & acheteurs publics",
-          "desc": "Appels d’offres BOAMP + TED en direct, adaptés à vous, avec échéances et probabilité de gain."
+          "desc": "Appels d’offres BOAMP + TED + PLACE en direct, classés par pertinence réelle des mots-clés, avec échéances et acheteurs."
         },
         {
-          "title": "Signaux de levées & investissements",
-          "desc": "Repérez les entreprises qui viennent de lever des fonds — budget frais, forte intention d’achat."
+          "title": "Signaux de levées & recrutement",
+          "desc": "Entreprises qui viennent de lever des fonds ou recrutent fortement — budget frais et expansion = forte intention d’achat."
+        },
+        {
+          "title": "Calculateur coût & ROI",
+          "desc": "Estimez votre coût réel de première année en France — création, bureaux, un recrutement, comptabilité et conformité — avec seuil de rentabilité et ROI."
         },
         {
           "title": "Aides & subventions",
@@ -596,11 +604,11 @@
         },
         {
           "title": "Copilote IA, sourcé",
-          "desc": "Réponses tirées d’une connaissance française curatée, avec citations officielles — pas un simple LLM."
+          "desc": "Réponses tirées d’un graphe de connaissances français curaté, avec citations officielles — pas un simple LLM."
         },
         {
           "title": "Radar quotidien d’opportunités",
-          "desc": "Un e-mail quotidien des nouveaux appels d’offres, levées et actualités selon vos mots-clés."
+          "desc": "Un e-mail quotidien des nouveaux appels d’offres, levées et actualités selon votre profil et vos mots-clés."
         }
       ]
     },
@@ -756,6 +764,7 @@
     "knowledge": {
       "title": "Graphe de connaissances",
       "subtitle": "Knowledge OS L2 — vérifiez les entités & relations extraites par l’IA avant leur entrée dans le graphe.",
+      "runPipeline": "Lancer l’extraction",
       "statNodes": "Nœuds", "statEdges": "Relations", "statApproved": "Approuvés", "statCandNodes": "Nœuds candidats", "statCandEdges": "Relations candidates",
       "candEntities": "Entités candidates ({n})", "candEmpty": "Aucun candidat. Lancez l’extraction (/api/cron/extract) sur les documents indexés.",
       "colType": "Type", "colName": "Nom", "colConf": "Conf.", "colSource": "Source",

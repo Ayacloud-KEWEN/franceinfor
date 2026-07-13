@@ -2,6 +2,7 @@ import 'server-only';
 import { matchPlaybook, type Loc } from './data/playbooks';
 import { experienceStats } from './projects';
 import { semanticSearch } from './knowledge';
+import { graphContext } from './knowledge-graph';
 
 export interface RetrievedSource {
   label: string;
@@ -26,6 +27,17 @@ export async function retrieveContext(query: string, loc: Loc = 'en'): Promise<R
   };
 
   const match = matchPlaybook(query, loc);
+
+  // L2 — knowledge graph: approved entities + relations relevant to the query.
+  try {
+    const g = await graphContext(query);
+    if (g.hits) {
+      lines.push(...g.lines, '');
+      for (const s of g.sources) addSource(s);
+    }
+  } catch {
+    /* graph optional */
+  }
 
   // L2 — semantic vector retrieval over indexed official documents.
   try {

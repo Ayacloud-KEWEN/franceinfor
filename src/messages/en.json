@@ -571,16 +571,24 @@
       "subheading": "One platform, fifteen modules — from first signal to signed deal.",
       "items": [
         {
+          "title": "Guided entry plan",
+          "desc": "Your market-entry journey as one plan — research → establish → grow, 11 steps deep-linked to each module, tracked and personalized to your goals."
+        },
+        {
           "title": "Company intelligence",
-          "desc": "Search 25M+ French companies with financials, executives, shareholders and an opportunity score."
+          "desc": "Search 25M+ French companies with real financials, executives and shareholders from the official registry."
         },
         {
           "title": "Tenders & public buyers",
-          "desc": "Live BOAMP + TED public tenders matched to you, with deadlines and win probability."
+          "desc": "Live BOAMP + TED + PLACE public tenders, ranked by real keyword relevance, with deadlines and buyers."
         },
         {
-          "title": "Funding & investment signals",
-          "desc": "Spot French companies that just raised capital — fresh budget, strong buying intent."
+          "title": "Funding & hiring signals",
+          "desc": "French companies that just raised capital or are hiring hard — fresh budget and expansion mean strong buying intent."
+        },
+        {
+          "title": "Entry cost & ROI calculator",
+          "desc": "Estimate your real first-year cost of landing in France — incorporation, office, a local hire, accounting and compliance — with break-even and ROI."
         },
         {
           "title": "Subsidy & grant matching",
@@ -596,11 +604,11 @@
         },
         {
           "title": "AI copilot, grounded",
-          "desc": "Answers retrieved from curated French knowledge with official source citations — not just an LLM."
+          "desc": "Answers retrieved from a curated French knowledge graph with official source citations — not just an LLM."
         },
         {
           "title": "Daily opportunity radar",
-          "desc": "A daily email of new tenders, funding and news matched to your keywords."
+          "desc": "A daily email of new tenders, funding and news matched to your profile and keywords."
         }
       ]
     },
@@ -756,6 +764,7 @@
     "knowledge": {
       "title": "Knowledge graph",
       "subtitle": "Knowledge OS L2 — review AI-extracted entities & relationships before they enter the graph.",
+      "runPipeline": "Run extraction",
       "statNodes": "Nodes", "statEdges": "Edges", "statApproved": "Approved", "statCandNodes": "Candidate nodes", "statCandEdges": "Candidate edges",
       "candEntities": "Candidate entities ({n})", "candEmpty": "No candidates. Run extraction (/api/cron/extract) over indexed documents.",
       "colType": "Type", "colName": "Name", "colConf": "Conf.", "colSource": "Source",
