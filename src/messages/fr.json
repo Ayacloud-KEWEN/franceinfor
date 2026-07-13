@@ -340,6 +340,7 @@
     "title": "Intelligence des relations et contacts",
     "subtitle": "Décideurs et réseaux d'entreprises",
     "decisionMakers": "Décideurs",
+    "directorsNote": "Dirigeants réels issus du registre officiel. Aucun score d'influence/intention fabriqué.",
     "relationshipGraph": "Réseau d'entreprises",
     "role": "Fonction",
     "company": "Entreprise",
@@ -518,7 +519,12 @@
     "intent": "Intention",
     "sampleData": "données d’exemple",
     "empty": "Aucun signal de levée récent.",
-    "disclaimer": "Extrait automatiquement des titres d’actualité ; montants et noms d’entreprise indicatifs — vérifiez l’article source."
+    "disclaimer": "Extrait automatiquement des titres d’actualité ; montants et noms d’entreprise indicatifs — vérifiez l’article source.",
+    "hiringTitle": "Signaux de recrutement",
+    "hiringSubtitle": "Entreprises publiant de nombreuses offres récentes — un vrai signal d’expansion / d’achat.",
+    "openRoles": "{n} postes ouverts",
+    "latestPosting": "Dernière offre",
+    "hiringSource": "En direct de France Travail (service public de l’emploi)."
   },
   "compliance": {
     "title": "Conformité & implantation",

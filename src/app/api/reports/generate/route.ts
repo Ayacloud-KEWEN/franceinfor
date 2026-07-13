@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { consumeSearch } from '@/lib/usage';
-import { generateReport } from '@/lib/ai';
+import { generateGroundedReport } from '@/lib/report-rag';
 import { getTemplate } from '@/lib/data/reports';
+import type { Loc } from '@/lib/data/playbooks';
 
 export async function POST(req: NextRequest) {
   const user = await getCurrentUser();
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest) {
   if (!quota.ok)
     return NextResponse.json({ error: 'quota_exceeded', limit: quota.limit }, { status: 429 });
 
-  const locale = typeof body?.locale === 'string' ? body.locale : user.locale;
-  const markdown = await generateReport(tpl.name, topic, locale);
+  const locale = (typeof body?.locale === 'string' ? body.locale : user.locale) as Loc;
+  const markdown = await generateGroundedReport(tpl.name, topic, locale);
   return NextResponse.json({ markdown });
 }

@@ -15,18 +15,20 @@
 - ☑ **管理后台 `/[locale]/admin`**(仅 `role=ADMIN`)：用户列表(注册时间/套餐/订阅状态)、事件流(注册/升级/降级/退订/留资,`Event` 审计表)、留资列表 + KPI 卡。
 - ☑ **关注列表 / 轻量 CRM**：`/watchlist` 按阶段看板(潜在→接触→商谈→赢单/丢单)，每项可改阶段、加备注、移除。收藏按钮已接入**企业(搜索+详情)、招标、机会发现**。`SavedItem` 已扩展 `note/stage/tags`。**待扩展**：买家意向(intent)收藏、标签编辑 UI、拖拽换列、看板内招标外链。
 - ☑ **订阅提醒 + 每日邮件**：设置页开关 + 关键词 → `scripts/daily-cron.sh` 每日触发 `/api/cron/digest` → 「法国机会雷达」邮件。**按用户界面语言发送**（标题+章节本地化、新闻/招标标题翻译）、HTML 精美版式（`lib/digest.ts`、`lib/notify.ts` 接 Resend）。需 `RESEND_API_KEY` + 已验证发信域 + `CRON_SECRET` + crontab。
-- ☑ **注册画像 → 个性化**：注册后跳 `/onboarding` 采集 产品/行业/地区/阶段/预算/目标 → 存 `User.profile`（JSON）+ `onboardedAt`；可在设置页编辑、Dashboard 顶部提示补全。个性化已落地：Dashboard hero 显示画像行、机会发现(`/discover`)表单预填、落地路线按目标高亮"推荐"步骤。代码 `lib/profile.ts`、`app/actions/profile.ts`、`components/onboarding/`。**待扩展**：Copilot 上下文注入画像、markets/funding 预填。
+- ☑ **注册画像 → 个性化**：注册后跳 `/onboarding` 采集 产品/行业/地区/阶段/预算/目标 → 存 `User.profile`（JSON）+ `onboardedAt`；可在设置页编辑、Dashboard 顶部提示补全。个性化已落地：Dashboard hero 显示画像行、机会发现(`/discover`)表单预填、落地路线按目标高亮"推荐"步骤、**Copilot 注入画像**（`profilePromptContext` 前置到聊天+报告系统提示，答案贴合产品/行业/地区/阶段/目标，已用真实 LLM 对比验证）。代码 `lib/profile.ts`、`app/actions/profile.ts`、`app/api/copilot/`、`components/onboarding/`。个性化预填已覆盖 discover / markets / funding 表单。
 - ☑ **🧭 市场进入项目主线 `/plan`**（补最大产品空白）：把 20 个模块串成一条带进度的落地主线（调研→立足→拿单，11 步、每步深链对应模块），逐步 todo/doing/done 状态存 `User.entryProgress`（JSON），按画像目标高亮推荐步骤。Dashboard 有"接下来做什么"卡片（总进度+下一步）。代码 `lib/data/entry-plan.ts`、`app/[locale]/(app)/plan/`、`components/plan/`、`api/plan`。**待扩展**：按 stage 自动预勾选已完成阶段、步骤完成度接入运营统计。
 - ☐ 保存搜索 / 搜索历史。
 
 ## 第二波 — 数据深度与差异化(护城河)
 
 - ☑ **🏆 补贴与扶持资金匹配**(差异化大招)：`/funding` 按 行业/阶段/需求/地区 匹配法国扶持项目并打分。内置真实国家级项目库(France 2030、Bpifrance 各产品、CIR/CII、JEI、ADEME、CCI les-aides 等)；配 `AIDES_API_TOKEN` 即叠加 **Aides-territoires** 实时数据。代码：`lib/data/subsidies.ts`、`lib/sources/aides.ts`、`/api/aides`。**待办**：申请 Aides-territoires token 启用实时源、补贴可收藏进 watchlist、评分权重微调(目前多项满分)。
-- ☐ **招聘信号(真实)**：接 France Travail(原 Pôle emploi)招聘 API，把「大量招某岗位」变成真实扩张/买入信号。
-- ☐ **Pappers 接入**(客户端已就绪，填 key 即用)：信用的付款风险/成长等占位维度变真实；企业档案补多年财务、股东、受益人。
+- ☑ **招聘信号(真实)**：接 France Travail(原 Pôle emploi)「Offres d'emploi v2」API（OAuth，参照 EUIPO 模式），按雇主聚合近期职位数=扩张/买入信号，`/signals` 新增「招聘信号」区，并混入买家意向(`intent.ts` 三信号融合：招标+融资+招聘)。代码 `lib/sources/hiring-signals.ts`、`api/signals/hiring`、`components/signals/hiring-signals.tsx`。聚合逻辑已单测；**需服务器填 `FRANCE_TRAVAIL_CLIENT_ID/SECRET`（francetravail.io）激活**，未配则该区隐藏、intent 优雅跳过。
+- ◐ **Pappers 接入**：客户端已**接进信用路由**（`getPappersFinancials`）——政府库无财务时用 Pappers 补，让财务健康分对更多小公司变真，来源动态标注（data.gouv.fr / Pappers）。**填真 key 即生效**（`.env` 现为空占位，`pappersConfigured()` 为空则优雅跳过）。**待办**：企业档案补 EBITDA/股东/受益人。
+- ☑ **数据诚实化（去伪造分数）**：① 删死代码 `contacts.ts`（假决策人）+ `org-tree.tsx`；② 招标去掉无真值的"中标概率"、`matchScore` 改为**真实关键词相关度**（`keywordRelevance`，无关键词不显示）；③ 网络模块去掉对真实高管的伪造 influence/buyingIntent/relationship 三分，只留真实姓名/职务 + 说明；④ 信用的付款风险/供应商可靠性/成长的解释文案由"假装真实推导"改为如实"估算"。均经 API 实测。
+  > 说明：`opportunityScore` 是全站通用的启发式优先级分（企业/市场/新闻/发现 8+ 处），作为"线索评分"性质保留，未动。
 - ☑ 融资/投资事件 → `/signals`「融资动向」：Google News(免密钥)抓融资新闻，解析 **公司/金额/轮次**，并用 **data.gouv 企业注册库(recherche-entreprises)校验富化** → 附真实 SIREN(深链企业页)+行业，过滤榜单/人名噪音；按规模+时效打分。**已并入 buyers intent 页统一打分**(BOAMP 采购方 + 刚融资公司混合排序)。代码 `lib/sources/funding-signals.ts`、`/api/signals`、`lib/sources/intent.ts`。
   > 注：data.gouv **无**结构化"融资轮次"数据集(Dealroom/Crunchbase 需付费)；改用官方企业注册库做结构化校验，既加 SIREN 又去噪。
-- ☐ **报告接 RAG + 引用来源**：把真实数据喂给模型并标注来源，报告数字不再是模型编的(商用关键)。
+- ☑ **报告接 RAG + 引用来源**：报告生成前先抓真实数据——市场规模(Eurostat)+ 在营招标数/样本(BOAMP)+ 注册企业数/龙头(data.gouv)+ 近期新闻 + 知识库(retrieveContext)，组成 data pack 喂给模型并**强制只用提供的数字**（缺失写"not available"），末尾附真实来源链接。代码 `lib/report-rag.ts`、`api/reports/generate`。已用真实 API + Ollama 验证：报告含真实 €144.7B 市场规模、96 家企业数、`## Sources` 真实链接。
 - ◐ **🧠 Knowledge OS**（长期战略资产，见 `KNOWLEDGE_OS.md`）：四层(原始数据→知识图谱→Playbook→项目经验)+ Copilot 改 RAG。**已落地 L3 Playbook 库** `/playbooks`（内置"在法国建数据中心"完整 playbook，可搜索匹配/PDF/留资）。待建：L1 抓取+对象存储、L2 pgvector 知识图谱、L4 项目经验统计。架构已为**无缝迁移 VPS/扩容**设计（无状态应用 + Postgres 单一事实源 + 限流换 Redis + 对象存储 + 容器化）。
   **已落地**：L1 抓取入库(`RawDocument`+`/api/cron/ingest`)、L3 库+版本+三语(playbook：「在法国建数据中心」+「把中国生产的乐器卖到法国」)、L4 项目经验+Experience Intelligence、Copilot RAG(L3/L4 grounding+来源)、Redis 限流、Dockerfile+compose。
 - ☐ **🧠 L2 知识图谱 + pgvector（下一块，最重）**：把 L1 原始文档抽取成 `KnowledgeNode`/`KnowledgeEdge`(实体+关系，带 confidence/来源/版本)，用 **pgvector** 做语义检索，让 Copilot RAG 从"关键词匹配 playbook"升级为"语义检索整个知识图谱"。**前置决策待定**：① pgvector 镜像/扩展；② **embedding 提供方(OpenAI vs 本地 Ollama)** —— 成本/资源/优劣对比见 `CONTINUE.md`，待用户拍板；③ 抽取管线(chunk→embed→LLM 抽取→候选+审核→入图)。详见 `KNOWLEDGE_OS.md` L2 行。
@@ -43,7 +45,7 @@
 
 - ☐ 真正的 PDF/DOCX/PPTX 导出(现为浏览器打印)。
 - ☐ 数据时效戳 + 来源标注(已部分有)。
-- ☐ **性能**：BOAMP 单次抓取过大(>2MB 不能缓存)→ 调小抓取量/分页/缓存，首页更快。
+- ☑ **性能**：BOAMP 单次抓取过大(>2MB 不能缓存)→ 给 Opendatasoft 请求加 `select` 只取用到的 9 个字段，payload **2.7MB → ~20KB(约 137×)**，恢复可缓存，首页/招标页/买家意向不再每次重抓。代码 `lib/sources/boamp.ts`。
 - ☐ 团队账号 / 多席位 / 白标(卖给咨询公司、商会、出海服务机构，客单价更高)。
 - ☐ 移动端持续打磨(Dashboard 已优化，其它页面待过一遍)。
 - ☐ 监控：GlitchTip(错误) + Umami(分析)。

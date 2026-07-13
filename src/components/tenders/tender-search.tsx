@@ -126,16 +126,12 @@ export function TenderSearch() {
                   {tn.deadline ? ` · ${t('deadline')}: ${tn.deadline}` : ''}
                 </div>
               </div>
-              <div className="flex shrink-0 flex-col items-end gap-1">
-                <div className="flex items-center gap-1 text-xs">
+              {query !== '*' && tn.matchScore > 0 && (
+                <div className="flex shrink-0 items-center gap-1 text-xs">
                   <span className="text-muted-foreground">{t('match')}</span>
                   <ScorePill score={tn.matchScore} />
                 </div>
-                <div className="flex items-center gap-1 text-xs">
-                  <span className="text-muted-foreground">{t('winProb')}</span>
-                  <ScorePill score={tn.winningProbability} />
-                </div>
-              </div>
+              )}
             </div>
             <div className="mt-2 flex items-center justify-between gap-3">
               {tn.url ? (

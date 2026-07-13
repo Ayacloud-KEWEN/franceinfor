@@ -4,6 +4,7 @@ import { consumeSearch } from '@/lib/usage';
 import { creditProfile, type LegalInput } from '@/lib/data/modules';
 import { searchCompanies } from '@/lib/sources/recherche-entreprises';
 import { getLegalEvents, legalRiskScore } from '@/lib/sources/bodacc';
+import { getPappersFinancials, pappersConfigured } from '@/lib/sources/pappers';
 
 export async function GET(req: NextRequest) {
   const user = await getCurrentUser();
@@ -17,7 +18,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'quota_exceeded', limit: quota.limit }, { status: 429 });
 
   // Pull the top real company match to ground the financial-health score.
-  let real: { revenue: number | null; netResult: number | null; year: string | null } | undefined;
+  let real: { revenue: number | null; netResult: number | null; year: string | null; source?: string } | undefined;
   let legal: LegalInput | undefined;
   let resolvedName = q;
   let events: Awaited<ReturnType<typeof getLegalEvents>>['events'] = [];
@@ -25,8 +26,21 @@ export async function GET(req: NextRequest) {
     const { results } = await searchCompanies(q, 1);
     if (results.length) {
       const best = results.find((r) => r.revenue != null) ?? results[0];
-      real = { revenue: best.revenue, netResult: best.netResult, year: best.financeYear };
+      real = { revenue: best.revenue, netResult: best.netResult, year: best.financeYear, source: 'data.gouv.fr' };
       resolvedName = best.name;
+
+      // Enrich with Pappers when the government registry has no financials
+      // (common for smaller companies) — makes financial health real for more.
+      if (real.revenue == null && pappersConfigured()) {
+        try {
+          const pf = await getPappersFinancials(best.siren);
+          if (pf?.available && pf.revenue != null) {
+            real = { revenue: pf.revenue, netResult: pf.netResult, year: pf.year, source: 'Pappers' };
+          }
+        } catch {
+          // Pappers optional
+        }
+      }
 
       // Real legal events from BODACC for the resolved SIREN.
       try {

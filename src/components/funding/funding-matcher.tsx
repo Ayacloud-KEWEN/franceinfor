@@ -21,10 +21,15 @@ const TYPE_TONE: Record<AidType, 'primary' | 'accent' | 'warning' | 'muted'> = {
   ADVISORY: 'muted',
 };
 
-export function FundingMatcher() {
+export function FundingMatcher({ initial }: { initial?: { sector?: string; region?: string } }) {
   const t = useTranslations('funding');
   const tc = useTranslations('common');
-  const [form, setForm] = useState({ sector: '', stage: '', region: '', need: '' });
+  const [form, setForm] = useState({
+    sector: initial?.sector ?? '',
+    stage: '',
+    region: initial?.region ?? '',
+    need: '',
+  });
   const [results, setResults] = useState<MatchedSubsidy[] | null>(null);
   const [source, setSource] = useState<'live' | 'curated'>('curated');
   const [loading, setLoading] = useState(false);

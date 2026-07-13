@@ -3,6 +3,7 @@
 // Aggregates recent BOAMP tenders by buyer. Falls back to mock on error.
 import { searchTenders } from './boamp';
 import { fundingIntent } from './funding-signals';
+import { hiringIntent } from './hiring-signals';
 import { INTENT_COMPANIES, type IntentCompany } from '../data/modules';
 import { seededScore } from '../utils';
 
@@ -47,17 +48,16 @@ export async function buyingIntentReal(query = '', limit = 100): Promise<IntentC
     } satisfies IntentCompany;
   });
 
-  // Merge in freshly-funded companies (private-sector buying intent), so the
-  // page blends public procurement signals with private budget signals. Both
-  // carry intentScore on the same 0–100 scale, so we just sort together.
-  let fundItems: IntentCompany[] = [];
-  try {
-    fundItems = await fundingIntent(8);
-  } catch {
-    fundItems = [];
-  }
+  // Blend three concrete buying signals on the same 0–100 scale:
+  //  · public procurement (open tenders, above)
+  //  · private budget (fresh fundraising)
+  //  · expansion (hiring surge from France Travail)
+  const [fundItems, hireItems] = await Promise.all([
+    fundingIntent(8).catch(() => [] as IntentCompany[]),
+    hiringIntent(6).catch(() => [] as IntentCompany[]),
+  ]);
 
-  const items = [...tenderItems, ...fundItems]
+  const items = [...tenderItems, ...fundItems, ...hireItems]
     .sort((a, b) => b.intentScore - a.intentScore)
     .slice(0, 30);
 

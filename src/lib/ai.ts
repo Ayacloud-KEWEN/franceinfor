@@ -28,7 +28,7 @@ interface ProviderConfig {
   needsKey: boolean;
 }
 
-const SYSTEM_PROMPT =
+export const SYSTEM_PROMPT =
   'You are a senior France market-entry consultant (McKinsey-grade). Be concise, structured, data-driven. Reply in the language of the user.';
 
 // Strong, explicit output-language directive. The model otherwise defaults to

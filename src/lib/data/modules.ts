@@ -101,7 +101,7 @@ export interface LegalInput {
 
 export function creditProfile(
   name: string,
-  real?: { revenue: number | null; netResult: number | null; year: string | null },
+  real?: { revenue: number | null; netResult: number | null; year: string | null; source?: string },
   legal?: LegalInput
 ): { company: string; scores: CreditScore[]; trust: number; realData: boolean; realLegal: boolean } {
   const n = name.trim() || 'Company';
@@ -121,7 +121,7 @@ export function creditProfile(
     financialHealth = {
       label: 'Financial Health',
       score,
-      explanation: `Based on real ${real.year} revenue €${(real.revenue! / 1e6).toFixed(1)}M and net margin ${(margin * 100).toFixed(1)}% (data.gouv.fr).`,
+      explanation: `Based on real ${real.year} revenue €${(real.revenue! / 1e6).toFixed(1)}M and net margin ${(margin * 100).toFixed(1)}% (${real.source || 'data.gouv.fr'}).`,
     };
   } else {
     financialHealth = mk('Financial Health', 'fh', 'Estimated — no public financials found.');
@@ -142,10 +142,10 @@ export function creditProfile(
 
   const scores = [
     financialHealth,
-    mk('Payment Risk', 'pr', 'Derived from payment incidents and DSO patterns.'),
-    mk('Supplier Reliability', 'sr', 'On-time delivery and contract continuity history.'),
+    mk('Payment Risk', 'pr', 'Estimated — no public dataset for payment behaviour (indicative only).'),
+    mk('Supplier Reliability', 'sr', 'Estimated — no public delivery/contract history available.'),
     legalRisk,
-    mk('Growth', 'gr', 'Headcount, revenue and market-share momentum.'),
+    mk('Growth', 'gr', 'Estimated — indicative momentum, not from filed accounts.'),
   ];
   const trust = Math.round(scores.reduce((s, x) => s + x.score, 0) / scores.length);
   return { company: n, scores, trust, realData: hasReal, realLegal: hasLegal };

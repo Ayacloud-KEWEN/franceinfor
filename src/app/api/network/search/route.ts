@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { consumeSearch } from '@/lib/usage';
 import { searchCompanies } from '@/lib/sources/recherche-entreprises';
-import { seededScore } from '@/lib/utils';
 
 export async function GET(req: NextRequest) {
   const user = await getCurrentUser();
@@ -28,13 +27,8 @@ export async function GET(req: NextRequest) {
   const people = c.executives.filter((e) => !e.isCompany);
   const parents = c.executives.filter((e) => e.isCompany);
 
-  const decisionMakers = people.map((p) => ({
-    name: p.name,
-    role: p.role,
-    influence: seededScore(c.siren + p.name + 'inf', 50, 98),
-    buyingIntent: seededScore(c.siren + p.name + 'buy', 35, 92),
-    relationship: seededScore(c.siren + p.name + 'rel', 10, 70),
-  }));
+  // Real named directors from the registry — no fabricated influence scores.
+  const decisionMakers = people.map((p) => ({ name: p.name, role: p.role }));
 
   return NextResponse.json({
     profile: {

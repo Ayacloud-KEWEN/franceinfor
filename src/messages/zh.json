@@ -340,6 +340,7 @@
     "title": "关系与联系人情报",
     "subtitle": "决策者与企业网络",
     "decisionMakers": "决策者",
+    "directorsNote": "来自官方企业注册库的真实在册高管;不含任何伪造的影响力/意向评分。",
     "relationshipGraph": "企业网络",
     "role": "职位",
     "company": "公司",
@@ -518,7 +519,12 @@
     "intent": "意向",
     "sampleData": "示例数据",
     "empty": "未发现近期融资动向。",
-    "disclaimer": "自动从实时新闻标题中提取；金额与公司名为尽力解析，请以来源文章为准。"
+    "disclaimer": "自动从实时新闻标题中提取；金额与公司名为尽力解析，请以来源文章为准。",
+    "hiringTitle": "招聘信号",
+    "hiringSubtitle": "大量发布新招聘岗位的公司 —— 真实的扩张 / 采购信号。",
+    "openRoles": "{n} 个在招岗位",
+    "latestPosting": "最新发布",
+    "hiringSource": "来自 France Travail(法国官方公共就业服务)实时数据。"
   },
   "compliance": {
     "title": "落地合规清单",

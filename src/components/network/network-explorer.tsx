@@ -5,10 +5,10 @@ import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge, ScorePill } from '@/components/ui/badge';
+import { Badge } from '@/components/ui/badge';
 import { Search, Loader2, Building2, Users, GitBranch } from 'lucide-react';
 
-interface DM { name: string; role: string | null; influence: number; buyingIntent: number; relationship: number }
+interface DM { name: string; role: string | null }
 interface Profile {
   company: { name: string; siren: string; city: string | null; establishments: number | null };
   decisionMakers: DM[];
@@ -60,29 +60,22 @@ export function NetworkExplorer() {
                 {profile.decisionMakers.length === 0 ? (
                   <CardContent className="py-4 text-sm text-muted-foreground">—</CardContent>
                 ) : (
-                  <table className="w-full text-sm">
-                    <thead className="border-b border-border bg-muted/50 text-left text-xs text-muted-foreground">
-                      <tr>
-                        <th className="px-4 py-2.5 font-medium">{t('contact')}</th>
-                        <th className="px-4 py-2.5 font-medium">{t('influence')}</th>
-                        <th className="px-4 py-2.5 font-medium">{t('buyingIntent')}</th>
-                        <th className="px-4 py-2.5 font-medium">{t('relationship')}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {profile.decisionMakers.map((d, i) => (
-                        <tr key={i} className="border-b border-border last:border-0 hover:bg-muted/30">
-                          <td className="px-4 py-3">
-                            <div className="font-medium">{d.name}</div>
-                            <div className="text-xs text-muted-foreground">{d.role || '—'}</div>
-                          </td>
-                          <td className="px-4 py-3"><ScorePill score={d.influence} /></td>
-                          <td className="px-4 py-3"><ScorePill score={d.buyingIntent} /></td>
-                          <td className="px-4 py-3"><ScorePill score={d.relationship} /></td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <>
+                  <ul className="divide-y divide-border">
+                    {profile.decisionMakers.map((d, i) => (
+                      <li key={i} className="flex items-center gap-3 px-4 py-3 hover:bg-muted/30">
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+                          {d.name.split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase()}
+                        </span>
+                        <div className="min-w-0">
+                          <div className="font-medium">{d.name}</div>
+                          <div className="text-xs text-muted-foreground">{d.role || '—'}</div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="px-4 py-2 text-[11px] text-muted-foreground">{t('directorsNote')}</p>
+                  </>
                 )}
               </Card>
             </div>

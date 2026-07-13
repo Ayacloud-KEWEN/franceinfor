@@ -3,7 +3,7 @@
 // parse the HTML of the public quick-search page (robots.txt allows everything).
 // Keyword search: GET /espace-entreprise/search?keyWord=... (redirects to the
 // PRADO results page). Empty query: the "all open consultations" listing.
-import { seededScore } from '../utils';
+import { keywordRelevance } from '../utils';
 import type { TenderResult } from './boamp';
 
 const BASE = process.env.PLACE_URL || 'https://www.marches-publics.gouv.fr';
@@ -87,18 +87,19 @@ export async function searchPlaceTenders(
 
     const title = intitule ? decodeEntities(intitule[1]) : null;
     const description = objet ? decodeEntities(objet[1]) : null;
+    const buyer = organisme ? decodeEntities(organisme[1]) : null;
+    const finalTitle = title || description || `Consultation ${id}`;
 
     results.push({
       id,
-      title: title || description || `Consultation ${id}`,
-      buyer: organisme ? decodeEntities(organisme[1]) : null,
+      title: finalTitle,
+      buyer,
       description,
       deadline,
       publishedAt: null,
       region: lieu ? decodeEntities(lieu[1]) : null,
       url: `${BASE}/entreprise/consultation/${id}`,
-      matchScore: seededScore(id + 'match'),
-      winningProbability: seededScore(id + 'win', 20, 85),
+      matchScore: keywordRelevance(query, `${finalTitle} ${buyer ?? ''} ${description ?? ''}`),
     });
   }
 

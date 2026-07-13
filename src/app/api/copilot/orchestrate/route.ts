@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { consumeSearch } from '@/lib/usage';
 import { generateReport } from '@/lib/ai';
+import { parseProfile, profilePromptContext } from '@/lib/profile';
 import { COPILOT_AGENTS } from '@/lib/data/modules';
 
 export async function POST(req: NextRequest) {
@@ -17,6 +18,9 @@ export async function POST(req: NextRequest) {
 
   // Each agent runs (mock); a real build would fan out to the per-module engines.
   const locale = typeof body?.locale === 'string' ? body.locale : user.locale;
-  const markdown = await generateReport('France Market Entry Report', topic, locale);
+  // Personalize the report with the user's onboarding profile when present.
+  const profileCtx = profilePromptContext(parseProfile(user));
+  const topicWithProfile = profileCtx ? `${topic}\n\n${profileCtx}` : topic;
+  const markdown = await generateReport('France Market Entry Report', topicWithProfile, locale);
   return NextResponse.json({ agents: COPILOT_AGENTS, markdown });
 }

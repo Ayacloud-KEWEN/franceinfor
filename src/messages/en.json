@@ -340,6 +340,7 @@
     "title": "Relationship & Contact Intelligence",
     "subtitle": "Decision makers and corporate networks",
     "decisionMakers": "Decision Makers",
+    "directorsNote": "Real registered directors from the official registry. No fabricated influence/intent scores.",
     "relationshipGraph": "Corporate Network",
     "role": "Role",
     "company": "Company",
@@ -518,7 +519,12 @@
     "intent": "Intent",
     "sampleData": "sample data",
     "empty": "No recent funding signals found.",
-    "disclaimer": "Auto-extracted from live news headlines; amounts and company names are best-effort — verify on the source article."
+    "disclaimer": "Auto-extracted from live news headlines; amounts and company names are best-effort — verify on the source article.",
+    "hiringTitle": "Hiring signals",
+    "hiringSubtitle": "Companies posting many fresh job offers — a real expansion / buying signal.",
+    "openRoles": "{n} open roles",
+    "latestPosting": "Latest posting",
+    "hiringSource": "Live from France Travail (official public employment service)."
   },
   "compliance": {
     "title": "Compliance & landing checklist",

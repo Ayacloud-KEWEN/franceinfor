@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { consumeSearch } from '@/lib/usage';
-import { complete, type AiMessage } from '@/lib/ai';
+import { complete, SYSTEM_PROMPT, type AiMessage } from '@/lib/ai';
 import { retrieveContext, RAG_SYSTEM } from '@/lib/rag';
+import { parseProfile, profilePromptContext } from '@/lib/profile';
 import type { Loc } from '@/lib/data/playbooks';
 
 export async function POST(req: NextRequest) {
@@ -32,9 +33,13 @@ export async function POST(req: NextRequest) {
   const lastQuestion = messages[messages.length - 1]?.content || '';
   const retrieval = await retrieveContext(lastQuestion, locale);
 
-  let reply = retrieval.grounded
-    ? await complete(messages, RAG_SYSTEM(retrieval.context), locale)
-    : await complete(messages, undefined, locale);
+  // Personalize: prepend the user's onboarding profile to the system prompt so
+  // answers are tailored to their product / sector / stage / goals.
+  const profileCtx = profilePromptContext(parseProfile(user));
+  const baseSystem = retrieval.grounded ? RAG_SYSTEM(retrieval.context) : SYSTEM_PROMPT;
+  const system = profileCtx ? `${profileCtx}\n\n${baseSystem}` : baseSystem;
+
+  let reply = await complete(messages, system, locale);
 
   // Append the official sources used to ground the answer.
   if (retrieval.grounded && retrieval.sources.length) {

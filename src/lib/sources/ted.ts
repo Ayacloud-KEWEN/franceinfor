@@ -1,6 +1,6 @@
 // TED (Tenders Electronic Daily) EU procurement — keyless public Search API v3.
 // https://api.ted.europa.eu/v3/notices/search
-import { seededScore } from '../utils';
+import { keywordRelevance } from '../utils';
 import type { TenderResult } from './boamp';
 
 const BASE = process.env.TED_API || 'https://api.ted.europa.eu/v3';
@@ -49,17 +49,18 @@ export async function searchTedTenders(
     const deadlineRaw = Array.isArray(n['deadline-receipt-tender-date-lot'])
       ? n['deadline-receipt-tender-date-lot'][0]
       : n['deadline-receipt-tender-date-lot'];
+    const title = pickLang(n['notice-title']) ?? `Notice ${id}`;
+    const buyer = pickLang(n['buyer-name']);
     return {
       id,
-      title: pickLang(n['notice-title']) ?? `Notice ${id}`,
-      buyer: pickLang(n['buyer-name']),
+      title,
+      buyer,
       description: null,
       deadline: deadlineRaw ? String(deadlineRaw).slice(0, 10) : null,
       publishedAt: n['publication-date'] ? String(n['publication-date']).slice(0, 10) : null,
       region: 'EU / France',
       url: `https://ted.europa.eu/en/notice/-/detail/${id}`,
-      matchScore: seededScore(id + 'match'),
-      winningProbability: seededScore(id + 'win', 20, 85),
+      matchScore: keywordRelevance(query, `${title} ${buyer ?? ''}`),
     };
   });
 

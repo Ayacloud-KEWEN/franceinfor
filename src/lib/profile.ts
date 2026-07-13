@@ -62,3 +62,26 @@ export const GOAL_LABELS: Record<Goal, Record<Loc, string>> = {
 export function toLoc(locale: string): Loc {
   return locale === 'fr' ? 'fr' : locale === 'zh' ? 'zh' : 'en';
 }
+
+// Build an English system-prompt preamble from the user's profile, so the
+// copilot tailors answers to their product / sector / stage / goals. Returns
+// null when there's nothing useful to personalize on. (English on purpose —
+// the output language is enforced separately by the LLM layer.)
+export function profilePromptContext(p: EntryProfile | null): string | null {
+  if (!p) return null;
+  const parts: string[] = [];
+  if (p.product) parts.push(`Product/service: ${p.product}`);
+  if (p.industry) parts.push(`Industry: ${p.industry}`);
+  if (p.region) parts.push(`Target region in France: ${p.region}`);
+  if (p.stage) parts.push(`Entry stage: ${STAGE_LABELS[p.stage].en}`);
+  if (p.budget) parts.push(`Budget for entry: ${BUDGET_LABELS[p.budget].en}`);
+  if (p.goals?.length) parts.push(`Goals: ${p.goals.map((g) => GOAL_LABELS[g].en).join(', ')}`);
+  if (!parts.length) return null;
+  return (
+    `[User profile] The user is a foreign company expanding into France. ` +
+    parts.join('. ') +
+    `. Tailor every answer to this profile: reference their sector and entry stage, ` +
+    `use concrete examples relevant to their product, and prioritize their stated goals. ` +
+    `Do not restate the profile back to the user.`
+  );
+}
