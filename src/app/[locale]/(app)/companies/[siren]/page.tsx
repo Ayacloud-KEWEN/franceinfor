@@ -7,6 +7,7 @@ import { Badge, ScorePill } from '@/components/ui/badge';
 import { FinancialsChart } from '@/components/companies/financials-chart';
 import { CompanyAiSummary } from '@/components/companies/ai-summary';
 import { SaveButton } from '@/components/saved/save-button';
+import { OutreachButton } from '@/components/companies/outreach-button';
 import { getLegalEvents, type LegalEvent } from '@/lib/sources/bodacc';
 import { fetchFranceNews, type LiveNewsItem } from '@/lib/sources/news';
 import { ArrowLeft, Building2, MapPin, ExternalLink, GitBranch, Scale } from 'lucide-react';
@@ -107,6 +108,9 @@ export default async function CompanyProfilePage({
             <div className="text-xs text-muted-foreground">{t('score')}</div>
             <ScorePill score={c.opportunityScore} />
           </div>
+          <OutreachButton
+            company={{ name: c.name, siren: c.siren, city: c.city, industry: c.industry || c.nafCode }}
+          />
           <SaveButton
             type="COMPANY"
             refId={c.siren}

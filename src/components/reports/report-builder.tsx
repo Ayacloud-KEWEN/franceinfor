@@ -8,7 +8,8 @@ import { Input } from '@/components/ui/input';
 import { Markdown } from './markdown';
 import { REPORT_TEMPLATES } from '@/lib/data/reports';
 import { cn } from '@/lib/utils';
-import { Loader2, Download, FileText } from 'lucide-react';
+import { buildWordDoc } from '@/lib/markdown-doc';
+import { Loader2, Download, FileText, FileDown } from 'lucide-react';
 
 export function ReportBuilder() {
   const t = useTranslations('reports');
@@ -47,6 +48,17 @@ export function ReportBuilder() {
     const a = document.createElement('a');
     a.href = url;
     a.download = `${template}-report.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function exportDoc() {
+    const tpl = REPORT_TEMPLATES.find((x) => x.slug === template);
+    const blob = new Blob([buildWordDoc(markdown, tpl?.name ?? 'Report')], { type: 'application/msword' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${template}-report.doc`;
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -90,6 +102,9 @@ export function ReportBuilder() {
           </Button>
           {markdown && (
             <>
+              <Button variant="outline" onClick={exportDoc}>
+                <FileDown size={15} /> {t('exportDoc')}
+              </Button>
               <Button variant="outline" onClick={() => window.print()}>
                 <Download size={15} /> {t('download')}
               </Button>

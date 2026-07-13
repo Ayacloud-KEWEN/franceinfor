@@ -7,9 +7,10 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ScorePill } from '@/components/ui/badge';
-import { Search, Loader2, ExternalLink, ChevronDown } from 'lucide-react';
+import { Search, Loader2, ExternalLink, ChevronDown, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SaveButton } from '@/components/saved/save-button';
+import { AiResultPanel } from '@/components/ai/ai-result-panel';
 import type { TenderResult } from '@/lib/sources/boamp';
 
 type Source = 'boamp' | 'ted' | 'place' | 'francemarches';
@@ -29,6 +30,7 @@ export function TenderSearch() {
   const [query, setQuery] = useState('*');
   const [source, setSource] = useState<Source>('boamp');
   const [visible, setVisible] = useState(PAGE);
+  const [assistTender, setAssistTender] = useState<TenderResult | null>(null);
 
   const isExternal = source === 'francemarches';
 
@@ -146,12 +148,17 @@ export function TenderSearch() {
               ) : (
                 <span />
               )}
-              <SaveButton
-                type="TENDER"
-                refId={tn.id}
-                label={tn.title}
-                data={{ buyer: tn.buyer, deadline: tn.deadline, url: tn.url, source }}
-              />
+              <div className="flex items-center gap-2">
+                <Button size="sm" variant="outline" onClick={() => setAssistTender(tn)}>
+                  <Sparkles size={14} /> {t('assistant')}
+                </Button>
+                <SaveButton
+                  type="TENDER"
+                  refId={tn.id}
+                  label={tn.title}
+                  data={{ buyer: tn.buyer, deadline: tn.deadline, url: tn.url, source }}
+                />
+              </div>
             </div>
           </Card>
         ))}
@@ -164,6 +171,15 @@ export function TenderSearch() {
           </Button>
         </div>
       )}
+
+      <AiResultPanel
+        open={assistTender != null}
+        onClose={() => setAssistTender(null)}
+        title={t('assistantTitle')}
+        endpoint="/api/tenders/assistant"
+        payload={{ tender: assistTender }}
+        filename={`tender-response-${assistTender?.id ?? ''}`}
+      />
     </div>
   );
 }
